@@ -1,0 +1,85 @@
+/* Landing Page Styles */
+
+/* Hero Section */
+.hero-section {
+  background: url("../assets/images/hero_image.jpeg") no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding-top: 80px;
+}
+
+/* About Section */
+.about-section {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.about-section img {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Programs Section */
+.programs-section .card {
+  transition: 0.3s ease-in-out;
+}
+
+.programs-section .card:hover {
+  transform: scale(1.05);
+}
+
+/* Contact Section */
+.contact-section {
+  background-color: #212529;
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* Circle Placeholder */
+.circle {
+  width: 70px;
+  height: 70px;
+  background-color: #ddd;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+/* Icon Circle */
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+/* Cultural Exchange Section */
+.cultural-exchange-section {
+  padding: 50px 20px;
+}
+
+.cultural-exchange-section img {
+  margin-bottom: 20px;
+}
+
+.cultural-exchange-section h3 {
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.cultural-exchange-section h4 {
+  color: green;
+  margin-bottom: 20px;
+}
