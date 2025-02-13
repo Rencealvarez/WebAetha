@@ -1,16 +1,19 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./LandingPage.css"; // Import the CSS file
+import tryImage from "../assets/images/try.jpg";
+import { Carousel } from "react-bootstrap"; // Import Carousel from Bootstrap
 
 const LandingPage = () => {
   return (
     <>
       {/* Hero Section */}
       <header id="aeta-hero-section" className="hero-section">
-        <div>
+        <div className="text-center text-white">
           <h1 className="display-4">The Aeta of Indigenous Cultures</h1>
           <p className="lead">
             Join us in celebrating the rich traditions, art, and stories of
-            indigenous peoples in province of Quezon.
+            Indigenous peoples from around the world.
           </p>
           <a href="#about" className="btn btn-success mt-3">
             Explore Now
@@ -18,134 +21,160 @@ const LandingPage = () => {
         </div>
       </header>
 
-      {/* About Section */}
-      <section id="about" className="about-section">
-        <h2>Explore the life of Aeta People</h2>
+      {/* Rights Section */}
+      <section id="rights" className="rights-section text-center">
+        <div className="rights-background">36</div>
+        <h2>
+          36 Specific Rights under Four Bundles of Rights for the Indigenous
+          Cultural Communities/Indigenous People (ICCs/IPs) of the Philippines
+        </h2>
         <p>
-          Join us in preserving and celebrating the rich heritage of indigenous
-          peoples. Your journey starts here, where tradition meets community.
+          Learn more about the rights of Indigenous Cultural Communities
+          Indigenous People of the Philippines
         </p>
-        <img
-          src="https://placehold.co/1200x600"
-          alt="Aeta People"
-          className="img-fluid rounded shadow"
-        />
+        <Link to="/bundles-of-rights" className="btn btn-success mt-3">
+          Learn More
+        </Link>
       </section>
 
-      {/* New Section */}
-      <section className="new-section text-center">
-        <h2>Empower Indigenous Voices</h2>
-        <h3>Celebrating Indigenous Cultures</h3>
-        <div className="row">
-          {[
-            {
-              title: "Cultural Heritage",
-              desc: "Explore the rich traditions and histories of Indigenous peoples.",
-              link: "Discover More Heritage",
-              icon: "⚡",
-            },
-            {
-              title: "Art and Craft",
-              desc: "Experience the vibrant artistry that reflects our identity.",
-              link: "Explore Our Art",
-              icon: "🎨",
-            },
-            {
-              title: "Language Revitalization",
-              desc: "Join us in preserving Indigenous languages for future generations.",
-              link: "Learn About Languages",
-              icon: "🔒",
-            },
-            {
-              title: "Community Events",
-              desc: "Participate in events that celebrate our culture and unity.",
-              link: "Join Our Events",
-              icon: "❤️",
-            },
-          ].map((item, index) => (
-            <div key={index} className="col-md-3">
-              <div className="card p-3">
-                <div className="icon-circle">
-                  <span>{item.icon}</span>
-                </div>
-                <h5>{item.title}</h5>
-                <p>{item.desc}</p>
-                <a href="#" className="text-success">
-                  {item.link}
-                </a>
+      {/* Building Blocks Section */}
+      <section className="building-blocks-section">
+        <div className="row align-items-center">
+          <div className="col-md-6 text-center">
+            <h3>11 Building Blocks</h3>
+            <p>
+              of Resilient, Responsive, and Relevant ICCs/IPs in their Ancestral
+              Domains
+            </p>
+            <a href="#learn-more" className="btn btn-success mt-3">
+              Learn more
+            </a>
+          </div>
+          <div className="col-md-6">
+            <div className="row">
+              <div className="col-6">
+                <img
+                  src="https://placehold.co/300x300"
+                  alt="Building Block 1"
+                  className="img-fluid rounded mb-3"
+                />
+                <img
+                  src="https://placehold.co/300x300"
+                  alt="Building Block 2"
+                  className="img-fluid rounded mb-3"
+                />
+              </div>
+              <div className="col-6">
+                <img
+                  src="https://placehold.co/300x300"
+                  alt="Building Block 3"
+                  className="img-fluid rounded mb-3"
+                />
+                <img
+                  src="https://placehold.co/300x300"
+                  alt="Building Block 4"
+                  className="img-fluid rounded mb-3"
+                />
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
       {/* Voices of Indigenous Pride Section */}
       <section className="voices-section text-center">
         <h2>Voices of Indigenous Pride</h2>
-        <div className="row">
-          {[
-            "The cultural diversity and rich heritage of indigenous peoples inspire us all. Their traditions, stories, and art connect us to our roots and remind us of the profound beauty of our world. I feel fortunate to be part of this vibrant community.",
-            "Witnessing the resilience and strength of indigenous cultures is a transformative experience. Their commitment to preserving their identity and sharing their wisdom with future generations is both empowering and necessary for our global society.",
-          ].map((text, index) => (
-            <div key={index} className="col-md-6">
-              <div className="p-3">
-                <div className="circle mb-3"></div>
-                <p>{text}</p>
+        <Carousel>
+          <Carousel.Item>
+            <div className="d-flex justify-content-center align-items-center">
+              <div className="testimonial">
+                <div className="circle">
+                  <img src="https://placehold.co/80x80" alt="Placeholder" />
+                </div>
+                <p>
+                  The cultural diversity and rich heritage of indigenous peoples
+                  inspire us all. Their traditions, stories, and art connect us
+                  to our roots and remind us of the profound beauty of our
+                  world. I feel fortunate to be part of this vibrant community.
+                </p>
               </div>
             </div>
-          ))}
-        </div>
+          </Carousel.Item>
+          <Carousel.Item>
+            <div className="d-flex justify-content-center align-items-center">
+              <div className="testimonial">
+                <div className="circle">
+                  <img src="https://placehold.co/80x80" alt="Placeholder" />
+                </div>
+                <p>
+                  Witnessing the resilience and strength of indigenous cultures
+                  is a transformative experience. Their commitment to preserving
+                  their identity and sharing their wisdom with future
+                  generations is both empowering and necessary for our global
+                  society.
+                </p>
+              </div>
+            </div>
+          </Carousel.Item>
+        </Carousel>
       </section>
 
       {/* Cultural Exchange Section */}
-      <section
-        id="engage-indigenous-culture"
-        className="cultural-exchange-section"
-      >
+      <section className="cultural-exchange-section">
         <div className="row">
           <div className="col-md-6">
             <img
-              src="https://placehold.co/600x400"
+              src="https://placehold.co/500x500"
               alt="Cultural Exchange"
-              className="img-fluid rounded"
+              className="img-fluid"
             />
-          </div>
-          <div className="col-md-6">
-            <h3>Engage with Indigenous Culture</h3>
-            <h4>Join Cultural Exchange</h4>
+            <h4>Engage with Indigenous Culture</h4>
+            <h3>Join Cultural Exchange</h3>
             <p>
               Immerse yourself in the beauty of Indigenous cultures. Our
-              platform offers a range of resources, experiences, and
-              opportunities to connect with Indigenous communities.
+              platform offers a range of resources, events, and opportunities to
+              connect.
             </p>
-            <div className="row">
-              {[
-                {
-                  title: "Support Local Artisans",
-                  desc: "We believe in the strength of Indigenous communities.",
-                  img: "https://placehold.co/150x100",
-                },
-                {
-                  title: "Cultural Education Programs",
-                  desc: "Language is a vital part of our cultural identity.",
-                  img: "https://placehold.co/150x100",
-                },
-                {
-                  title: "Cultural Festivals",
-                  desc: "Join us in celebrating the diverse heritage of Indigenous peoples.",
-                  img: "https://placehold.co/150x100",
-                },
-              ].map((item, index) => (
-                <div key={index} className="col-md-4">
-                  <img
-                    src={item.img}
-                    alt={item.title}
-                    className="img-fluid rounded"
-                  />
-                  <h5>{item.title}</h5>
-                  <p>{item.desc}</p>
-                </div>
-              ))}
+          </div>
+          <div className="col-md-6">
+            <div className="program d-flex align-items-center">
+              <img
+                src="https://placehold.co/100x100"
+                alt="Support Local Artisans"
+                className="img-fluid"
+              />
+              <div className="text-content">
+                <h5>Empowering Indigenous Communities</h5>
+                <h4>Support Local Artisans</h4>
+                <p>We believe in the strength of Indigenous communities.</p>
+              </div>
+            </div>
+            <div className="program d-flex align-items-center">
+              <img
+                src="https://placehold.co/100x100"
+                alt="Cultural Education Programs"
+                className="img-fluid"
+              />
+              <div className="text-content">
+                <h5>Preserving Our Languages</h5>
+                <h4>Cultural Education Programs</h4>
+                <p>Language is a vital part of our cultural identity.</p>
+              </div>
+            </div>
+            <div className="program d-flex align-items-center">
+              <img
+                src="https://placehold.co/100x100"
+                alt="Cultural Festivals"
+                className="img-fluid"
+              />
+              <div className="text-content">
+                <h5>Celebrate Our Heritage</h5>
+                <h4>Cultural Festivals</h4>
+                <p>
+                  Join us in celebrating the diverse heritage of Indigenous
+                  peoples.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -214,46 +243,29 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Programs Section */}
-      <section id="programs" className="container py-5 programs-section">
-        <h2 className="programs&initiatives">Programs & Initiatives</h2>
-        <div className="row text-center">
-          {[
-            {
-              title: "Cultural Heritage",
-              desc: "Explore rich traditions and histories.",
-              icon: "📖",
-            },
-            {
-              title: "Art & Craft",
-              desc: "Discover vibrant indigenous artistry.",
-              icon: "🎨",
-            },
-            {
-              title: "Language Revitalization",
-              desc: "Preserve indigenous languages.",
-              icon: "🗣",
-            },
-            {
-              title: "Community Events",
-              desc: "Celebrate culture and unity.",
-              icon: "🎉",
-            },
-          ].map((program, index) => (
-            <div key={index} className="col-md-3">
-              <div className="card p-3">
-                <span className="display-4">{program.icon}</span>
-                <h5 className="mt-3">{program.title}</h5>
-                <p>{program.desc}</p>
-              </div>
-            </div>
-          ))}
+      {/* Learn More Section */}
+      <section className="learn-more-section">
+        <div className="row align-items-center">
+          <div className="col-md-6">
+            <h4>Want to learn more about us?</h4>
+            <p>Click the button below to explore and find out more.</p>
+            <a href="#learn-more" className="btn btn-success mt-3">
+              Learn more
+            </a>
+          </div>
+          <div className="col-md-6">
+            <img
+              src="https://placehold.co/500x500"
+              alt="Learn More"
+              className="img-fluid rounded"
+            />
+          </div>
         </div>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="contact-section">
-        <div className="container">
+        <div className="container text-center">
           <h2>Connect with Us</h2>
           <p>123 Cultural Way, Heritage City, Country</p>
           <p>1-800-INDIGENOUS</p>
