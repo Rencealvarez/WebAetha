@@ -9,6 +9,7 @@ import AdminLogin from "./pages/adminLogin";
 import Admin from "./pages/admin";
 import LearnMore from "./pages/LearnMore";
 import PanoramicPage from "./pages/PanoramicPage";
+
 import "./App.css";
 
 const App = () => {

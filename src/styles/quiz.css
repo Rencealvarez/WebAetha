@@ -1,0 +1,32 @@
+.quiz-container {
+  max-width: 600px;
+  margin: 100px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.question-block h4 {
+  margin-bottom: 20px;
+}
+
+.options button {
+  background: #218838;
+  color: white;
+  border: none;
+  margin: 10px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.options button:hover {
+  background: #1a6f31;
+}
+
+.result {
+  font-size: 18px;
+  font-weight: bold;
+}

@@ -1,14 +1,14 @@
 import React, { useState, Suspense, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/panoramicpage.css";
-import { Canvas, useLoader, useFrame } from "@react-three/fiber";
+import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
+import { quizData } from "../data/quizData";
 import * as THREE from "three";
 
-// card
+// Card viewer
 const PanoramaViewer = ({ image }) => {
   const texture = useLoader(THREE.TextureLoader, image);
-
   return (
     <Canvas style={{ height: "300px" }}>
       <ambientLight intensity={0.5} />
@@ -23,11 +23,9 @@ const PanoramaViewer = ({ image }) => {
   );
 };
 
-// Fullscreen
+// Fullscreen 360° view
 const FullscreenPanorama = ({ image, onClose }) => {
   const controlsRef = useRef();
-  const cameraRef = useRef();
-  const [vrMode, setVrMode] = useState(false);
 
   const zoomIn = () => {
     if (controlsRef.current) {
@@ -43,127 +41,43 @@ const FullscreenPanorama = ({ image, onClose }) => {
     }
   };
 
-  // Gyroscope
-  useEffect(() => {
-    if (vrMode) {
-      window.addEventListener("deviceorientation", handleOrientation, true);
-    } else {
-      window.removeEventListener("deviceorientation", handleOrientation, true);
-    }
-    return () => {
-      window.removeEventListener("deviceorientation", handleOrientation, true);
-    };
-  }, [vrMode]);
-
-  const handleOrientation = (event) => {
-    if (cameraRef.current) {
-      const { alpha, beta, gamma } = event;
-      const alphaRad = THREE.MathUtils.degToRad(alpha || 0);
-      const betaRad = THREE.MathUtils.degToRad(beta || 0);
-      const gammaRad = THREE.MathUtils.degToRad(gamma || 0);
-      cameraRef.current.rotation.set(betaRad, alphaRad, -gammaRad);
-    }
-  };
-
   return (
     <div className="fullscreen-modal">
       <button className="close-btn" onClick={onClose}>
         ✕
       </button>
-
-      {!vrMode && (
-        <div className="zoom-controls">
-          <button onClick={zoomIn}>+</button>
-          <button onClick={zoomOut}>-</button>
-        </div>
-      )}
-
-      <div className="vr-toggle">
-        <button onClick={() => setVrMode(!vrMode)}>
-          {vrMode ? "Exit VR Mode" : "Enter VR Mode"}
-        </button>
+      <div className="zoom-controls">
+        <button onClick={zoomIn}>+</button>
+        <button onClick={zoomOut}>-</button>
       </div>
-
       <Suspense fallback={<div className="loading-spinner">Loading...</div>}>
-        {vrMode ? (
-          <div className="vr-split">
-            <Canvas
-              style={{ height: "100vh", width: "50vw" }}
-              camera={{ fov: 75 }}
-            >
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} />
-              <FullscreenSphere image={image} />
-              <OrbitControls
-                enableZoom={false}
-                enablePan={false}
-                enableRotate={false}
-              />
-              <Environment preset="sunset" />
-              <CameraUpdater ref={cameraRef} />
-            </Canvas>
-
-            <Canvas
-              style={{ height: "100vh", width: "50vw" }}
-              camera={{ fov: 75 }}
-            >
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} />
-              <FullscreenSphere image={image} />
-              <OrbitControls
-                enableZoom={false}
-                enablePan={false}
-                enableRotate={false}
-              />
-              <Environment preset="sunset" />
-              <CameraUpdater ref={cameraRef} />
-            </Canvas>
-          </div>
-        ) : (
-          <Canvas
-            style={{ height: "100vh", width: "100vw" }}
-            camera={{ fov: 75 }}
-          >
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} />
-            <FullscreenSphere image={image} />
-            <OrbitControls
-              ref={controlsRef}
-              enableZoom={false}
-              enablePan={false}
-              enableRotate={true}
-              autoRotate
-              autoRotateSpeed={0.5}
+        <Canvas
+          style={{ height: "100vh", width: "100vw" }}
+          camera={{ fov: 75 }}
+        >
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <mesh>
+            <sphereGeometry args={[10, 64, 64]} />
+            <meshStandardMaterial
+              map={useLoader(THREE.TextureLoader, image)}
+              side={THREE.BackSide}
             />
-            <Environment preset="sunset" />
-            <CameraUpdater ref={cameraRef} />
-          </Canvas>
-        )}
+          </mesh>
+          <OrbitControls
+            ref={controlsRef}
+            enableZoom={false}
+            enablePan={false}
+            enableRotate={true}
+            autoRotate
+            autoRotateSpeed={0.5}
+          />
+          <Environment preset="sunset" />
+        </Canvas>
       </Suspense>
     </div>
   );
 };
-
-// Helper
-const FullscreenSphere = ({ image }) => {
-  const texture = useLoader(THREE.TextureLoader, image);
-
-  return (
-    <mesh>
-      <sphereGeometry args={[10, 64, 64]} />
-      <meshStandardMaterial map={texture} side={THREE.BackSide} />
-    </mesh>
-  );
-};
-
-const CameraUpdater = React.forwardRef((props, ref) => {
-  useFrame(({ camera }) => {
-    if (ref) {
-      ref.current = camera;
-    }
-  });
-  return null;
-});
 
 const PanoramicPage = () => {
   const images = [
@@ -178,20 +92,38 @@ const PanoramicPage = () => {
   ];
 
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizTarget, setQuizTarget] = useState(null);
+  const [quizAnswered, setQuizAnswered] = useState(false);
 
   const openFullscreen = (image) => {
     setSelectedImage(image);
+    setShowQuiz(false);
+    setQuizAnswered(false);
   };
 
   const closeFullscreen = () => {
     setSelectedImage(null);
+    setQuizTarget(selectedImage);
+    setShowQuiz(true);
+  };
+
+  const handleAnswer = (selectedOption) => {
+    const correct = selectedOption === quizData[quizTarget].answer;
+    alert(
+      correct
+        ? "✅ Correct!"
+        : `❌ Incorrect. Correct is ${quizData[quizTarget].answer}`
+    );
+    setQuizAnswered(true);
+    setShowQuiz(false);
   };
 
   useEffect(() => {
-    const headerSection = document.querySelector(".panorama-header");
-    if (headerSection) {
+    const header = document.querySelector(".panorama-header");
+    if (header) {
       setTimeout(() => {
-        headerSection.scrollIntoView({ behavior: "smooth" });
+        header.scrollIntoView({ behavior: "smooth" });
       }, 300);
     }
   }, []);
@@ -202,8 +134,10 @@ const PanoramicPage = () => {
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <span className="navbar-brand mb-0 h1">AETHA</span>
           <Link
-            to="/explore"
-            className="btn btn-link text-white text-decoration-none"
+            to={quizAnswered ? "/explore" : "#"}
+            className={`btn btn-link text-white text-decoration-none ${
+              !quizAnswered ? "disabled" : ""
+            }`}
           >
             Back
           </Link>
@@ -236,10 +170,25 @@ const PanoramicPage = () => {
         <FullscreenPanorama image={selectedImage} onClose={closeFullscreen} />
       )}
 
+      {showQuiz && quizTarget && quizData[quizTarget] && (
+        <div className="quiz-popup text-center">
+          <h5>{quizData[quizTarget].question}</h5>
+          {quizData[quizTarget].options.map((opt, i) => (
+            <button
+              key={i}
+              className="btn btn-outline-primary m-2"
+              onClick={() => handleAnswer(opt)}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
+
       <footer className="footer-section">
         <div className="text-center">
           <h3>Connect with Us</h3>
-          <p className="text-white">123, Dasmariñas city, Cavite</p>
+          <p className="text-white">123, Dasmariñas City, Cavite</p>
           <p className="text-white">0929222145</p>
           <p className="text-white">contact@TAPDEV.org</p>
         </div>
