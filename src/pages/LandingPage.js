@@ -1,27 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./LandingPage.css"; // Import the CSS file
+import "../styles/LandingPage.css";
 import tryImage from "../assets/images/try.jpg";
-import { Carousel } from "react-bootstrap"; // Import Carousel from Bootstrap
+import meImage from "../assets/images/me.jpg";
+import engageImage from "../assets/images/engage.png";
+import aetaImage from "../assets/images/Aeta.png";
+import { Carousel } from "react-bootstrap";
+import Navbar from "../components/Navbar";
 
 const LandingPage = () => {
+  useEffect(() => {
+    setTimeout(() => {
+      const heroSection = document.getElementById("hero");
+      if (heroSection) {
+        window.scrollTo({
+          top: heroSection.offsetTop - 70,
+          behavior: "smooth",
+        });
+      }
+    }, 100);
+  }, []);
+
   return (
-    <>
-      {/* Hero Section */}
-      <header id="aeta-hero-section" className="hero-section">
+    <div>
+      <Navbar />
+
+      <section id="hero" className="hero-section">
         <div className="text-center text-white">
           <h1 className="display-4">The Aeta of Indigenous Cultures</h1>
-          <p className="lead">
+          <p className="lead lead-white">
             Join us in celebrating the rich traditions, art, and stories of
             Indigenous peoples from around the world.
           </p>
-          <a href="#about" className="btn btn-success mt-3">
+          <a href="/login" className="btn btn-success mt-3">
             Explore Now
           </a>
         </div>
-      </header>
+      </section>
 
-      {/* Rights Section */}
       <section id="rights" className="rights-section text-center">
         <div className="rights-background">36</div>
         <h2>
@@ -37,7 +53,6 @@ const LandingPage = () => {
         </Link>
       </section>
 
-      {/* Building Blocks Section */}
       <section className="building-blocks-section">
         <div className="row align-items-center">
           <div className="col-md-6 text-center">
@@ -46,32 +61,29 @@ const LandingPage = () => {
               of Resilient, Responsive, and Relevant ICCs/IPs in their Ancestral
               Domains
             </p>
-            <a href="#learn-more" className="btn btn-success mt-3">
-              Learn more
-            </a>
           </div>
           <div className="col-md-6">
             <div className="row">
               <div className="col-6">
                 <img
-                  src="https://placehold.co/300x300"
+                  src={tryImage}
                   alt="Building Block 1"
                   className="img-fluid rounded mb-3"
                 />
                 <img
-                  src="https://placehold.co/300x300"
+                  src={tryImage}
                   alt="Building Block 2"
                   className="img-fluid rounded mb-3"
                 />
               </div>
               <div className="col-6">
                 <img
-                  src="https://placehold.co/300x300"
+                  src={tryImage}
                   alt="Building Block 3"
                   className="img-fluid rounded mb-3"
                 />
                 <img
-                  src="https://placehold.co/300x300"
+                  src={tryImage}
                   alt="Building Block 4"
                   className="img-fluid rounded mb-3"
                 />
@@ -81,7 +93,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Voices of Indigenous Pride Section */}
       <section className="voices-section text-center">
         <h2>Voices of Indigenous Pride</h2>
         <Carousel>
@@ -89,7 +100,7 @@ const LandingPage = () => {
             <div className="d-flex justify-content-center align-items-center">
               <div className="testimonial">
                 <div className="circle">
-                  <img src="https://placehold.co/80x80" alt="Placeholder" />
+                  <img src={meImage} alt="Placeholder" />
                 </div>
                 <p>
                   The cultural diversity and rich heritage of indigenous peoples
@@ -104,7 +115,7 @@ const LandingPage = () => {
             <div className="d-flex justify-content-center align-items-center">
               <div className="testimonial">
                 <div className="circle">
-                  <img src="https://placehold.co/80x80" alt="Placeholder" />
+                  <img src={meImage} alt="Placeholder" />
                 </div>
                 <p>
                   Witnessing the resilience and strength of indigenous cultures
@@ -119,14 +130,14 @@ const LandingPage = () => {
         </Carousel>
       </section>
 
-      {/* Cultural Exchange Section */}
       <section className="cultural-exchange-section">
         <div className="row">
           <div className="col-md-6">
             <img
-              src="https://placehold.co/500x500"
+              src={engageImage}
               alt="Cultural Exchange"
               className="img-fluid"
+              style={{ width: "500px", height: "300px" }}
             />
             <h4>Engage with Indigenous Culture</h4>
             <h3>Join Cultural Exchange</h3>
@@ -138,23 +149,13 @@ const LandingPage = () => {
           </div>
           <div className="col-md-6">
             <div className="program d-flex align-items-center">
-              <img
-                src="https://placehold.co/100x100"
-                alt="Support Local Artisans"
-                className="img-fluid"
-              />
               <div className="text-content">
                 <h5>Empowering Indigenous Communities</h5>
                 <h4>Support Local Artisans</h4>
                 <p>We believe in the strength of Indigenous communities.</p>
               </div>
             </div>
-            <div className="program d-flex align-items-center">
-              <img
-                src="https://placehold.co/100x100"
-                alt="Cultural Education Programs"
-                className="img-fluid"
-              />
+            <div className="program">
               <div className="text-content">
                 <h5>Preserving Our Languages</h5>
                 <h4>Cultural Education Programs</h4>
@@ -162,14 +163,8 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="program d-flex align-items-center">
-              <img
-                src="https://placehold.co/100x100"
-                alt="Cultural Festivals"
-                className="img-fluid"
-              />
               <div className="text-content">
                 <h5>Celebrate Our Heritage</h5>
-                <h4>Cultural Festivals</h4>
                 <p>
                   Join us in celebrating the diverse heritage of Indigenous
                   peoples.
@@ -180,10 +175,10 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Accordion Section */}
       <section className="accordion-section">
         <h2 className="text-center">Empowering Indigenous Voices</h2>
-        <h3 className="text-center">Celebrating Cultural Heritage</h3>
+        <h3 className="text-center mb-4">Celebrating Cultural Heritage</h3>
+
         <div className="accordion" id="accordionExample">
           {[
             {
@@ -220,11 +215,11 @@ const LandingPage = () => {
             <div className="accordion-item" key={index}>
               <h2 className="accordion-header" id={`heading${index}`}>
                 <button
-                  className="accordion-button"
+                  className="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target={`#collapse${index}`}
-                  aria-expanded="true"
+                  aria-expanded="false"
                   aria-controls={`collapse${index}`}
                 >
                   {item.question}
@@ -243,36 +238,45 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Learn More Section */}
       <section className="learn-more-section">
         <div className="row align-items-center">
           <div className="col-md-6">
-            <h4>Want to learn more about us?</h4>
-            <p>Click the button below to explore and find out more.</p>
-            <a href="#learn-more" className="btn btn-success mt-3">
-              Learn more
-            </a>
+            <h4>Who are the Aeta?</h4>
+            <p style={{ textAlign: "justify" }}>
+              The Aeta in Camarines Norte are an indigenous group known for
+              their resilience and cultural heritage. Traditionally
+              hunter-gatherers, many have adapted to modern life while
+              preserving their customs. They have deep knowledge of nature,
+              practicing sustainable living. Despite challenges like land
+              disputes and economic struggles, they continue to uphold their
+              traditions, passing them down through generations. Efforts to
+              support their community include education programs and cultural
+              preservation initiatives. Their rich oral history, dances, and
+              artistry reflect their identity and strength. The Aeta remain an
+              integral part of Philippine indigenous culture, embodying
+              perseverance and wisdom.
+            </p>
           </div>
           <div className="col-md-6">
             <img
-              src="https://placehold.co/500x500"
+              src={aetaImage}
               alt="Learn More"
               className="img-fluid rounded"
+              style={{ maxWidth: "500px", maxHeight: "500px" }}
             />
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
       <section id="contact" className="contact-section">
         <div className="container text-center">
           <h2>Connect with Us</h2>
-          <p>123 Cultural Way, Heritage City, Country</p>
-          <p>1-800-INDIGENOUS</p>
-          <p>contact@indigenousheritage.org</p>
+          <p className="text-white">123, Dasmariñas city, Cavite</p>
+          <p className="text-white">0929222145</p>
+          <p className="text-white">contact@TAPDEV.org</p>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

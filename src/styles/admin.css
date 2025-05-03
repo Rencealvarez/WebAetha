@@ -1,0 +1,72 @@
+.admin-container {
+  background: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.admin-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: white;
+  border-bottom: 2px solid #ddd;
+}
+
+.admin-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.admin-welcome {
+  font-size: 18px;
+}
+
+.logout-btn {
+  padding: 8px 15px;
+  border-radius: 5px;
+}
+
+.analytics-section {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.analytics-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.analytics-boxes {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.analytics-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 150px;
+}
+
+.analytics-icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.analytics-label {
+  font-size: 16px;
+  color: #333;
+}
+
+.admin-footer {
+  background: #1d1d1b;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}

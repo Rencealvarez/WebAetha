@@ -1,6 +1,18 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 const Navbar = () => {
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    }
+  }, []);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container">
@@ -28,8 +40,8 @@ const Navbar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#vr">
-                VR
+              <a className="nav-link" href="/admin-login">
+                Admin
               </a>
             </li>
           </ul>
