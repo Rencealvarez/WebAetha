@@ -155,6 +155,38 @@ const PanoramicPage = () => {
     }
   }, []);
 
+  const DidYouKnowCard = () => {
+    const [index, setIndex] = useState(0);
+    const { facts } = require("../data/didYouKnowData");
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setIndex((prev) => (prev + 1) % facts.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }, [facts.length]);
+    return (
+      <div
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          background: "#fff",
+          borderLeft: "4px solid #4CAF50",
+          padding: "15px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+          maxWidth: "250px",
+          fontSize: "14px",
+          zIndex: 999,
+        }}
+      >
+        <h6 style={{ margin: "0 0 5px", fontWeight: "bold" }}>Did You Know?</h6>
+        <p style={{ margin: 0 }}>{facts[index]}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="panoramic-page">
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -222,7 +254,7 @@ const PanoramicPage = () => {
           )}
         </div>
       )}
-
+      <DidYouKnowCard />
       <footer className="footer-section">
         <div className="text-center">
           <h3>Connect with Us</h3>

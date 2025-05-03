@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "./explorenow.css";
 import BundlesOfRightsNavbar from "../components/explorenavbar";
 import exploreImage1 from "../assets/images/11.png";
@@ -7,9 +7,10 @@ import vrImage from "../assets/images/vr.png";
 import qrImage from "../assets/images/Qr.png";
 import playerImage from "../assets/images/player.png";
 import PanoramaViewer from "../components/PanoramaViewer";
+import DidYouKnowCard from "../components/DidYouKnowCard";
 
 const ExploreNow = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   return (
     <div className="explore-container">
@@ -29,7 +30,7 @@ const ExploreNow = () => {
           <p className="text-white">Check Out with our 360 Panoramic images</p>
           <button
             className="btn btn-success"
-            onClick={() => navigate("/panoramic")} 
+            onClick={() => navigate("/panoramic")}
           >
             View More
           </button>
@@ -90,7 +91,7 @@ const ExploreNow = () => {
           </div>
         </div>
       </section>
-
+      <DidYouKnowCard />
       <footer className="footer-section">
         <div className="text-center">
           <h3>Connect with Us</h3>

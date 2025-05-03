@@ -144,6 +144,19 @@
   z-index: 9999;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+.did-you-know-card {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #fff9c4;
+  border: 1px solid #fbc02d;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  max-width: 250px;
+  font-size: 14px;
+}
 
 @keyframes spin {
   0% {

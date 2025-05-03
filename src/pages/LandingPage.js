@@ -7,6 +7,7 @@ import engageImage from "../assets/images/engage.png";
 import aetaImage from "../assets/images/Aeta.png";
 import { Carousel } from "react-bootstrap";
 import Navbar from "../components/Navbar";
+import DidYouKnowCard from "../components/DidYouKnowCard";
 
 const LandingPage = () => {
   useEffect(() => {
@@ -251,7 +252,7 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
+      <DidYouKnowCard />
       <section id="contact" className="contact-section">
         <div className="container text-center">
           <h2>Connect with Us</h2>
