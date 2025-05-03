@@ -1,13 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; 
 import "./explorenow.css";
 import BundlesOfRightsNavbar from "../components/explorenavbar";
-import exploreImage1 from "../assets/images/explore.jpg";
+import exploreImage1 from "../assets/images/11.png";
 import vrImage from "../assets/images/vr.png";
 import qrImage from "../assets/images/Qr.png";
 import playerImage from "../assets/images/player.png";
 import PanoramaViewer from "../components/PanoramaViewer";
 
 const ExploreNow = () => {
+  const navigate = useNavigate(); 
+
   return (
     <div className="explore-container">
       <BundlesOfRightsNavbar />
@@ -24,7 +27,12 @@ const ExploreNow = () => {
         <div className="panorama-text text-center">
           <h2>360°</h2>
           <p className="text-white">Check Out with our 360 Panoramic images</p>
-          <button className="btn btn-success">View More</button>
+          <button
+            className="btn btn-success"
+            onClick={() => navigate("/panoramic")} 
+          >
+            View More
+          </button>
         </div>
       </section>
 
@@ -48,7 +56,9 @@ const ExploreNow = () => {
               <div className="livelihood-text text-start">
                 <h3 className="fw-bold">Explore the life of Aeta People</h3>
                 <p>Learn more about them, click the button below</p>
-                <button className="btn btn-success">Learn More</button>
+                <a href="/learn-more" className="btn btn-success">
+                  Learn More
+                </a>
               </div>
             </div>
           </div>

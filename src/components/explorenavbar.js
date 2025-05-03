@@ -23,7 +23,7 @@ const Navbar = () => {
             <li className="nav-item">
               <button
                 className="nav-link back-button"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/login")} 
               >
                 Logout
               </button>

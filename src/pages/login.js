@@ -20,8 +20,14 @@ const Login = () => {
     if (error) {
       alert(error.message);
     } else {
-      // 🟢 Log the login to the 'logins' table
-      await supabase.from("logins").insert([{ user_email: email }]);
+      // Detect device type
+      const userAgent = navigator.userAgent;
+      const deviceType = /Mobi|Android/i.test(userAgent) ? "Mobile" : "Desktop";
+
+      // Insert login record with device info
+      await supabase
+        .from("logins")
+        .insert([{ user_email: email, device_type: deviceType }]);
 
       alert("Login successful!");
       navigate("/explore");
@@ -61,15 +67,6 @@ const Login = () => {
           <button type="submit" className="btn btn-success w-100">
             Sign In
           </button>
-          <div className="form-check mt-3">
-            <input type="checkbox" className="form-check-input" />
-            <label className="form-check-label">
-              I agree to{" "}
-              <a href="/terms" className="text-green">
-                Terms and Conditions
-              </a>
-            </label>
-          </div>
           <p className="text-center mt-3 text-black">
             Don’t have an account?{" "}
             <Link to="/register" className="text-green">

@@ -6,7 +6,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <div className="container">
+      <div className="container-fluid d-flex justify-content-between align-items-center">
         <a className="navbar-brand" href="#aeta-hero-section">
           AETHA
         </a>

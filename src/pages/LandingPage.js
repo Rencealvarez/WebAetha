@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/LandingPage.css";
-import tryImage from "../assets/images/try.jpg";
+import tryImage from "../assets/images/11.png";
 import meImage from "../assets/images/me.jpg";
 import engageImage from "../assets/images/engage.png";
 import aetaImage from "../assets/images/Aeta.png";
@@ -69,23 +69,7 @@ const LandingPage = () => {
                   src={tryImage}
                   alt="Building Block 1"
                   className="img-fluid rounded mb-3"
-                />
-                <img
-                  src={tryImage}
-                  alt="Building Block 2"
-                  className="img-fluid rounded mb-3"
-                />
-              </div>
-              <div className="col-6">
-                <img
-                  src={tryImage}
-                  alt="Building Block 3"
-                  className="img-fluid rounded mb-3"
-                />
-                <img
-                  src={tryImage}
-                  alt="Building Block 4"
-                  className="img-fluid rounded mb-3"
+                  style={{ maxWidth: "500px", maxHeight: "500px" }}
                 />
               </div>
             </div>

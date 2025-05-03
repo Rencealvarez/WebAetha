@@ -7,6 +7,8 @@ import Register from "./pages/register";
 import ExploreNow from "./pages/explorenow";
 import AdminLogin from "./pages/adminLogin";
 import Admin from "./pages/admin";
+import LearnMore from "./pages/LearnMore";
+import PanoramicPage from "./pages/PanoramicPage";
 import "./App.css";
 
 const App = () => {
@@ -20,6 +22,8 @@ const App = () => {
         <Route path="/explore" element={<ExploreNow />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/learn-more" element={<LearnMore />} />
+        <Route path="/panoramic" element={<PanoramicPage />} />
       </Routes>
     </Router>
   );

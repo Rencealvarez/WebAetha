@@ -35,7 +35,6 @@ const PanoramaViewer = () => {
       scene.add(sphere);
     });
 
-    //controls
     camera.position.set(0, 0, 0);
     let isDragging = false,
       previousMouseX = 0,
