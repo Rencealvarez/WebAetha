@@ -35,19 +35,22 @@ const Admin = () => {
   const [deviceData, setDeviceData] = useState([0, 0]);
   const [progressPercent, setProgressPercent] = useState(0);
   const [selectedRange, setSelectedRange] = useState("week");
+  const [quizStats, setQuizStats] = useState({}); // ✅ NEW
 
   const fetchDashboardData = async () => {
     try {
-      const [userRes, loginRes, usersList, loginData] = await Promise.all([
-        supabase.from("users").select("*", { count: "exact", head: true }),
-        supabase.from("logins").select("*", { count: "exact", head: true }),
-        supabase
-          .from("users")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(5),
-        supabase.from("logins").select("logged_in_at, device_type"),
-      ]);
+      const [userRes, loginRes, usersList, loginData, quizRes] =
+        await Promise.all([
+          supabase.from("users").select("*", { count: "exact", head: true }),
+          supabase.from("logins").select("*", { count: "exact", head: true }),
+          supabase
+            .from("users")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(5),
+          supabase.from("logins").select("logged_in_at, device_type"),
+          supabase.from("quiz_logs").select("*"), // ✅ NEW
+        ]);
 
       setUserCount(userRes.count || 0);
       setVisitorCount(loginRes.count || 0);
@@ -55,6 +58,21 @@ const Admin = () => {
       setLoginEvents(loginData.data || []);
 
       processVisits("week", loginData.data || []);
+
+      // ✅ Process Quiz Logs
+      if (quizRes.data) {
+        const stats = {};
+        console.log("Raw quiz logs:", quizRes.data);
+        quizRes.data.forEach((log) => {
+          const img = log.image_path?.trim();
+          if (!img) return;
+          if (!stats[img]) stats[img] = { total: 0, correct: 0 };
+          stats[img].total++;
+          if (log.is_correct) stats[img].correct++;
+        });
+        console.log("Quiz Stats:", stats); // ✅ check console output
+        setQuizStats(stats);
+      }
 
       // Device Usage
       const deviceCounts = { Desktop: 0, Mobile: 0 };
@@ -89,7 +107,6 @@ const Admin = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchDashboardData();
   }, []);
 
@@ -253,6 +270,24 @@ const Admin = () => {
               ))
             ) : (
               <p>No new users found.</p>
+            )}
+          </div>
+        </div>
+
+        {/* ✅ QUIZ STATISTICS SECTION */}
+        <div className="quiz-stats mt-4">
+          <h4>Quiz Statistics</h4>
+          <div className="quiz-list">
+            {Object.keys(quizStats).length > 0 ? (
+              Object.entries(quizStats).map(([image, stat], i) => (
+                <div key={i} className="quiz-card">
+                  <h6>{image}</h6>
+                  <p>Total Attempts: {stat.total}</p>
+                  <p>Correct Answers: {stat.correct}</p>
+                </div>
+              ))
+            ) : (
+              <p>No quiz data found.</p>
             )}
           </div>
         </div>

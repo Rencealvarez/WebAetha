@@ -1,12 +1,23 @@
-import React, { useState, Suspense, useRef, useEffect } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import { Link } from "react-router-dom";
-import "../styles/panoramicpage.css";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
-import { quizData } from "../data/quizData";
 import * as THREE from "three";
+import { quizData } from "../data/quizData";
+import { supabase } from "../supabase";
+import "../styles/panoramicpage.css";
 
-// Card viewer
+// ✅ Logging function (inserted after imports)
+const logQuizResult = async (imagePath, selectedOption, isCorrect) => {
+  await supabase.from("quiz_logs").insert([
+    {
+      image_path: imagePath, // ✅ Correct usage
+      selected_option: selectedOption,
+      is_correct: isCorrect,
+    },
+  ]);
+};
+
 const PanoramaViewer = ({ image }) => {
   const texture = useLoader(THREE.TextureLoader, image);
   return (
@@ -23,7 +34,6 @@ const PanoramaViewer = ({ image }) => {
   );
 };
 
-// Fullscreen 360° view
 const FullscreenPanorama = ({ image, onClose }) => {
   const controlsRef = useRef();
 
@@ -94,37 +104,54 @@ const PanoramicPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizTarget, setQuizTarget] = useState(null);
-  const [quizAnswered, setQuizAnswered] = useState(false);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [showResult, setShowResult] = useState(false);
 
   const openFullscreen = (image) => {
     setSelectedImage(image);
     setShowQuiz(false);
-    setQuizAnswered(false);
+    setUserAnswer("");
+    setShowResult(false);
   };
 
   const closeFullscreen = () => {
-    setSelectedImage(null);
-    setQuizTarget(selectedImage);
     setShowQuiz(true);
+    setQuizTarget(selectedImage);
+    setSelectedImage(null);
   };
 
-  const handleAnswer = (selectedOption) => {
-    const correct = selectedOption === quizData[quizTarget].answer;
-    alert(
-      correct
-        ? "✅ Correct!"
-        : `❌ Incorrect. Correct is ${quizData[quizTarget].answer}`
-    );
-    setQuizAnswered(true);
-    setShowQuiz(false);
+  // ✅ Modified to include logging function
+  const handleAnswer = async (option) => {
+    const isCorrect = option === quizData[quizTarget].answer;
+    setUserAnswer(option);
+    setShowResult(true);
+
+    // Save badge locally
+    if (isCorrect) {
+      const badges = JSON.parse(localStorage.getItem("badges") || "{}");
+      badges[quizTarget] = true;
+      localStorage.setItem("badges", JSON.stringify(badges));
+    }
+
+    // ✅ Log to Supabase
+    await logQuizResult(quizTarget, option, isCorrect);
+
+    setTimeout(() => {
+      setShowQuiz(false);
+      setUserAnswer("");
+      setShowResult(false);
+    }, 2000);
+  };
+
+  const hasBadge = (image) => {
+    const badges = JSON.parse(localStorage.getItem("badges") || "{}");
+    return badges[image];
   };
 
   useEffect(() => {
     const header = document.querySelector(".panorama-header");
     if (header) {
-      setTimeout(() => {
-        header.scrollIntoView({ behavior: "smooth" });
-      }, 300);
+      setTimeout(() => header.scrollIntoView({ behavior: "smooth" }), 300);
     }
   }, []);
 
@@ -134,10 +161,8 @@ const PanoramicPage = () => {
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <span className="navbar-brand mb-0 h1">AETHA</span>
           <Link
-            to={quizAnswered ? "/explore" : "#"}
-            className={`btn btn-link text-white text-decoration-none ${
-              !quizAnswered ? "disabled" : ""
-            }`}
+            to="/explore"
+            className="btn btn-link text-white text-decoration-none"
           >
             Back
           </Link>
@@ -159,7 +184,10 @@ const PanoramicPage = () => {
                 style={{ cursor: "pointer" }}
               >
                 <PanoramaViewer image={item.src} />
-                <p className="text-center mt-2 fw-bold">{item.label}</p>
+                <p className="text-center mt-2 fw-bold">
+                  {item.label}{" "}
+                  {hasBadge(item.src) && <span className="ms-2">🏅</span>}
+                </p>
               </div>
             </div>
           ))}
@@ -170,25 +198,35 @@ const PanoramicPage = () => {
         <FullscreenPanorama image={selectedImage} onClose={closeFullscreen} />
       )}
 
-      {showQuiz && quizTarget && quizData[quizTarget] && (
-        <div className="quiz-popup text-center">
+      {showQuiz && quizData[quizTarget] && (
+        <div className="quiz-popup text-center mt-4">
           <h5>{quizData[quizTarget].question}</h5>
           {quizData[quizTarget].options.map((opt, i) => (
             <button
               key={i}
-              className="btn btn-outline-primary m-2"
+              className={`btn m-2 ${
+                userAnswer ? "btn-outline-secondary" : "btn-outline-success"
+              }`}
               onClick={() => handleAnswer(opt)}
+              disabled={!!userAnswer}
             >
               {opt}
             </button>
           ))}
+          {showResult && (
+            <p className="fw-bold mt-2">
+              {userAnswer === quizData[quizTarget].answer
+                ? "✅ Correct! Badge unlocked!"
+                : "❌ Incorrect!"}
+            </p>
+          )}
         </div>
       )}
 
       <footer className="footer-section">
         <div className="text-center">
           <h3>Connect with Us</h3>
-          <p className="text-white">123, Dasmariñas City, Cavite</p>
+          <p className="text-white">123, Dasmariñas city, Cavite</p>
           <p className="text-white">0929222145</p>
           <p className="text-white">contact@TAPDEV.org</p>
         </div>
