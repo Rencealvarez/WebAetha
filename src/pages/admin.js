@@ -35,7 +35,8 @@ const Admin = () => {
   const [deviceData, setDeviceData] = useState([0, 0]);
   const [progressPercent, setProgressPercent] = useState(0);
   const [selectedRange, setSelectedRange] = useState("week");
-  const [quizStats, setQuizStats] = useState({}); // ✅ NEW
+  const [quizStats, setQuizStats] = useState({});
+  const [feedbackStats, setFeedbackStats] = useState({});
 
   const fetchDashboardData = async () => {
     try {
@@ -104,6 +105,26 @@ const Admin = () => {
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     }
+  };
+  const fetchFeedbackStats = async () => {
+    const { data, error } = await supabase
+      .from("feedback_logs")
+      .select("image_path, emoji");
+
+    if (error) {
+      console.error("❌ Failed to fetch feedback stats:", error.message);
+      return;
+    }
+
+    const stats = {};
+    data.forEach(({ image_path, emoji }) => {
+      const normalized = image_path?.trim().replace(/^\//, "") || "Unknown";
+      if (!stats[normalized]) stats[normalized] = {};
+      if (!stats[normalized][emoji]) stats[normalized][emoji] = 0;
+      stats[normalized][emoji]++;
+    });
+
+    setFeedbackStats(stats);
   };
 
   useEffect(() => {
@@ -288,6 +309,24 @@ const Admin = () => {
               ))
             ) : (
               <p>No quiz data found.</p>
+            )}
+          </div>
+        </div>
+        {/* ✅ FEEDBACK REPORT SECTION */}
+        <div className="feedback-stats mt-4">
+          <h4>Feedback Summary</h4>
+          <div className="quiz-list">
+            {Object.keys(feedbackStats).length > 0 ? (
+              Object.entries(feedbackStats).map(([image, emojis], i) => (
+                <div key={i} className="quiz-card">
+                  <h6>{image}</h6>
+                  <p>👍: {emojis["👍"] || 0}</p>
+                  <p>😐: {emojis["😐"] || 0}</p>
+                  <p>👎: {emojis["👎"] || 0}</p>
+                </div>
+              ))
+            ) : (
+              <p>No feedback data found.</p>
             )}
           </div>
         </div>

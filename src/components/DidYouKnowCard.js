@@ -8,7 +8,7 @@ const DidYouKnowCard = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % facts.length);
-    }, 5000); // rotate every 5 seconds
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 

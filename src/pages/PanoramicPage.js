@@ -7,15 +7,27 @@ import { quizData } from "../data/quizData";
 import { supabase } from "../supabase";
 import "../styles/panoramicpage.css";
 
-// ✅ Logging function (inserted after imports)
 const logQuizResult = async (imagePath, selectedOption, isCorrect) => {
   await supabase.from("quiz_logs").insert([
     {
-      image_path: imagePath, // ✅ Correct usage
+      image_path: imagePath,
       selected_option: selectedOption,
       is_correct: isCorrect,
     },
   ]);
+};
+
+const logFeedback = async (imagePath, emoji) => {
+  const normalizedPath = imagePath.replace(/^\//, "");
+  const { error } = await supabase
+    .from("feedback_logs")
+    .insert([{ image_path: normalizedPath, emoji: String(emoji) }]);
+
+  if (error) {
+    console.error("❌ Failed to log feedback:", error.message);
+  } else {
+    console.log(`✅ Feedback logged: ${emoji} for ${normalizedPath}`);
+  }
 };
 
 const PanoramaViewer = ({ image }) => {
@@ -106,6 +118,7 @@ const PanoramicPage = () => {
   const [quizTarget, setQuizTarget] = useState(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [showResult, setShowResult] = useState(false);
+  const [feedbackCounts, setFeedbackCounts] = useState({});
 
   const openFullscreen = (image) => {
     setSelectedImage(image);
@@ -120,20 +133,17 @@ const PanoramicPage = () => {
     setSelectedImage(null);
   };
 
-  // ✅ Modified to include logging function
   const handleAnswer = async (option) => {
     const isCorrect = option === quizData[quizTarget].answer;
     setUserAnswer(option);
     setShowResult(true);
 
-    // Save badge locally
     if (isCorrect) {
       const badges = JSON.parse(localStorage.getItem("badges") || "{}");
       badges[quizTarget] = true;
       localStorage.setItem("badges", JSON.stringify(badges));
     }
 
-    // ✅ Log to Supabase
     await logQuizResult(quizTarget, option, isCorrect);
 
     setTimeout(() => {
@@ -147,6 +157,32 @@ const PanoramicPage = () => {
     const badges = JSON.parse(localStorage.getItem("badges") || "{}");
     return badges[image];
   };
+
+  const fetchFeedbackCounts = async () => {
+    const { data, error } = await supabase.from("feedback_logs").select("*");
+
+    if (error) {
+      console.error("❌ Error fetching feedback logs:", error.message);
+      return;
+    }
+
+    console.log("✅ Raw feedback logs:", data);
+
+    const counts = {};
+    data.forEach(({ image_path, emoji }) => {
+      const normalized = image_path.trim().replace(/^\//, "");
+      if (!counts[normalized]) counts[normalized] = {};
+      if (!counts[normalized][emoji]) counts[normalized][emoji] = 0;
+      counts[normalized][emoji]++;
+    });
+
+    console.log("✅ Grouped feedbackCounts:", counts);
+    setFeedbackCounts(counts);
+  };
+
+  useEffect(() => {
+    fetchFeedbackCounts();
+  }, []);
 
   useEffect(() => {
     const header = document.querySelector(".panorama-header");
@@ -165,6 +201,7 @@ const PanoramicPage = () => {
       }, 5000);
       return () => clearInterval(interval);
     }, [facts.length]);
+
     return (
       <div
         style={{
@@ -208,21 +245,45 @@ const PanoramicPage = () => {
 
       <section className="panorama-gallery container">
         <div className="row">
-          {images.map((item, index) => (
-            <div className="col-md-6 mb-4" key={index}>
-              <div
-                className="panorama-card"
-                onClick={() => openFullscreen(item.src)}
-                style={{ cursor: "pointer" }}
-              >
-                <PanoramaViewer image={item.src} />
-                <p className="text-center mt-2 fw-bold">
-                  {item.label}{" "}
-                  {hasBadge(item.src) && <span className="ms-2">🏅</span>}
-                </p>
+          {images.map((item, index) => {
+            const imgKey = item.src.replace(/^\//, "");
+            const feedback = feedbackCounts[imgKey] || {};
+
+            return (
+              <div className="col-md-6 mb-4" key={index}>
+                <div
+                  className="panorama-card"
+                  onClick={() => openFullscreen(item.src)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <PanoramaViewer image={item.src} />
+                  <p className="text-center mt-2 fw-bold">
+                    {item.label}{" "}
+                    {hasBadge(item.src) && <span className="ms-2">🏅</span>}
+                  </p>
+
+                  <div
+                    className="feedback-buttons text-center mt-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {["👍", "😐", "👎"].map((emoji) => (
+                      <button
+                        key={emoji}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await logFeedback(item.src, emoji);
+                          await fetchFeedbackCounts(); // refresh after vote
+                        }}
+                        className="btn btn-sm mx-1 btn-outline-secondary"
+                      >
+                        {emoji} {feedback[emoji] || 0}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -254,11 +315,13 @@ const PanoramicPage = () => {
           )}
         </div>
       )}
+
       <DidYouKnowCard />
+
       <footer className="footer-section">
         <div className="text-center">
           <h3>Connect with Us</h3>
-          <p className="text-white">123, Dasmariñas city, Cavite</p>
+          <p className="text-white">123, Dasmariñas City, Cavite</p>
           <p className="text-white">0929222145</p>
           <p className="text-white">contact@TAPDEV.org</p>
         </div>
