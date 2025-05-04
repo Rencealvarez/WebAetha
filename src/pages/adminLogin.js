@@ -23,7 +23,7 @@ const AdminLogin = () => {
     }
 
     if (data.password === password) {
-      navigate("/admin");
+      navigate("/admin-page");
     } else {
       alert("Invalid admin credentials!");
     }

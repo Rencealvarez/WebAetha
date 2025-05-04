@@ -29,6 +29,9 @@ const AdminLayout = () => {
               <Link to="/admin-page/quiz-stats">🧠 Quiz Stats</Link>
             </li>
             <li>
+              <Link to="/admin-page/pending-voices">⏳ Pending Voices</Link>
+            </li>
+            <li>
               <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>

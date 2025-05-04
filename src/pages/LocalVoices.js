@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabase";
+import { useNavigate } from "react-router-dom";
 import "../styles/LocalVoices.css";
 
 const LocalVoicesWall = () => {
@@ -8,12 +9,14 @@ const LocalVoicesWall = () => {
   const [image, setImage] = useState(null);
   const [audio, setAudio] = useState(null);
   const [voices, setVoices] = useState([]);
+  const navigate = useNavigate();
 
   // Fetch all submissions
   const fetchVoices = async () => {
     const { data, error } = await supabase
       .from("local_voices")
       .select("*")
+      .eq("approved", true)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -77,6 +80,7 @@ const LocalVoicesWall = () => {
         quote: quote.trim(),
         image_url: imageUrl,
         audio_url: audioUrl,
+        approved: false,
       },
     ]);
 
@@ -88,12 +92,15 @@ const LocalVoicesWall = () => {
       setQuote("");
       setImage(null);
       setAudio(null);
-      fetchVoices();
+      alert("Thank you! Your post is pending admin approval.");
     }
   };
 
   return (
     <div className="local-voices-wall">
+      <button className="back-btn" onClick={() => navigate(-1)}>
+        ← Back
+      </button>
       <h2>🧑‍🤝‍🧑 Local Voices Wall</h2>
 
       <form className="voice-form" onSubmit={handleSubmit}>
@@ -132,31 +139,15 @@ const LocalVoicesWall = () => {
         <button type="submit">Post to Wall</button>
       </form>
 
-      <div className="voices-list">
-        {voices.map((v, idx) => (
-          <div key={idx} className="voice-card">
-            <h5>{v.name || "Anonymous"}</h5>
-            <p>“{v.quote}”</p>
-
-            {v.image_url && (
-              <img
-                src={v.image_url}
-                alt="User submission"
-                style={{
-                  display: "block",
-                  maxWidth: "100%",
-                  margin: "10px 0",
-                }}
-              />
-            )}
-
+      <div className="voices-grid">
+        {voices.map((v) => (
+          <div key={v.id} className="voice-card">
+            <h5>{v.name}</h5>
+            <p className="quote">“{v.quote}”</p>
+            {v.image_url && <img src={v.image_url} alt="user upload" />}
             {v.audio_url && (
-              <audio
-                controls
-                src={v.audio_url}
-                style={{ display: "block", margin: "10px 0" }}
-              >
-                Your browser does not support the audio element.
+              <audio controls>
+                <source src={v.audio_url} type="audio/mpeg" />
               </audio>
             )}
           </div>

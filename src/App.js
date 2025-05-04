@@ -16,6 +16,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminFeedback from "./pages/admin/AdminFeedback";
 import NewUsers from "./pages/admin/NewUsers";
 import QuizStats from "./pages/admin/QuizStats";
+import AdminPendingVoices from "./pages/admin/AdminPendingVoices";
 
 import "./App.css";
 
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="feedback" element={<AdminFeedback />} />
           <Route path="new-users" element={<NewUsers />} />
           <Route path="quiz-stats" element={<QuizStats />} />
+          <Route path="pending-voices" element={<AdminPendingVoices />} />
         </Route>
       </Routes>
     </Router>
