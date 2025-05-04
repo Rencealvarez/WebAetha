@@ -1,0 +1,25 @@
+.new-users {
+  padding: 20px;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.user-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.user-card h5 {
+  margin-bottom: 5px;
+}
+
+.small-text {
+  font-size: 0.85rem;
+  color: #555;
+}

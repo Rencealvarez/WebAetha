@@ -1,0 +1,26 @@
+.quiz-stats {
+  padding: 20px;
+}
+
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.quiz-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.quiz-card h6 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.quiz-card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}

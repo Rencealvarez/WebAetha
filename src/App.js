@@ -9,6 +9,13 @@ import AdminLogin from "./pages/adminLogin";
 import Admin from "./pages/admin";
 import LearnMore from "./pages/LearnMore";
 import PanoramicPage from "./pages/PanoramicPage";
+import LocalVoices from "./pages/LocalVoices";
+
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminFeedback from "./pages/admin/AdminFeedback";
+import NewUsers from "./pages/admin/NewUsers";
+import QuizStats from "./pages/admin/QuizStats";
 
 import "./App.css";
 
@@ -25,6 +32,16 @@ const App = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/panoramic" element={<PanoramicPage />} />
+        <Route path="/local-voices" element={<LocalVoices />} />
+
+        {/* ✅ Nested Admin Routes */}
+        <Route path="/admin-page" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="feedback" element={<AdminFeedback />} />
+          <Route path="new-users" element={<NewUsers />} />
+          <Route path="quiz-stats" element={<QuizStats />} />
+        </Route>
       </Routes>
     </Router>
   );

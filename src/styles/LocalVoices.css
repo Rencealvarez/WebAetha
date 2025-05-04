@@ -1,0 +1,86 @@
+.local-voices-wall {
+  max-width: 800px;
+  margin: 80px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.local-voices-wall h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+}
+
+.voice-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.voice-form input[type="text"],
+.voice-form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.voice-form input[type="file"] {
+  font-size: 14px;
+}
+
+.voice-form button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.voice-form button:hover {
+  background-color: #43a047;
+}
+
+.voices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.voice-card {
+  background-color: #f8f8f8;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.voice-card h5 {
+  margin-bottom: 5px;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.voice-card p {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.voice-card img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.voice-card audio {
+  width: 100%;
+  max-width: 300px;
+}

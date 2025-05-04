@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 import "../styles/admin.css";
-import { Line, Doughnut, Bar } from "react-chartjs-2";
+import { Line, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,7 +10,6 @@ import {
   PointElement,
   LineElement,
   ArcElement,
-  BarElement,
   Tooltip,
   Legend,
 } from "chart.js";
@@ -21,7 +20,6 @@ ChartJS.register(
   PointElement,
   LineElement,
   ArcElement,
-  BarElement,
   Tooltip,
   Legend
 );
@@ -38,11 +36,10 @@ const Admin = () => {
   const [progressPercent, setProgressPercent] = useState(0);
   const [selectedRange, setSelectedRange] = useState("week");
   const [quizStats, setQuizStats] = useState({});
-  const [feedbackStats, setFeedbackStats] = useState({});
 
   const fetchDashboardData = async () => {
     try {
-      const [userRes, loginRes, usersList, loginData, quizRes, feedbackRes] =
+      const [userRes, loginRes, usersList, loginData, quizRes] =
         await Promise.all([
           supabase.from("users").select("*", { count: "exact", head: true }),
           supabase.from("logins").select("*", { count: "exact", head: true }),
@@ -52,39 +49,32 @@ const Admin = () => {
             .order("created_at", { ascending: false })
             .limit(5),
           supabase.from("logins").select("logged_in_at, device_type"),
-          supabase.from("quiz_logs").select("*"),
-          supabase.from("feedback_logs").select("image_path, emoji"),
+          supabase.from("quiz_logs").select("*"), // ✅ NEW
         ]);
 
       setUserCount(userRes.count || 0);
       setVisitorCount(loginRes.count || 0);
       setNewUsers(usersList.data || []);
       setLoginEvents(loginData.data || []);
+
       processVisits("week", loginData.data || []);
 
-      // ✅ Process Quiz Stats
-      const stats = {};
-      quizRes.data?.forEach((log) => {
-        const img = log.image_path?.trim();
-        if (!img) return;
-        if (!stats[img]) stats[img] = { total: 0, correct: 0 };
-        stats[img].total++;
-        if (log.is_correct) stats[img].correct++;
-      });
-      setQuizStats(stats);
+      // ✅ Process Quiz Logs
+      if (quizRes.data) {
+        const stats = {};
+        console.log("Raw quiz logs:", quizRes.data);
+        quizRes.data.forEach((log) => {
+          const img = log.image_path?.trim();
+          if (!img) return;
+          if (!stats[img]) stats[img] = { total: 0, correct: 0 };
+          stats[img].total++;
+          if (log.is_correct) stats[img].correct++;
+        });
+        console.log("Quiz Stats:", stats); // ✅ check console output
+        setQuizStats(stats);
+      }
 
-      // ✅ Process Feedback
-      const fbStats = {};
-      feedbackRes.data?.forEach(({ image_path, emoji }) => {
-        const path = image_path.trim().replace(/^\//, "");
-        if (!fbStats[path]) fbStats[path] = { "👍": 0, "😐": 0, "👎": 0 };
-        if (fbStats[path][emoji] !== undefined) {
-          fbStats[path][emoji]++;
-        }
-      });
-      setFeedbackStats(fbStats);
-
-      // ✅ Device Data
+      // Device Usage
       const deviceCounts = { Desktop: 0, Mobile: 0 };
       loginData.data.forEach((log) => {
         if (log.device_type === "Desktop") deviceCounts.Desktop++;
@@ -92,7 +82,7 @@ const Admin = () => {
       });
       setDeviceData([deviceCounts.Desktop, deviceCounts.Mobile]);
 
-      // ✅ Progress
+      // Progress Percent
       const today = new Date();
       let todayLogins = 0;
       loginData.data.forEach((log) => {
@@ -115,6 +105,10 @@ const Admin = () => {
       console.error("Error fetching dashboard data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   const processVisits = (range, loginData) => {
     const today = new Date();
@@ -166,27 +160,30 @@ const Admin = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  const handleLogout = () => {
+    navigate("/");
+  };
 
-  const feedbackBarData = {
-    labels: Object.keys(feedbackStats),
+  const lineChartData = {
+    labels: weeklyLabels,
     datasets: [
       {
-        label: "👍",
-        backgroundColor: "#4CAF50",
-        data: Object.values(feedbackStats).map((img) => img["👍"] || 0),
+        label: "Visits",
+        data: weeklyVisits,
+        fill: true,
+        borderColor: "#4CAF50",
+        backgroundColor: "rgba(76, 175, 80, 0.1)",
+        tension: 0.4,
       },
+    ],
+  };
+
+  const doughnutData = {
+    labels: ["Desktop", "Mobile"],
+    datasets: [
       {
-        label: "😐",
-        backgroundColor: "#FFC107",
-        data: Object.values(feedbackStats).map((img) => img["😐"] || 0),
-      },
-      {
-        label: "👎",
-        backgroundColor: "#F44336",
-        data: Object.values(feedbackStats).map((img) => img["👎"] || 0),
+        data: deviceData,
+        backgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
   };
@@ -195,13 +192,12 @@ const Admin = () => {
     <div className="admin-container">
       <nav className="admin-nav">
         <h3 className="admin-title">Admin</h3>
-        <button className="btn btn-success" onClick={() => navigate("/")}>
+        <button className="btn btn-success" onClick={handleLogout}>
           Logout
         </button>
       </nav>
 
       <div className="dashboard-content">
-        {/* Summary Cards */}
         <div className="summary-cards">
           <div className="card">
             <h5>Total Registered Users</h5>
@@ -223,78 +219,76 @@ const Admin = () => {
           </div>
         </div>
 
-        {/* Charts */}
         <div className="charts-section">
           <div className="line-chart">
-            <h4>Network Activities</h4>
-            <Line
-              data={{
-                labels: weeklyLabels,
-                datasets: [
-                  {
-                    label: "Visits",
-                    data: weeklyVisits,
-                    fill: true,
-                    borderColor: "#4CAF50",
-                    backgroundColor: "rgba(76, 175, 80, 0.1)",
-                    tension: 0.4,
-                  },
-                ],
-              }}
-            />
+            <div className="chart-header">
+              <h4>Network Activities</h4>
+              <div className="report-buttons">
+                <button
+                  onClick={() => {
+                    setSelectedRange("week");
+                    processVisits("week", loginEvents);
+                  }}
+                  className={selectedRange === "week" ? "active" : ""}
+                >
+                  Weekly
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedRange("month");
+                    processVisits("month", loginEvents);
+                  }}
+                  className={selectedRange === "month" ? "active" : ""}
+                >
+                  Monthly
+                </button>
+              </div>
+            </div>
+            <Line data={lineChartData} />
           </div>
 
           <div className="doughnut-chart">
             <h4>Device Usage</h4>
-            <Doughnut
-              data={{
-                labels: ["Desktop", "Mobile"],
-                datasets: [
-                  {
-                    data: deviceData,
-                    backgroundColor: ["#36A2EB", "#FF6384"],
-                  },
-                ],
-              }}
-            />
+            <Doughnut data={doughnutData} />
           </div>
         </div>
 
-        {/* Feedback Stats Chart */}
-        <div className="bar-chart mt-4">
-          <h4>Feedback Per Image</h4>
-          <Bar data={feedbackBarData} />
-        </div>
-
-        {/* New Users */}
         <div className="new-users">
           <h4>New Registered Users</h4>
           <div className="new-users-grid">
-            {newUsers.map((user) => (
-              <div key={user.id} className="user-card">
-                <h5>
-                  {user.name} {user.last_name}
-                </h5>
-                <p>Email: {user.email}</p>
-                <p className="small-text">
-                  Joined: {new Date(user.created_at).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
+            {newUsers.length > 0 ? (
+              newUsers.map((user) => (
+                <div key={user.id} className="user-card">
+                  <h5>
+                    {user.name} {user.last_name}
+                  </h5>
+                  <p>Email: {user.email}</p>
+                  <p className="small-text">
+                    Joined: {new Date(user.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>No new users found.</p>
+            )}
           </div>
         </div>
 
-        {/* Quiz Stats */}
+        {/* ✅ QUIZ STATISTICS SECTION */}
         <div className="quiz-stats mt-4">
           <h4>Quiz Statistics</h4>
           <div className="quiz-list">
-            {Object.entries(quizStats).map(([img, stat], i) => (
-              <div key={i} className="quiz-card">
-                <h6>{img}</h6>
-                <p>Total Attempts: {stat.total}</p>
-                <p>Correct Answers: {stat.correct}</p>
-              </div>
-            ))}
+            {Object.keys(quizStats).length > 0 ? (
+              Object.entries(quizStats).map(([image, stat], i) => (
+                <div key={i} className="quiz-card">
+                  <h6>{image}</h6>
+                  <p>Total Attempts: {stat.total}</p>
+                  <p>Correct Answers: {stat.correct}</p>
+                </div>
+              ))
+            ) : (
+              <p>No quiz data found.</p>
+            )}
           </div>
         </div>
       </div>
