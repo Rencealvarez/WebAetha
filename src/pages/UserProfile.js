@@ -1,185 +1,231 @@
-// src/pages/Profile.js
-import React, { useState, useEffect } from "react";
+// src/pages/UserProfilePage.js
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/register.css";
+import { FaPencilAlt, FaRegEye } from "react-icons/fa";
+import "../styles/UserProfile.css";
 
-export default function Profile() {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [profession, setProfession] = useState("");
-  const [bio, setBio] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [uploading, setUploading] = useState(false);
+export default function UserProfilePage() {
+  const nav = useNavigate();
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [registeredAt, setRegisteredAt] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [coverFile, setCoverFile] = useState(null);
+  const [form, setForm] = useState({
+    full_name: "",
+    bio: "",
+    avatar_url: "",
+    cover_url: "",
+  });
 
   useEffect(() => {
     (async () => {
       const {
-        data: { user },
+        data: { user: session },
       } = await supabase.auth.getUser();
-      if (!user) return;
-      // fetch profile
-      const { data, error } = await supabase
-        .from("users")
-        .select("name,last_name,email,profession,bio,avatar_url")
-        .eq("id", user.id)
+      if (!session) return nav("/login");
+      setUser(session);
+      setRegisteredAt(new Date(session.created_at).toLocaleDateString());
+
+      let { data, error } = await supabase
+        .from("user_profiles")
+        .select("*")
+        .eq("id", session.id)
         .single();
-      if (error) return console.error(error);
-      setName(data.name);
-      setLastName(data.last_name);
-      setEmail(data.email);
-      setProfession(data.profession || "");
-      setBio(data.bio || "");
-      setAvatarUrl(data.avatar_url || "");
+
+      if (error && error.code === "PGRST116") {
+        await supabase.from("user_profiles").insert({
+          id: session.id,
+          email: session.email,
+        });
+        ({ data, error } = await supabase
+          .from("user_profiles")
+          .select("*")
+          .eq("id", session.id)
+          .single());
+      }
+      if (error) console.error("fetch profile:", error);
+
+      if (data) {
+        setProfile(data);
+        setForm({
+          full_name: data.full_name || "",
+          bio: data.bio || "",
+          avatar_url: data.avatar_url || "",
+          cover_url: data.cover_url || "",
+        });
+      }
     })();
-  }, []);
+  }, [nav]);
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-    const { error } = await supabase
-      .from("users")
-      .update({
-        name,
-        last_name: lastName,
-        profession,
-        bio,
-      })
-      .eq("id", user.id);
-    if (error) alert(error.message);
-    else alert("Profile updated!");
-  };
+  const handleSave = async () => {
+    let { avatar_url, cover_url } = form;
 
-  const handleUploadAvatar = async (e) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    setUploading(true);
-    const file = e.target.files[0];
-    const path = `avatars/${Date.now()}_${file.name}`;
-    const { error: uploadError } = await supabase.storage
-      .from("avatars")
-      .upload(path, file);
-    if (uploadError) {
-      alert(uploadError.message);
-      setUploading(false);
-      return;
+    if (avatarFile) {
+      const ext = avatarFile.name.split(".").pop();
+      const path = `avatars/${user.id}_${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(path, avatarFile, {
+          upsert: true,
+          metadata: { user_id: user.id },
+        });
+      if (error) return alert("Avatar upload failed");
+      ({
+        data: { publicUrl: avatar_url },
+      } = supabase.storage.from("avatars").getPublicUrl(path));
     }
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("avatars").getPublicUrl(path);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    await supabase
-      .from("users")
-      .update({ avatar_url: publicUrl })
-      .eq("id", user.id);
-    setAvatarUrl(publicUrl);
-    setUploading(false);
+
+    if (coverFile) {
+      const ext = coverFile.name.split(".").pop();
+      const path = `covers/${user.id}_${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("covers")
+        .upload(path, coverFile, {
+          upsert: true,
+          metadata: { user_id: user.id },
+        });
+      if (error) return alert("Cover upload failed");
+      ({
+        data: { publicUrl: cover_url },
+      } = supabase.storage.from("covers").getPublicUrl(path));
+    }
+
+    const { error: profErr } = await supabase.from("user_profiles").upsert(
+      {
+        id: user.id,
+        email: user.email,
+        full_name: form.full_name,
+        bio: form.bio,
+        avatar_url,
+        cover_url,
+      },
+      { onConflict: "id" }
+    );
+    if (profErr) return alert("Profile save failed");
+
+    const updated = {
+      ...profile,
+      full_name: form.full_name,
+      bio: form.bio,
+      avatar_url,
+      cover_url,
+    };
+    setProfile(updated);
+    setForm(updated);
+    setEditing(false);
+    setAvatarFile(null);
+    setCoverFile(null);
   };
 
-  const handleDeleteAvatar = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    await supabase.from("users").update({ avatar_url: null }).eq("id", user.id);
-    setAvatarUrl("");
-  };
+  if (!profile) return <div>Loading…</div>;
 
   return (
-    <div className="register-container">
-      <div className="register-box">
-        <h3 className="text-center">Your Profile</h3>
+    <div className="profile-card">
+      {/* Cover + Avatar */}
+      <div className="cover-wrapper">
+        <img
+          src={profile.cover_url || "/default_cover.jpg"}
+          alt="cover"
+          className="cover-photo"
+        />
 
         {/* Avatar */}
-        <div className="text-center mb-4">
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt="avatar"
-              className="rounded-circle mb-2"
-              style={{ width: 100, height: 100, objectFit: "cover" }}
-            />
-          ) : (
-            <div
-              className="bg-secondary rounded-circle mb-2"
-              style={{ width: 100, height: 100 }}
-            />
-          )}
-          <div>
-            <label className="btn btn-sm btn-outline-primary me-2">
-              {uploading ? "Uploading…" : "Change picture"}
+        <div className="avatar-wrapper">
+          <img
+            src={profile.avatar_url || "/default_avatar.png"}
+            alt="avatar"
+            className="avatar-large"
+          />
+          {editing && (
+            <label className="avatar-edit-icon">
+              <FaPencilAlt />
               <input
                 type="file"
                 accept="image/*"
                 hidden
-                onChange={handleUploadAvatar}
+                onChange={(e) => setAvatarFile(e.target.files[0])}
               />
             </label>
-            {avatarUrl && (
-              <button
-                className="btn btn-sm btn-outline-danger"
-                onClick={handleDeleteAvatar}
-              >
-                Delete
-              </button>
-            )}
+          )}
+        </div>
+
+        {/* Cover edit pencil */}
+        {editing && (
+          <label className="cover-edit-icon">
+            <FaPencilAlt />
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => setCoverFile(e.target.files[0])}
+            />
+          </label>
+        )}
+      </div>
+
+      {/* White card with details */}
+      <div className="profile-content">
+        <button
+          className="edit-btn"
+          onClick={() => {
+            setEditing(!editing);
+            setForm(profile);
+          }}
+        >
+          {editing ? "Cancel" : "Edit Profile"}
+        </button>
+
+        <div className="info-block">
+          <h1 className="name">{profile.full_name || user.email}</h1>
+          <p className="email">{profile.email}</p>
+          <FaRegEye className="eye-icon" />
+        </div>
+
+        <div className="details">
+          <div className="row">
+            <div className="label">Full Name</div>
+            <div className="value">
+              {editing ? (
+                <input
+                  type="text"
+                  value={form.full_name}
+                  onChange={(e) =>
+                    setForm({ ...form, full_name: e.target.value })
+                  }
+                />
+              ) : (
+                profile.full_name || "—"
+              )}
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="label">Email</div>
+            <div className="value">{profile.email}</div>
+          </div>
+
+          <div className="row">
+            <div className="label">Registered at</div>
+            <div className="value">{registeredAt}</div>
           </div>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSave}>
-          <div className="form-group mb-3">
-            <label>First Name</label>
-            <input
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label>Last Name</label>
-            <input
-              className="form-control"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label>Email (read‑only)</label>
-            <input
-              type="email"
-              className="form-control"
-              value={email}
-              readOnly
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label>Profession</label>
-            <input
-              className="form-control"
-              value={profession}
-              onChange={(e) => setProfession(e.target.value)}
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label>Bio</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="btn btn-success w-100">
-            Save Changes
+        <div className="actions">
+          <button className="btn-back" onClick={() => nav(-1)}>
+            Back
           </button>
-        </form>
+        </div>
+
+        {editing && (
+          <div className="actions action-save">
+            <button className="btn-save" onClick={handleSave}>
+              Save Changes
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

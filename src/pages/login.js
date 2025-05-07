@@ -36,7 +36,12 @@ const Login = () => {
         ]);
 
       console.log("Inserted login row:", inserted, "Insert error:", insertErr);
-
+      // ✅ Store user_id for profile use
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData?.session?.user?.id;
+      if (userId) {
+        localStorage.setItem("user_id", userId);
+      }
       alert("Login successful!");
       navigate("/explore");
     }

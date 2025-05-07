@@ -43,6 +43,9 @@ const Navbar = () => {
                 <Link to="/local-voices" className="nav-link text-white ">
                   🧑‍🤝‍🧑 Local Voices
                 </Link>
+                <Link to="/profile" className="nav-link text-white">
+                  Profile
+                </Link>
               </li>
             )}
             <li className="nav-item">
