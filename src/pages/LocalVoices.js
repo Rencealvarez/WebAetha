@@ -1,3 +1,4 @@
+// src/pages/LocalVoicesWall.js
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,7 @@ const LocalVoicesWall = () => {
   const [voices, setVoices] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch all submissions
+  // 1) Fetch only approved entries
   const fetchVoices = async () => {
     const { data, error } = await supabase
       .from("local_voices")
@@ -20,9 +21,8 @@ const LocalVoicesWall = () => {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Fetch error:", error);
+      console.error("Fetch error:", error.message);
     } else {
-      console.log("Fetched voices:", data);
       setVoices(data);
     }
   };
@@ -31,51 +31,59 @@ const LocalVoicesWall = () => {
     fetchVoices();
   }, []);
 
+  // 2) Handle submission (uploads + insert as pending)
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     let imageUrl = null;
     let audioUrl = null;
 
-    // 1) Upload image if provided
-    if (image) {
-      const imagePath = `images/${Date.now()}_${image.name}`;
-      const { data: imgData, error: imgErr } = await supabase.storage
-        .from("localvoicesuploads")
-        .upload(imagePath, image);
+    // 🔐 Get current user
+    const {
+      data: { user },
+      error: userErr,
+    } = await supabase.auth.getUser();
+    if (userErr || !user) {
+      console.error("Auth error:", userErr?.message);
+      alert("You must be logged in to post.");
+      return;
+    }
 
+    // upload image
+    if (image) {
+      const path = `images/${Date.now()}_${image.name}`;
+      const { error: imgErr } = await supabase.storage
+        .from("localvoicesuploads")
+        .upload(path, image);
       if (imgErr) {
-        console.error("Image upload error:", imgErr.message);
+        console.error("Image upload:", imgErr.message);
       } else {
         const {
           data: { publicUrl },
-        } = supabase.storage.from("localvoicesuploads").getPublicUrl(imagePath);
-        console.log("Image publicUrl:", publicUrl);
+        } = supabase.storage.from("localvoicesuploads").getPublicUrl(path);
         imageUrl = publicUrl;
       }
     }
 
-    // 2) Upload audio if provided
+    // upload audio
     if (audio) {
-      const audioPath = `audio/${Date.now()}_${audio.name}`;
-      const { data: audData, error: audErr } = await supabase.storage
+      const path = `audio/${Date.now()}_${audio.name}`;
+      const { error: audErr } = await supabase.storage
         .from("localvoicesuploads")
-        .upload(audioPath, audio);
-
+        .upload(path, audio);
       if (audErr) {
-        console.error("Audio upload error:", audErr.message);
+        console.error("Audio upload:", audErr.message);
       } else {
         const {
           data: { publicUrl },
-        } = supabase.storage.from("localvoicesuploads").getPublicUrl(audioPath);
-        console.log("Audio publicUrl:", publicUrl);
+        } = supabase.storage.from("localvoicesuploads").getPublicUrl(path);
         audioUrl = publicUrl;
       }
     }
 
-    // 3) Insert into local_voices table
-    const { error: insertError } = await supabase.from("local_voices").insert([
+    // insert pending row
+    const { error: insertErr } = await supabase.from("local_voices").insert([
       {
+        user_id: user.id,
         name: name.trim() || "Anonymous",
         quote: quote.trim(),
         image_url: imageUrl,
@@ -84,15 +92,15 @@ const LocalVoicesWall = () => {
       },
     ]);
 
-    if (insertError) {
-      console.error("Insert error:", insertError.message);
+    if (insertErr) {
+      console.error("Insert error:", insertErr.message);
+      alert("Failed to post. Please try again.");
     } else {
-      // Clear form fields
       setName("");
       setQuote("");
       setImage(null);
       setAudio(null);
-      alert("Thank you! Your post is pending admin approval.");
+      alert("Thanks! Your story is pending admin approval.");
     }
   };
 
@@ -112,14 +120,14 @@ const LocalVoicesWall = () => {
         />
 
         <textarea
-          placeholder="Share a quote or story..."
+          placeholder="Share a quote or story…"
           value={quote}
           onChange={(e) => setQuote(e.target.value)}
           required
         />
 
         <label>
-          Upload an Image:
+          Upload Image:
           <input
             type="file"
             accept="image/*"
@@ -152,6 +160,7 @@ const LocalVoicesWall = () => {
             )}
           </div>
         ))}
+        {voices.length === 0 && <p>No approved stories yet.</p>}
       </div>
     </div>
   );
