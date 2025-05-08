@@ -33,7 +33,7 @@ const logFeedback = async (imagePath, emoji) => {
 const PanoramaViewer = ({ image }) => {
   const texture = useLoader(THREE.TextureLoader, image);
   return (
-    <Canvas style={{ height: "300px" }}>
+    <Canvas style={{ width: "100%", height: "300px" }}>
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
       <mesh>
@@ -239,29 +239,78 @@ const PanoramicPage = () => {
       </nav>
 
       <section className="panorama-header">
-        <h1>360°</h1>
-        <p>With our Panoramic Images</p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <svg
+            width="110"
+            height="70"
+            viewBox="0 0 110 70"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <text
+              x="10"
+              y="35"
+              fontFamily="Arial, sans-serif"
+              fontWeight="bold"
+              fontSize="38"
+              fill="#000"
+            >
+              360°
+            </text>
+            <path
+              d="M20 50 Q55 80 90 50"
+              stroke="#000"
+              strokeWidth="4"
+              fill="none"
+              markerEnd="url(#arrowhead)"
+            />
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="8"
+                markerHeight="8"
+                refX="4"
+                refY="4"
+                orient="auto"
+                markerUnits="strokeWidth"
+              >
+                <path d="M0,0 L8,4 L0,8 L2,4 Z" fill="#000" />
+              </marker>
+            </defs>
+          </svg>
+          <div
+            style={{ fontWeight: "bold", fontSize: "18px", marginTop: "8px" }}
+          >
+            With our Panoramic images
+          </div>
+        </div>
       </section>
 
       <section className="panorama-gallery container">
-        <div className="row">
+        <div className="row row-cols-1 row-cols-md-2 g-4">
           {images.map((item, index) => {
             const imgKey = item.src.replace(/^\//, "");
             const feedback = feedbackCounts[imgKey] || {};
 
             return (
-              <div className="col-md-6 mb-4" key={index}>
+              <div className="col" key={index}>
                 <div
                   className="panorama-card"
                   onClick={() => openFullscreen(item.src)}
-                  style={{ cursor: "pointer" }}
                 >
-                  <PanoramaViewer image={item.src} />
+                  <div className="canvas-wrapper">
+                    <PanoramaViewer image={item.src} />
+                  </div>
                   <p className="text-center mt-2 fw-bold">
                     {item.label}{" "}
                     {hasBadge(item.src) && <span className="ms-2">🏅</span>}
                   </p>
-
                   <div
                     className="feedback-buttons text-center mt-2"
                     onClick={(e) => e.stopPropagation()}
@@ -272,7 +321,7 @@ const PanoramicPage = () => {
                         onClick={async (e) => {
                           e.stopPropagation();
                           await logFeedback(item.src, emoji);
-                          await fetchFeedbackCounts(); // refresh after vote
+                          await fetchFeedbackCounts();
                         }}
                         className="btn btn-sm mx-1 btn-outline-secondary"
                       >

@@ -10,6 +10,7 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  Filler,
 } from "chart.js";
 import { Line, Doughnut } from "react-chartjs-2";
 
@@ -20,7 +21,8 @@ ChartJS.register(
   LineElement,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 const AdminDashboard = () => {
@@ -38,42 +40,52 @@ const AdminDashboard = () => {
       const [userRes, loginRes, loginRaw] = await Promise.all([
         supabase.from("users").select("*", { count: "exact", head: true }),
         supabase.from("logins").select("*", { count: "exact", head: true }),
-        supabase.from("logins").select("logged_in_at, device_type"),
+        supabase.from("logins").select("logged_in_at, device_type, user_email"),
       ]);
 
       setUserCount(userRes.count || 0);
       setVisitorCount(loginRes.count || 0);
       setLoginData(loginRaw.data || []);
 
-      // Device chart
+      // Device usage
       const deviceCounts = { Desktop: 0, Mobile: 0 };
-      loginRaw.data.forEach((log) => {
+      (loginRaw.data || []).forEach((log) => {
         if (log.device_type === "Desktop") deviceCounts.Desktop++;
         else if (log.device_type === "Mobile") deviceCounts.Mobile++;
       });
       setDeviceData([deviceCounts.Desktop, deviceCounts.Mobile]);
 
-      // Progress bar
+      // 🌐 Progress Report Calculation with local date
       const today = new Date();
-      let todayLogins = 0;
-      loginRaw.data.forEach((log) => {
-        const loginDate = new Date(log.logged_in_at);
-        if (
-          loginDate.getDate() === today.getDate() &&
-          loginDate.getMonth() === today.getMonth() &&
-          loginDate.getFullYear() === today.getFullYear()
-        ) {
-          todayLogins++;
+      const todayStr = today.toISOString().split("T")[0];
+      const uniqueEmails = new Set();
+
+      console.log("🔍 Today (ISO):", todayStr);
+
+      (loginRaw.data || []).forEach((log) => {
+        const logDate = new Date(log.logged_in_at);
+        const localDate = new Date(
+          logDate.getTime() - logDate.getTimezoneOffset() * 60000
+        );
+        const logStr = localDate.toISOString().split("T")[0];
+
+        if (logStr === todayStr) {
+          console.log("✅ Match:", log.user_email);
+          uniqueEmails.add(log.user_email);
         }
       });
 
+      const todayLogins = uniqueEmails.size;
       const progress = userRes.count
         ? Math.min(100, Math.round((todayLogins / userRes.count) * 100))
         : 0;
 
-      setProgressPercent(progress);
+      console.log("👥 Total Users:", userRes.count);
+      console.log("📥 Today's Unique Logins:", todayLogins);
+      console.log("📊 Progress:", progress + "%");
 
-      processVisits("week", loginRaw.data);
+      setProgressPercent(progress);
+      processVisits("week", loginRaw.data || []);
     };
 
     fetchDashboardData();
@@ -83,48 +95,51 @@ const AdminDashboard = () => {
     const today = new Date();
 
     if (range === "week") {
-      const dailyVisits = {};
+      const daily = {};
       const labels = [];
 
       for (let i = 6; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(today.getDate() - i);
+        const key = d.toISOString().split("T")[0];
         const label = d.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
         });
         labels.push(label);
-        dailyVisits[label] = 0;
+        daily[key] = 0;
       }
 
-      data.forEach((log) => {
-        const loginDate = new Date(log.logged_in_at);
-        const label = loginDate.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-        if (dailyVisits[label] !== undefined) {
-          dailyVisits[label]++;
+      (data || []).forEach((log) => {
+        const logDate = new Date(log.logged_in_at);
+        const localDate = new Date(
+          logDate.getTime() - logDate.getTimezoneOffset() * 60000
+        );
+        const logKey = localDate.toISOString().split("T")[0];
+
+        if (daily[logKey] !== undefined) {
+          daily[logKey]++;
         }
       });
 
       setWeeklyLabels(labels);
-      setWeeklyVisits(Object.values(dailyVisits));
-    } else if (range === "month") {
-      const weeklyVisits = [0, 0, 0, 0];
-      data.forEach((log) => {
-        const loginDate = new Date(log.logged_in_at);
-        const diffDays = Math.floor(
-          (today - loginDate) / (1000 * 60 * 60 * 24)
+      setWeeklyVisits(Object.values(daily));
+    } else {
+      const weeks = [0, 0, 0, 0];
+      (data || []).forEach((log) => {
+        const logDate = new Date(log.logged_in_at);
+        const localDate = new Date(
+          logDate.getTime() - logDate.getTimezoneOffset() * 60000
         );
-        const weekIndex = Math.floor(diffDays / 7);
-        if (weekIndex >= 0 && weekIndex <= 3) {
-          weeklyVisits[3 - weekIndex]++;
-        }
+        const diffDays = Math.floor(
+          (today - localDate) / (1000 * 60 * 60 * 24)
+        );
+        const weekIndex = Math.min(3, Math.floor(diffDays / 7));
+        weeks[3 - weekIndex]++;
       });
 
       setWeeklyLabels(["Week 1", "Week 2", "Week 3", "Week 4"]);
-      setWeeklyVisits(weeklyVisits);
+      setWeeklyVisits(weeks);
     }
   };
 
@@ -171,7 +186,7 @@ const AdminDashboard = () => {
             <div
               className="progress-bar"
               style={{ width: `${progressPercent}%` }}
-            ></div>
+            />
           </div>
           <p>{progressPercent}%</p>
         </div>
@@ -204,6 +219,7 @@ const AdminDashboard = () => {
           </div>
           <Line data={lineChartData} />
         </div>
+
         <div className="chart-container">
           <h4>Device Usage</h4>
           <Doughnut data={doughnutData} />

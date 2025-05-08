@@ -10,6 +10,7 @@ import Admin from "./pages/admin";
 import LearnMore from "./pages/LearnMore";
 import PanoramicPage from "./pages/PanoramicPage";
 import LocalVoices from "./pages/LocalVoices";
+import UserProfile from "./pages/UserProfile";
 
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/panoramic" element={<PanoramicPage />} />
         <Route path="/local-voices" element={<LocalVoices />} />
+        <Route path="/profile" element={<UserProfile />} />
 
         {/* ✅ Nested Admin Routes */}
         <Route path="/admin-page" element={<AdminLayout />}>

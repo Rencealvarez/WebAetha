@@ -24,11 +24,24 @@ const Login = () => {
       const userAgent = navigator.userAgent;
       const deviceType = /Mobi|Android/i.test(userAgent) ? "Mobile" : "Desktop";
 
-      // Insert login record with device info
-      await supabase
+      // Insert login record with timestamp
+      const { data: inserted, error: insertErr } = await supabase
         .from("logins")
-        .insert([{ user_email: email, device_type: deviceType }]);
+        .insert([
+          {
+            user_email: email,
+            device_type: deviceType,
+            logged_in_at: new Date().toISOString(), // ✅ crucial for dashboard
+          },
+        ]);
 
+      console.log("Inserted login row:", inserted, "Insert error:", insertErr);
+      // ✅ Store user_id for profile use
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData?.session?.user?.id;
+      if (userId) {
+        localStorage.setItem("user_id", userId);
+      }
       alert("Login successful!");
       navigate("/explore");
     }

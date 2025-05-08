@@ -27,12 +27,26 @@ const Register = () => {
     const user = authData.user;
 
     if (user) {
-      const { error: dbError } = await supabase
+      // Insert into your original "users" table
+      const { error: dbError1 } = await supabase
         .from("users")
         .insert([{ id: user.id, email, name, last_name: lastName }]);
 
-      if (dbError) {
-        alert(dbError.message);
+      // Insert into "user_profiles" table for profile page
+      const { error: dbError2 } = await supabase.from("user_profiles").insert([
+        {
+          id: user.id,
+          email: user.email,
+          full_name: name + " " + lastName,
+          avatar_url: "", // optional: can be updated later
+          bio: "", // default empty
+        },
+      ]);
+
+      if (dbError1 || dbError2) {
+        alert(
+          dbError1?.message || dbError2?.message || "Something went wrong..."
+        );
       } else {
         alert("Account created!");
         navigate("/login");

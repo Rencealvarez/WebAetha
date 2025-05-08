@@ -39,11 +39,18 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             {session && (
-              <li className="nav-item">
-                <Link to="/local-voices" className="nav-link text-white ">
-                  🧑‍🤝‍🧑 Local Voices
-                </Link>
-              </li>
+              <>
+                <li className="nav-item">
+                  <Link to="/local-voices" className="nav-link text-white ">
+                    🧑‍🤝‍🧑 Local Voices
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/profile" className="nav-link text-white">
+                    Profile
+                  </Link>
+                </li>
+              </>
             )}
             <li className="nav-item">
               <button
