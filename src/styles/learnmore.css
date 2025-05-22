@@ -65,7 +65,7 @@ body {
 }
 
 .back-link {
-  color: white;
+  color: white !important;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -74,7 +74,8 @@ body {
 }
 
 .back-link:hover {
-  color: var(--secondary-color);
+  color: white !important;
+  opacity: 0.8;
 }
 
 /* Hero Section */

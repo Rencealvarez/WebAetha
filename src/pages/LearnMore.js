@@ -127,10 +127,10 @@ const LearnMore = () => {
           <div className="d-flex align-items-center">
             <Link
               to="/explore"
-              className="back-link"
+              className="back-link text-white"
               aria-label="Back to explore page"
             >
-              <i className="fas fa-arrow-left"></i>
+              <i className="fas fa-arrow-left text-white"></i>
               Back
             </Link>
           </div>
