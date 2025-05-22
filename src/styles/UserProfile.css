@@ -221,13 +221,6 @@
   margin-bottom: 2rem;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 1rem;
-  align-items: center;
-}
-
 .label {
   font-weight: 600;
   color: #495057;
@@ -345,11 +338,6 @@
 
   .profile-content {
     padding: 1.5rem;
-  }
-
-  .row {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
   }
 
   .details {
