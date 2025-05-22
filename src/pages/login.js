@@ -76,6 +76,11 @@ const Login = () => {
                 required
               />
             </div>
+            <p className="text-end mt-2">
+              <Link to="/update-password" className="text-green">
+                Forgot Password?
+              </Link>
+            </p>
           </div>
           <button type="submit" className="btn btn-success w-100">
             Sign In

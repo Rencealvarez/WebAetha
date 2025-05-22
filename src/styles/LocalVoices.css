@@ -1,11 +1,13 @@
 /* src/styles/LocalVoices.css */
 
 .local-voices-wall {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
+/* Header and Navigation */
 .back-btn {
   background: none;
   border: none;
@@ -13,79 +15,302 @@
   font-size: 1rem;
   margin-bottom: 1rem;
   cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }
 
 .back-btn:hover {
-  text-decoration: underline;
+  background-color: #f0f0f0;
+  text-decoration: none;
 }
 
+.back-btn:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+}
+
+/* Search and Filter Controls */
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.controls input[type="search"] {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.controls select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+/* Messages */
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Form Styles */
 .voice-form {
   background: #fff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
-.voice-form input[type="text"],
-.voice-form textarea {
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.voice-form label {
-  font-weight: bold;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.submit-btn {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 0.75rem;
   font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  border-color: #4299e1;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+}
+
+.form-group textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 0.25rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+/* File Upload */
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px dashed #ccc;
   border-radius: 4px;
+  background: #f8f9fa;
   cursor: pointer;
 }
 
-.submit-btn:hover {
-  background-color: #218838;
+.form-group input[type="file"]:hover {
+  border-color: #4299e1;
 }
 
+/* Preview Section */
+.preview-section {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.preview-section img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 4px;
+}
+
+.preview-section audio {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Submit Button */
+.voice-form button[type="submit"] {
+  width: 100%;
+  padding: 1rem;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.voice-form button[type="submit"]:hover:not(:disabled) {
+  background-color: #3182ce;
+}
+
+.voice-form button[type="submit"]:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* Stories Grid */
 .voices-grid {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .voice-card {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.voice-card img {
-  max-width: 100%;
-  border-radius: 4px;
+.voice-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.voice-card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
 }
 
 .voice-card .quote {
   font-style: italic;
-  color: #333;
+  color: #4a5568;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.voice-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 .voice-card audio {
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+}
+
+.no-stories {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .local-voices-wall {
+    padding: 0 0.5rem;
+  }
+
+  .voice-form {
+    padding: 1.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls input[type="search"],
+  .controls select {
+    width: 100%;
+  }
+
+  .voices-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .voice-card,
+  .back-btn,
+  .voice-form button[type="submit"] {
+    transition: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+  .voice-card {
+    border: 1px solid CanvasText;
+  }
+
+  .form-group input[type="text"],
+  .form-group textarea,
+  .form-group input[type="file"] {
+    border: 1px solid CanvasText;
+  }
+
+  .voice-form button[type="submit"] {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* Focus Styles */
+:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .local-voices-wall {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .voice-form,
+  .controls,
+  .back-btn {
+    display: none;
+  }
+
+  .voice-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .voice-card audio {
+    display: none;
+  }
 }

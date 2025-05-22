@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "../styles/BundlesOfRights.css";
 import BundlesOfRightsNavbar from "../components/BundlesOfRightsNavbar";
 import bg33 from "../assets/images/36.png";
+import DidYouKnowCard from "../components/DidYouKnowCard";
 
 const BundlesOfRights = () => {
   useEffect(() => {
@@ -135,7 +136,7 @@ const BundlesOfRights = () => {
           />
         </div>
       </div>
-
+      <DidYouKnowCard />
       <footer className="connect-footer text-center">
         <h4>Connect with Us</h4>
         <p className="text-white">123, Dasmariñas city, Cavite</p>

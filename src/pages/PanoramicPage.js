@@ -3,30 +3,28 @@ import { Link } from "react-router-dom";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import * as THREE from "three";
-import { quizData } from "../data/quizData";
 import { supabase } from "../supabase";
 import "../styles/panoramicpage.css";
+import DidYouKnowCard from "../components/DidYouKnowCard";
 
-const logQuizResult = async (imagePath, selectedOption, isCorrect) => {
-  await supabase.from("quiz_logs").insert([
-    {
-      image_path: imagePath,
-      selected_option: selectedOption,
-      is_correct: isCorrect,
-    },
-  ]);
-};
-
-const logFeedback = async (imagePath, emoji) => {
-  const normalizedPath = imagePath.replace(/^\//, "");
-  const { error } = await supabase
-    .from("feedback_logs")
-    .insert([{ image_path: normalizedPath, emoji: String(emoji) }]);
+const logQuizResult = async (imagePath, selectedOption, isCorrect, userId) => {
+  const quizPayload = {
+    image_path: imagePath,
+    selected_option: selectedOption,
+    is_correct: isCorrect,
+    user_id: userId,
+  };
+  // Debug log
+  console.log("[DEBUG] userId:", userId, "quizPayload:", quizPayload);
+  const { data, error } = await supabase
+    .from("quiz_logs")
+    .insert([quizPayload])
+    .select();
 
   if (error) {
-    console.error("❌ Failed to log feedback:", error.message);
+    console.error("❌ Failed to log quiz result:", error.message);
   } else {
-    console.log(`✅ Feedback logged: ${emoji} for ${normalizedPath}`);
+    console.log("✅ Quiz result logged:", data);
   }
 };
 
@@ -102,23 +100,105 @@ const FullscreenPanorama = ({ image, onClose }) => {
 };
 
 const PanoramicPage = () => {
-  const images = [
-    { src: "/3601.jpg", label: "1" },
-    { src: "/3602.jpg", label: "2" },
-    { src: "/3603.jpg", label: "3" },
-    { src: "/3604.jpg", label: "4" },
-    { src: "/3605.jpg", label: "5" },
-    { src: "/3606.jpg", label: "6" },
-    { src: "/3607.jpg", label: "7" },
-    { src: "/3608.jpg", label: "8" },
-  ];
-
+  const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizTarget, setQuizTarget] = useState(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [feedbackCounts, setFeedbackCounts] = useState({});
+  const [userBadges, setUserBadges] = useState({});
+  const [userId, setUserId] = useState(null);
+  const [quizzes, setQuizzes] = useState({});
+  const [userReactions, setUserReactions] = useState({});
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("panoramic_images")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        if (data) {
+          const formattedImages = data.map((img, index) => ({
+            src: img.url,
+            label: (index + 1).toString(),
+            id: img.id,
+          }));
+          setImages(formattedImages);
+        }
+      } catch (error) {
+        console.error("Error fetching panoramic images:", error);
+      }
+    };
+
+    const fetchQuizzes = async () => {
+      try {
+        const { data, error } = await supabase.from("quizzes").select("*");
+
+        if (error) throw error;
+
+        if (data) {
+          const quizMap = {};
+          data.forEach((quiz) => {
+            quizMap[quiz.image_id] = {
+              question: quiz.question,
+              options: quiz.options,
+              answer: quiz.answer,
+            };
+          });
+          setQuizzes(quizMap);
+        }
+      } catch (error) {
+        console.error("Error fetching quizzes:", error);
+      }
+    };
+
+    fetchImages();
+    fetchQuizzes();
+  }, []);
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        // Fetch user's badges
+        const { data: badges } = await supabase
+          .from("user_badges")
+          .select("*")
+          .eq("user_id", user.id);
+
+        if (badges) {
+          const badgeMap = {};
+          badges.forEach((badge) => {
+            badgeMap[badge.image_path] = true;
+          });
+          setUserBadges(badgeMap);
+        }
+
+        // Fetch user's reactions
+        const { data: reactions } = await supabase
+          .from("feedback_logs")
+          .select("image_path, emoji, user_id")
+          .eq("user_id", user.id);
+
+        if (reactions) {
+          const reactionMap = {};
+          reactions.forEach((reaction) => {
+            reactionMap[reaction.image_path] = reaction.emoji;
+          });
+          setUserReactions(reactionMap);
+        }
+      }
+    };
+    getCurrentUser();
+  }, []);
 
   const openFullscreen = (image) => {
     setSelectedImage(image);
@@ -128,23 +208,63 @@ const PanoramicPage = () => {
   };
 
   const closeFullscreen = () => {
-    setShowQuiz(true);
-    setQuizTarget(selectedImage);
-    setSelectedImage(null);
+    if (selectedImage) {
+      setShowQuiz(true);
+      setQuizTarget(selectedImage.id);
+      setSelectedImage(null);
+    }
   };
 
   const handleAnswer = async (option) => {
-    const isCorrect = option === quizData[quizTarget].answer;
+    // Ensure user is authenticated
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      alert("You must be logged in to answer quizzes.");
+      return;
+    }
+
+    const imageSrc = images.find((img) => img.id === quizTarget)?.src;
+    if (!imageSrc) {
+      console.error("No image source found for badge!");
+      return;
+    }
+
+    const isCorrect = option === quizzes[quizTarget]?.answer;
     setUserAnswer(option);
     setShowResult(true);
 
     if (isCorrect) {
-      const badges = JSON.parse(localStorage.getItem("badges") || "{}");
-      badges[quizTarget] = true;
-      localStorage.setItem("badges", JSON.stringify(badges));
+      // Add badge to database only if correct and not already awarded
+      if (!userBadges[imageSrc]) {
+        const badgePayload = {
+          user_id: user.id,
+          image_path: imageSrc,
+          earned_at: new Date().toISOString(),
+        };
+        const { error: badgeError } = await supabase
+          .from("user_badges")
+          .insert([badgePayload]);
+        if (!badgeError) {
+          setUserBadges((prev) => ({
+            ...prev,
+            [imageSrc]: true,
+          }));
+        } else {
+          console.error("❌ Failed to insert badge:", badgeError.message);
+        }
+      }
     }
 
-    await logQuizResult(quizTarget, option, isCorrect);
+    // Always log the quiz result
+    const quizPayload = {
+      image_path: imageSrc,
+      selected_option: option,
+      is_correct: isCorrect,
+      user_id: user.id,
+    };
+    await logQuizResult(imageSrc, option, isCorrect, user.id);
 
     setTimeout(() => {
       setShowQuiz(false);
@@ -154,19 +274,18 @@ const PanoramicPage = () => {
   };
 
   const hasBadge = (image) => {
-    const badges = JSON.parse(localStorage.getItem("badges") || "{}");
-    return badges[image];
+    return userBadges[image] || false;
   };
 
   const fetchFeedbackCounts = async () => {
-    const { data, error } = await supabase.from("feedback_logs").select("*");
+    const { data, error } = await supabase
+      .from("feedback_logs")
+      .select("image_path, emoji, user_id");
 
     if (error) {
-      console.error("❌ Error fetching feedback logs:", error.message);
+      console.error("❌ Error fetching reaction counts:", error.message);
       return;
     }
-
-    console.log("✅ Raw feedback logs:", data);
 
     const counts = {};
     data.forEach(({ image_path, emoji }) => {
@@ -176,8 +295,70 @@ const PanoramicPage = () => {
       counts[normalized][emoji]++;
     });
 
-    console.log("✅ Grouped feedbackCounts:", counts);
     setFeedbackCounts(counts);
+  };
+
+  const handleReaction = async (imagePath, emoji) => {
+    // Ensure user is authenticated
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      alert("You must be logged in to react to images.");
+      return;
+    }
+
+    const normalizedPath = imagePath.replace(/^\//, "");
+
+    // Check if user already has a reaction
+    const existingReaction = userReactions[normalizedPath];
+
+    try {
+      // Start a transaction: Remove previous reaction for this user and image
+      const { error: deleteError } = await supabase
+        .from("feedback_logs")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("image_path", normalizedPath);
+
+      if (deleteError) throw deleteError;
+
+      // If clicking the same reaction, just remove it
+      if (existingReaction === emoji) {
+        setUserReactions((prev) => {
+          const newReactions = { ...prev };
+          delete newReactions[normalizedPath];
+          return newReactions;
+        });
+        await fetchFeedbackCounts();
+        return;
+      }
+
+      // Insert new reaction
+      const { error: insertError } = await supabase
+        .from("feedback_logs")
+        .insert([
+          {
+            user_id: user.id,
+            image_path: normalizedPath,
+            emoji: emoji,
+            submitted_at: new Date().toISOString(),
+          },
+        ]);
+
+      if (insertError) throw insertError;
+
+      // Update local state
+      setUserReactions((prev) => ({
+        ...prev,
+        [normalizedPath]: emoji,
+      }));
+
+      await fetchFeedbackCounts();
+    } catch (error) {
+      console.error("Error handling reaction:", error.message);
+      alert("Failed to update reaction. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -190,39 +371,6 @@ const PanoramicPage = () => {
       setTimeout(() => header.scrollIntoView({ behavior: "smooth" }), 300);
     }
   }, []);
-
-  const DidYouKnowCard = () => {
-    const [index, setIndex] = useState(0);
-    const { facts } = require("../data/didYouKnowData");
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setIndex((prev) => (prev + 1) % facts.length);
-      }, 5000);
-      return () => clearInterval(interval);
-    }, [facts.length]);
-
-    return (
-      <div
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          background: "#fff",
-          borderLeft: "4px solid #4CAF50",
-          padding: "15px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-          maxWidth: "250px",
-          fontSize: "14px",
-          zIndex: 999,
-        }}
-      >
-        <h6 style={{ margin: "0 0 5px", fontWeight: "bold" }}>Did You Know?</h6>
-        <p style={{ margin: 0 }}>{facts[index]}</p>
-      </div>
-    );
-  };
 
   return (
     <div className="panoramic-page">
@@ -302,7 +450,7 @@ const PanoramicPage = () => {
               <div className="col" key={index}>
                 <div
                   className="panorama-card"
-                  onClick={() => openFullscreen(item.src)}
+                  onClick={() => openFullscreen(item)}
                 >
                   <div className="canvas-wrapper">
                     <PanoramaViewer image={item.src} />
@@ -315,19 +463,28 @@ const PanoramicPage = () => {
                     className="feedback-buttons text-center mt-2"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {["👍", "😐", "👎"].map((emoji) => (
-                      <button
-                        key={emoji}
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          await logFeedback(item.src, emoji);
-                          await fetchFeedbackCounts();
-                        }}
-                        className="btn btn-sm mx-1 btn-outline-secondary"
-                      >
-                        {emoji} {feedback[emoji] || 0}
-                      </button>
-                    ))}
+                    {["👍", "😐", "👎"].map((emoji) => {
+                      const isActive = userReactions[imgKey] === emoji;
+                      return (
+                        <button
+                          key={emoji}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleReaction(item.src, emoji);
+                          }}
+                          className={`btn btn-sm mx-1 ${
+                            isActive ? "btn-primary" : "btn-outline-secondary"
+                          }`}
+                          title={
+                            isActive
+                              ? "Click to remove reaction"
+                              : "Click to react"
+                          }
+                        >
+                          {emoji} {feedback[emoji] || 0}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -337,13 +494,16 @@ const PanoramicPage = () => {
       </section>
 
       {selectedImage && (
-        <FullscreenPanorama image={selectedImage} onClose={closeFullscreen} />
+        <FullscreenPanorama
+          image={selectedImage.src}
+          onClose={closeFullscreen}
+        />
       )}
 
-      {showQuiz && quizData[quizTarget] && (
+      {showQuiz && quizzes[quizTarget] && (
         <div className="quiz-popup text-center mt-4">
-          <h5>{quizData[quizTarget].question}</h5>
-          {quizData[quizTarget].options.map((opt, i) => (
+          <h5>{quizzes[quizTarget].question}</h5>
+          {quizzes[quizTarget].options.map((opt, i) => (
             <button
               key={i}
               className={`btn m-2 ${
@@ -357,16 +517,14 @@ const PanoramicPage = () => {
           ))}
           {showResult && (
             <p className="fw-bold mt-2">
-              {userAnswer === quizData[quizTarget].answer
+              {userAnswer === quizzes[quizTarget].answer
                 ? "✅ Correct! Badge unlocked!"
                 : "❌ Incorrect!"}
             </p>
           )}
         </div>
       )}
-
       <DidYouKnowCard />
-
       <footer className="footer-section">
         <div className="text-center">
           <h3>Connect with Us</h3>

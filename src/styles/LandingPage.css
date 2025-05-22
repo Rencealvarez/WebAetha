@@ -51,6 +51,10 @@
   padding: 40px 20px;
 }
 
+.contact-section h2 {
+  color: white !important;
+}
+
 .circle {
   width: 70px;
   height: 70px;
@@ -283,4 +287,19 @@
   display: flex;
   gap: 20px;
   color: white;
+}
+
+.display-4 {
+  font-size: 3.5rem !important;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.5rem !important;
+}
+
+.rights-header h2 {
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }

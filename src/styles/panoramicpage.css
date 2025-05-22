@@ -49,6 +49,17 @@
   border-radius: 20px;
   padding: 8px 16px;
   font-size: 16px;
+  background: transparent !important;
+}
+
+.feedback-buttons button.btn-primary {
+  background: transparent !important;
+  color: #000000;
+  border: 2px solid #0dfd39;
+}
+
+.feedback-buttons button.btn-outline-secondary {
+  background: transparent !important;
 }
 
 .feedback-buttons button:hover {

@@ -30,6 +30,13 @@
   z-index: 1;
 }
 
+.rights-header h1,
+.rights-header h2 {
+  color: #fff !important;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
 .rights-header h1 {
   font-size: 100px;
   opacity: 0.5;
@@ -43,6 +50,8 @@
   margin-top: -20px;
   position: relative;
   z-index: 2;
+  text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.9) !important;
+  margin-top: 0 !important;
 }
 
 .bundles-content {

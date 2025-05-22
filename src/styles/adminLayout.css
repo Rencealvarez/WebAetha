@@ -60,3 +60,15 @@
 .logout-btn:hover {
   background-color: #19b719;
 }
+
+.admin-dashboard {
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  padding: 2vw 2vw 2vw 2vw;
+  /* overflow-y: auto; */ /* <-- This is now disabled */
+  overflow-x: hidden;
+}
