@@ -1,13 +1,17 @@
 /* src/styles/UserProfile.css */
 
-.profile-card,
-.cover-wrapper {
+.profile-card {
   max-width: 800px;
   margin: 2rem auto;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  overflow: visible;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background: #fff;
+  transition: transform 0.2s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-2px);
 }
 
 .cover-wrapper {
@@ -21,43 +25,52 @@
   height: 100%;
   object-fit: cover;
   border-radius: 20px 20px 0 0;
+  transition: filter 0.3s ease;
+}
+
+/* Cover photo selection feedback */
+.cover-wrapper.has-selected-image .cover-photo {
+  filter: brightness(0.7);
+}
+
+.cover-wrapper.has-selected-image::after {
+  content: "Image Selected";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
 }
 
 .cover-edit-icon {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.85);
-  padding: 6px;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 1.1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
-.profile-content {
-  position: relative;
+.cover-edit-icon:hover {
   background: #fff;
-  padding: 2rem;
-  text-align: center;
-  border-radius: 0 0 20px 20px;
+  transform: scale(1.05);
 }
 
-.edit-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: #f0f0f0;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
+/* Avatar selection feedback */
 .avatar-wrapper {
-  position: relative;
-  display: inline-block;
-  margin-top: -80px;
+  position: absolute;
+  top: 180px;
+  left: 24px;
+  z-index: 2;
 }
 
 .avatar-large {
@@ -66,137 +79,623 @@
   border-radius: 50%;
   border: 4px solid #fff;
   object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.avatar-wrapper.has-selected-image .avatar-large {
+  filter: brightness(0.7);
+}
+
+.avatar-wrapper.has-selected-image::after {
+  content: "Image Selected";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .avatar-edit-icon {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.85);
-  padding: 4px;
+  bottom: 4px;
+  right: 4px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 0.9rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 3;
+}
+
+/* File input styling */
+.cover-edit-icon input[type="file"],
+.avatar-edit-icon input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Loading state */
+.cover-wrapper.is-uploading .cover-photo,
+.avatar-wrapper.is-uploading .avatar-large {
+  filter: brightness(0.5);
+}
+
+.cover-wrapper.is-uploading::after,
+.avatar-wrapper.is-uploading::after {
+  content: "Uploading...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.profile-content {
+  position: relative;
+  background: #fff;
+  padding: 2rem;
+  text-align: left;
+  border-radius: 0 0 20px 20px;
+}
+
+.edit-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #ffffff;
+  border: 1.5px solid #2c3e50;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.edit-btn::before {
+  content: "✎";
+  font-size: 1rem;
+  margin-right: 4px;
+  opacity: 0.9;
+}
+
+.info-block {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .name {
-  margin: 1rem 0 0.5rem;
+  margin: 0 0 0.5rem;
   font-size: 1.75rem;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 
 .email {
   color: #666;
   margin-bottom: 1rem;
+  font-size: 0.95rem;
 }
 
 .eye-icon {
   font-size: 1.2rem;
   color: #888;
   margin-bottom: 1.5rem;
+  transition: color 0.2s ease;
+}
+
+.eye-icon:hover {
+  color: #666;
 }
 
 .details {
   display: grid;
-  row-gap: 1rem;
+  row-gap: 1.25rem;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1rem;
+  align-items: center;
 }
 
 .label {
   font-weight: 600;
-  text-align: left;
+  color: #495057;
+  font-size: 0.95rem;
 }
 
 .value {
-  text-align: left;
+  color: #212529;
 }
 
 .details input[type="text"] {
   width: 100%;
-  padding: 0.4rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.6rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: #fff;
 }
 
-.icon {
-  color: #888;
+.details input[type="text"]:focus {
+  outline: none;
+  border-color: #16bb52;
+  box-shadow: 0 0 0 3px rgba(22, 187, 82, 0.1);
 }
 
 .actions {
-  text-align: right;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
   margin-top: 1.5rem;
-  justify-content: flex-start;
 }
 
 .btn-back,
 .btn-save {
-  padding: 0.6rem 1.2rem;
+  padding: 0.7rem 1.4rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .btn-back {
-  background-color: #16bb52;
-  color: #fff;
+  background: #ffffff;
+  border: 1.5px solid #2c3e50;
+  color: #2c3e50;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn-save {
-  background-color: #28a745;
-  color: #fff;
+  background: #ffffff;
+  border: 1.5px solid #2c3e50;
+  color: #2c3e50;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .action-save {
-  text-align: left;
-  margin-top: 1rem;
+  position: absolute;
+  top: 70px;
+  right: 16px;
+  margin-top: 0;
 }
-/* lay out avatar + info side by side, flush left */
-.profile-header {
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-card {
+    margin: 1rem;
+    border-radius: 16px;
+  }
+
+  .cover-wrapper {
+    height: 200px;
+  }
+
+  .avatar-wrapper {
+    top: 140px;
+  }
+
+  .avatar-large {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-content {
+    padding: 1.5rem;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .details {
+    padding: 1.25rem;
+  }
+
+  .edit-btn {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+
+  .action-save {
+    top: 60px;
+  }
+
+  .btn-save {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+
+  .btn-back {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cover-wrapper {
+    height: 160px;
+  }
+
+  .avatar-wrapper {
+    top: 100px;
+  }
+
+  .avatar-large {
+    width: 80px;
+    height: 80px;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .details {
+    padding: 1rem;
+  }
+
+  .edit-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+
+  .action-save {
+    top: 55px;
+  }
+
+  .btn-save {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+
+  .btn-back {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+}
+
+.crop-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  text-align: left;
-  margin-top: -80px; /* keep it overlapping the cover like before */
+  justify-content: center;
+  z-index: 1000;
 }
 
-/* ensure the white panel no longer centers everything */
-.profile-content {
-  text-align: left;
+.crop-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* you already have avatar-wrapper positioning & .avatar-large */
-/* just override its margin if needed */
-.avatar-wrapper {
-  margin-top: 0; /* moved into .profile-header */
-}
-.profile-content .actions {
-  display: flex !important;
-  justify-content: flex-start !important;
-  margin-top: 1.5rem;
+.crop-container img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
 }
 
-/* and make sure the button itself doesn’t float or align right */
-.btn-back {
-  margin-left: auto !important;
-  float: none !important;
+.crop-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
 }
-.cover-wrapper {
+
+.btn-crop,
+.btn-cancel {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-crop {
+  background: #16bb52;
+  color: white;
+}
+
+.btn-cancel {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.btn-crop:hover {
+  background: #14a848;
+  transform: translateY(-1px);
+}
+
+.btn-cancel:hover {
+  background: #dee2e6;
+  transform: translateY(-1px);
+}
+
+/* Ensure the crop area is visible */
+.ReactCrop {
   position: relative;
-  height: 240px;
-  overflow: visible;
-  border-radius: 12px 12px 0 0; /* <-- curve only the top corners */
+  display: inline-block;
+  cursor: crosshair;
+  overflow: hidden;
+  max-width: 100%;
 }
 
-.cover-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.ReactCrop:focus {
+  outline: none;
 }
 
-/* 2) Overlay the avatar halfway over the cover */
-.avatar-wrapper {
+.ReactCrop--disabled {
+  cursor: inherit;
+}
+
+.ReactCrop__drag-handle {
   position: absolute;
-  top: 235px; /* or whatever you need */
-  left: 24px;
-  transform: translateY(-50%);
-  z-index: 2;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+}
+
+.ReactCrop__drag-handle.ord-nw {
+  top: 0;
+  left: 0;
+  margin-top: -5px;
+  margin-left: -5px;
+  cursor: nw-resize;
+}
+
+.ReactCrop__drag-handle.ord-n {
+  top: 0;
+  left: 50%;
+  margin-top: -5px;
+  margin-left: -5px;
+  cursor: n-resize;
+}
+
+.ReactCrop__drag-handle.ord-ne {
+  top: 0;
+  right: 0;
+  margin-top: -5px;
+  margin-right: -5px;
+  cursor: ne-resize;
+}
+
+.ReactCrop__drag-handle.ord-e {
+  top: 50%;
+  right: 0;
+  margin-top: -5px;
+  margin-right: -5px;
+  cursor: e-resize;
+}
+
+.ReactCrop__drag-handle.ord-se {
+  bottom: 0;
+  right: 0;
+  margin-bottom: -5px;
+  margin-right: -5px;
+  cursor: se-resize;
+}
+
+.ReactCrop__drag-handle.ord-s {
+  bottom: 0;
+  left: 50%;
+  margin-bottom: -5px;
+  margin-left: -5px;
+  cursor: s-resize;
+}
+
+.ReactCrop__drag-handle.ord-sw {
+  bottom: 0;
+  left: 0;
+  margin-bottom: -5px;
+  margin-left: -5px;
+  cursor: sw-resize;
+}
+
+.ReactCrop__drag-handle.ord-w {
+  top: 50%;
+  left: 0;
+  margin-top: -5px;
+  margin-left: -5px;
+  cursor: w-resize;
+}
+
+.ReactCrop__drag-bar {
+  position: absolute;
+}
+
+.ReactCrop__drag-bar.ord-n {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  margin-top: -3px;
+}
+
+.ReactCrop__drag-bar.ord-e {
+  right: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  margin-right: -3px;
+}
+
+.ReactCrop__drag-bar.ord-s {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  margin-bottom: -3px;
+}
+
+.ReactCrop__drag-bar.ord-w {
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  margin-left: -3px;
+}
+
+.ReactCrop--disabled .ReactCrop__drag-handle,
+.ReactCrop--disabled .ReactCrop__drag-bar {
+  cursor: inherit;
+}
+
+.ReactCrop--new-crop .ReactCrop__drag-handle,
+.ReactCrop--new-crop .ReactCrop__drag-bar,
+.ReactCrop--fixed-aspect .ReactCrop__drag-handle.ord-n,
+.ReactCrop--fixed-aspect .ReactCrop__drag-handle.ord-e,
+.ReactCrop--fixed-aspect .ReactCrop__drag-handle.ord-s,
+.ReactCrop--fixed-aspect .ReactCrop__drag-handle.ord-w,
+.ReactCrop--fixed-aspect .ReactCrop__drag-bar.ord-n,
+.ReactCrop--fixed-aspect .ReactCrop__drag-bar.ord-e,
+.ReactCrop--fixed-aspect .ReactCrop__drag-bar.ord-s,
+.ReactCrop--fixed-aspect .ReactCrop__drag-bar.ord-w {
+  cursor: move;
+}
+
+.ReactCrop--disabled .ReactCrop__drag-bar {
+  display: none;
+}
+
+.ReactCrop__disabled {
+  cursor: inherit;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-handle,
+.ReactCrop__disabled .ReactCrop__drag-bar {
+  cursor: inherit;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-bar {
+  display: none;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-handle {
+  display: none;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-nw,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-ne,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-se,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-sw {
+  display: none;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-n,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-e,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-s,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-w {
+  display: none;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-n,
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-e,
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-s,
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-w {
+  display: none;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-nw,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-ne,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-se,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-sw {
+  display: none;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-n,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-e,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-s,
+.ReactCrop__disabled .ReactCrop__drag-handle.ord-w {
+  display: none;
+}
+
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-n,
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-e,
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-s,
+.ReactCrop__disabled .ReactCrop__drag-bar.ord-w {
+  display: none;
 }
