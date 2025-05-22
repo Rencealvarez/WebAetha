@@ -14,10 +14,23 @@
   border-radius: 8px;
 }
 
-.back-link {
+.register-box .back-link {
   display: block;
   margin-bottom: 10px;
-  color: #333;
+  color: #000000 !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-box .back-link:hover {
+  color: #000000 !important;
+  opacity: 0.8;
+}
+
+.register-box .back-link:focus,
+.register-box .back-link:active {
+  outline: none;
+  box-shadow: none;
 }
 
 .password-container {
