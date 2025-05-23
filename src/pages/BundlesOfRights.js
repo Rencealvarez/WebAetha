@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import "../styles/BundlesOfRights.css";
 import BundlesOfRightsNavbar from "../components/BundlesOfRightsNavbar";
 import bg33 from "../assets/images/36.png";
+import bg34 from "../assets/images/37.png";
+import bg35 from "../assets/images/39.png";
+import bg36 from "../assets/images/40.png";
 import DidYouKnowCard from "../components/DidYouKnowCard";
 
 const BundlesOfRights = () => {
@@ -74,7 +77,7 @@ const BundlesOfRights = () => {
         </div>
         <div className="content-right">
           <img
-            src={bg33}
+            src={bg34}
             style={{ width: "500px", height: "300px" }}
             alt="Self-Governance"
             className="img-fluid"
@@ -99,7 +102,7 @@ const BundlesOfRights = () => {
         </div>
         <div className="content-right">
           <img
-            src={bg33}
+            src={bg35}
             style={{ width: "500px", height: "300px" }}
             alt="Social Justice"
             className="img-fluid"
@@ -129,7 +132,7 @@ const BundlesOfRights = () => {
         </div>
         <div className="content-right">
           <img
-            src={bg33}
+            src={bg36}
             style={{ width: "500px", height: "300px" }}
             alt="Cultural Integrity"
             className="img-fluid"

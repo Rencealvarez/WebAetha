@@ -34,7 +34,7 @@ const NewUsers = () => {
       // Fetch profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("user_profiles")
-        .select("id, avatar_url");
+        .select("*");
       if (profilesError) throw profilesError;
       // Merge users with profiles by id
       const merged = (users || []).map((user) => {
