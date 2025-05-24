@@ -45,7 +45,7 @@ const AdminLogin = () => {
         toast.success("Welcome, Admin!");
         setTimeout(() => {
           navigate("/admin-page/dashboard");
-        }, 2000); // 1 second delay
+        }, 2000); // delay
       }
     } catch (error) {
       toast.error(

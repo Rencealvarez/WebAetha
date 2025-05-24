@@ -10,8 +10,13 @@
   width: 350px;
   padding: 20px;
   background: white;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
 }
 
 .login-box .back-link {
@@ -36,9 +41,11 @@
 .password-container {
   position: relative;
 }
+
 .text-black {
   color: black;
 }
+
 .text-green {
   color: green;
 }
