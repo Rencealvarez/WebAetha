@@ -22,7 +22,6 @@
     "react-chartjs-2": "^5.3.0",
     "react-csv": "^2.2.2",
     "react-datepicker": "^8.3.0",
-    "react-daterange-picker": "^2.0.1",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-image-crop": "^11.0.10",
