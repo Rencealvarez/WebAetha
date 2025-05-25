@@ -14,6 +14,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [notification, setNotification] = useState({ message: "", type: "" });
+  const [confirmationSent, setConfirmationSent] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,53 +94,78 @@ const Register = () => {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            name,
+            last_name: lastName,
+          },
+          emailRedirectTo: `${window.location.origin}/login`,
+        },
       });
 
       if (authError) {
-        setNotification({ message: authError.message, type: "error" });
-        return;
-      }
+        console.error("Signup error:", authError);
+        let errorMessage = "Failed to create account. Please try again.";
 
-      const user = authData.user;
-
-      if (user) {
-        // Insert into your original "users" table
-        const { error: dbError1 } = await supabase
-          .from("users")
-          .insert([{ id: user.id, email, name, last_name: lastName }]);
-
-        // Insert into "user_profiles" table for profile page
-        const { error: dbError2 } = await supabase
-          .from("user_profiles")
-          .insert([
-            {
-              id: user.id,
-              email: user.email,
-              full_name: name + " " + lastName,
-              avatar_url: "",
-              bio: "",
-            },
-          ]);
-
-        if (dbError1 || dbError2) {
-          setNotification({
-            message:
-              dbError1?.message ||
-              dbError2?.message ||
-              "Something went wrong...",
-            type: "error",
-          });
-          return;
+        if (authError.message.includes("already registered")) {
+          errorMessage =
+            "This email is already registered. Please use a different email or try logging in.";
+        } else if (authError.message.includes("password")) {
+          errorMessage =
+            "Password is too weak. Please use a stronger password.";
         }
 
         setNotification({
-          message: "Account created successfully! You can now log in.",
-          type: "success",
+          message: errorMessage,
+          type: "error",
         });
-        setTimeout(() => navigate("/login"), 1800);
+        return;
       }
+
+      const user = authData?.user;
+
+      if (!user) {
+        setNotification({
+          message: "Failed to create account. Please try again.",
+          type: "error",
+        });
+        return;
+      }
+
+      // Insert into "user_profiles" table for profile page
+      const { error: dbError } = await supabase.from("user_profiles").insert([
+        {
+          id: user.id,
+          email: user.email,
+          full_name: name + " " + lastName,
+          avatar_url: "",
+          bio: "",
+        },
+      ]);
+
+      if (dbError) {
+        console.error("Database error:", dbError);
+        setNotification({
+          message:
+            "Account created but profile setup failed. Please contact support.",
+          type: "error",
+        });
+        return;
+      }
+
+      setConfirmationSent(true);
+      setNotification({
+        message:
+          "Registration successful! Please check your email to confirm your account.",
+        type: "success",
+      });
+      setTimeout(() => navigate("/login"), 5000);
     } catch (error) {
-      setNotification({ message: error.message, type: "error" });
+      console.error("Registration error:", error);
+      setNotification({
+        message: "An unexpected error occurred. Please try again.",
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -157,87 +183,102 @@ const Register = () => {
           ← Back to Login
         </Link>
         <h3 className="text-center">Create Your Account</h3>
-        <form onSubmit={handleRegister}>
-          <div className="form-group">
-            <label>First Name</label>
-            <input
-              type="text"
-              className={`form-control ${errors.name ? "is-invalid" : ""}`}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your first name"
-              required
-            />
-            {errors.name && (
-              <div className="invalid-feedback">{errors.name}</div>
-            )}
+        {confirmationSent ? (
+          <div className="alert alert-success">
+            <h4>Registration Successful!</h4>
+            <p>
+              Please check your email to confirm your account. You will be
+              redirected to the login page in a few seconds.
+            </p>
+            <p>If you don't see the email, please check your spam folder.</p>
           </div>
-          <div className="form-group">
-            <label>Last Name</label>
-            <input
-              type="text"
-              className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Enter your last name"
-              required
-            />
-            {errors.lastName && (
-              <div className="invalid-feedback">{errors.lastName}</div>
-            )}
-          </div>
-          <div className="form-group">
-            <label>Email Address</label>
-            <input
-              type="email"
-              className={`form-control ${errors.email ? "is-invalid" : ""}`}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
-              required
-            />
-            {errors.email && (
-              <div className="invalid-feedback">{errors.email}</div>
-            )}
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              className={`form-control ${errors.password ? "is-invalid" : ""}`}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Create a strong password"
-              required
-            />
-            <div className="password-strength">
-              <div
-                className="password-strength-bar"
-                style={{
-                  width: `${(passwordStrength / 5) * 100}%`,
-                  backgroundColor: getPasswordStrengthColor(),
-                }}
+        ) : (
+          <form onSubmit={handleRegister}>
+            <div className="form-group">
+              <label>First Name</label>
+              <input
+                type="text"
+                className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your first name"
+                required
               />
+              {errors.name && (
+                <div className="invalid-feedback">{errors.name}</div>
+              )}
             </div>
-            {errors.password && (
-              <div className="invalid-feedback">{errors.password}</div>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="btn btn-success w-100"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="loading-spinner"></span>
-                Creating Account...
-              </>
-            ) : (
-              "Create Account"
-            )}
-          </button>
-        </form>
+            <div className="form-group">
+              <label>Last Name</label>
+              <input
+                type="text"
+                className={`form-control ${
+                  errors.lastName ? "is-invalid" : ""
+                }`}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Enter your last name"
+                required
+              />
+              {errors.lastName && (
+                <div className="invalid-feedback">{errors.lastName}</div>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                required
+              />
+              {errors.email && (
+                <div className="invalid-feedback">{errors.email}</div>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                className={`form-control ${
+                  errors.password ? "is-invalid" : ""
+                }`}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create a strong password"
+                required
+              />
+              <div className="password-strength">
+                <div
+                  className="password-strength-bar"
+                  style={{
+                    width: `${(passwordStrength / 5) * 100}%`,
+                    backgroundColor: getPasswordStrengthColor(),
+                  }}
+                />
+              </div>
+              {errors.password && (
+                <div className="invalid-feedback">{errors.password}</div>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="btn btn-success w-100"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Creating Account...
+                </>
+              ) : (
+                "Create Account"
+              )}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -20,10 +21,34 @@ const Login = () => {
     return password.length >= 6;
   };
 
+  const handleResendConfirmation = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: email,
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        setError(
+          "Confirmation email has been resent. Please check your inbox."
+        );
+        setShowResendConfirmation(false);
+      }
+    } catch (err) {
+      setError("Failed to resend confirmation email. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
+    setShowResendConfirmation(false);
 
     // Validate inputs
     if (!validateEmail(email)) {
@@ -39,22 +64,27 @@ const Login = () => {
     }
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      console.log("Attempting login with email:", email);
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
       });
 
       if (error) {
-        // Handle specific authentication errors
-        if (error.message.includes("Invalid login credentials")) {
-          setError("Invalid email or password. Please try again.");
-        } else if (error.message.includes("Email not confirmed")) {
+        console.error("Login error details:", error);
+        if (error.message.includes("Email not confirmed")) {
           setError("Please verify your email address before logging in.");
+          setShowResendConfirmation(true);
+        } else if (error.message.includes("Invalid login credentials")) {
+          setError("Invalid email or password. Please try again.");
         } else {
-          setError(error.message);
+          setError(`Authentication error: ${error.message}`);
         }
         return;
       }
+
+      console.log("Login successful, user data:", data);
 
       // Detect device type
       const userAgent = navigator.userAgent;
@@ -82,8 +112,8 @@ const Login = () => {
 
       navigate("/explore");
     } catch (err) {
+      console.error("Unexpected login error:", err);
       setError("An unexpected error occurred. Please try again.");
-      console.error("Login error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -99,6 +129,17 @@ const Login = () => {
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}
+            {showResendConfirmation && (
+              <div className="mt-2">
+                <button
+                  className="btn btn-link p-0"
+                  onClick={handleResendConfirmation}
+                  disabled={isLoading}
+                >
+                  Resend confirmation email
+                </button>
+              </div>
+            )}
           </div>
         )}
         <form onSubmit={handleLogin}>
@@ -129,7 +170,7 @@ const Login = () => {
             </div>
             <div className="d-flex justify-content-end mt-2">
               <Link
-                to="/update-password"
+                to="/request-password-reset"
                 className="text-green text-decoration-none"
               >
                 Forgot Password?

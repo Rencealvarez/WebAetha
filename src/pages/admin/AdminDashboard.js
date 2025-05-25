@@ -38,7 +38,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       const [userRes, loginRes, loginRaw] = await Promise.all([
-        supabase.from("users").select("*", { count: "exact", head: true }),
+        supabase
+          .from("user_profiles")
+          .select("*", { count: "exact", head: true }),
         supabase.from("logins").select("*", { count: "exact", head: true }),
         supabase.from("logins").select("logged_in_at, device_type, user_email"),
       ]);

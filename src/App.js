@@ -12,6 +12,7 @@ import PanoramicPage from "./pages/PanoramicPage";
 import LocalVoices from "./pages/LocalVoices";
 import UserProfile from "./pages/UserProfile";
 import UpdatePasswordPage from "./pages/ForgotPasswordPage";
+import RequestPasswordResetPage from "./pages/RequestPasswordResetPage";
 
 import AdminLayout from "./pages/admin/AdminLayout";
 import Admin from "./pages/admin/Admin";
@@ -43,6 +44,14 @@ const App = () => {
           <Route path="/local-voices" element={<LocalVoices />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/update-password" element={<UpdatePasswordPage />} />
+          <Route
+            path="/update-password/:access_token"
+            element={<UpdatePasswordPage />}
+          />
+          <Route
+            path="/request-password-reset"
+            element={<RequestPasswordResetPage />}
+          />
 
           {/* ✅ Nested Admin Routes */}
           <Route path="/admin-page" element={<AdminLayout />}>

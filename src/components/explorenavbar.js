@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../supabase";
+import LogoutConfirmation from "./LogoutConfirmation";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -21,6 +23,11 @@ const Navbar = () => {
       listener.subscription.unsubscribe();
     };
   }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -55,7 +62,7 @@ const Navbar = () => {
             <li className="nav-item">
               <button
                 className="nav-link btn btn-link text-white"
-                onClick={() => navigate("/login")}
+                onClick={() => setShowLogoutConfirm(true)}
               >
                 Logout
               </button>
@@ -63,6 +70,11 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
+      <LogoutConfirmation
+        show={showLogoutConfirm}
+        onHide={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+      />
     </nav>
   );
 };

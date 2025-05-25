@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
 import "../../styles/adminLayout.css";
+import LogoutConfirmation from "../../components/LogoutConfirmation";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -36,7 +38,10 @@ const AdminLayout = () => {
               <Link to="/admin-page/content">🖼️ Content Management</Link>
             </li>
             <li>
-              <button className="logout-btn" onClick={handleLogout}>
+              <button
+                className="logout-btn"
+                onClick={() => setShowLogoutConfirm(true)}
+              >
                 Logout
               </button>
             </li>
@@ -46,6 +51,11 @@ const AdminLayout = () => {
       <main className="main-content">
         <Outlet />
       </main>
+      <LogoutConfirmation
+        show={showLogoutConfirm}
+        onHide={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+      />
     </div>
   );
 };

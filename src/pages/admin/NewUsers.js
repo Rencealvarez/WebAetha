@@ -26,9 +26,8 @@ const NewUsers = () => {
       setError(null);
       // Fetch users
       const { data: users, error: usersError } = await supabase
-        .from("users")
+        .from("user_profiles")
         .select("*")
-        .order("created_at", { ascending: false })
         .limit(10);
       if (usersError) throw usersError;
       // Fetch profiles

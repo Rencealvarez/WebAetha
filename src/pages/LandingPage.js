@@ -34,7 +34,7 @@ const LandingPage = () => {
             Indigenous peoples from around the world.
           </p>
           <a href="/login" className="btn btn-success mt-3">
-            Explore Now
+            Sign In
           </a>
         </div>
       </section>
