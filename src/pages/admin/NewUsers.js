@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
-import {
-  FaUserCircle,
-  FaEdit,
-  FaTrash,
-  FaBan,
-  FaCopy,
-  FaCheck,
-} from "react-icons/fa";
+import { FaUserCircle, FaTrash, FaBan, FaCopy, FaCheck } from "react-icons/fa";
 import "../../styles/NewUsers.css";
 
 const NewUsers = () => {
@@ -60,11 +53,6 @@ const NewUsers = () => {
     } catch (err) {
       console.error("Failed to copy text:", err);
     }
-  };
-
-  const handleEdit = async (user) => {
-    // Implement edit functionality
-    console.log("Edit user:", user);
   };
 
   const handleDelete = async (user) => {
@@ -192,13 +180,6 @@ const NewUsers = () => {
                   </button>
                 </div>
                 <div className="card-actions">
-                  <button
-                    className="action-button edit"
-                    onClick={() => handleEdit(user)}
-                    title="Edit user"
-                  >
-                    <FaEdit />
-                  </button>
                   <button
                     className="action-button suspend"
                     onClick={() => handleSuspend(user)}
