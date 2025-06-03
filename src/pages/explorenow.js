@@ -1,11 +1,12 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./explorenow.css";
 import BundlesOfRightsNavbar from "../components/explorenavbar";
 import exploreImage1 from "../assets/images/11.png";
 import vrImage from "../assets/images/vr.png";
 import qrImage from "../assets/images/Qr.png";
 import playerImage from "../assets/images/player.png";
+import tryImage from "../assets/images/11.png";
 import PanoramaViewer from "../components/PanoramaViewer";
 import DidYouKnowCard from "../components/DidYouKnowCard";
 
@@ -20,6 +21,45 @@ const ExploreNow = () => {
         <div className="hero hero-text">
           <h1>Explore the culture of Aeta in Camarines Norte</h1>
           <p className="text-white">Know more about Aeta and their culture</p>
+        </div>
+      </section>
+
+      <section id="rights" className="rights-section text-center">
+        <div className="rights-background">36</div>
+        <h2>
+          36 Specific Rights under Four Bundles of Rights for the Indigenous
+          Cultural Communities/Indigenous People (ICCs/IPs) of the Philippines
+        </h2>
+        <p>
+          Learn more about the rights of Indigenous Cultural Communities
+          Indigenous People of the Philippines
+        </p>
+        <Link to="/bundles-of-rights" className="btn btn-success mt-3">
+          Learn More
+        </Link>
+      </section>
+
+      <section className="building-blocks-section">
+        <div className="row align-items-center">
+          <div className="col-md-6 text-center">
+            <h3>11 Building Blocks</h3>
+            <p>
+              of Resilient, Responsive, and Relevant ICCs/IPs in their Ancestral
+              Domains
+            </p>
+          </div>
+          <div className="col-md-6">
+            <div className="row">
+              <div className="col-6">
+                <img
+                  src={tryImage}
+                  alt="Building Block 1"
+                  className="img-fluid rounded mb-3"
+                  style={{ maxWidth: "500px", maxHeight: "500px" }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
