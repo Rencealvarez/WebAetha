@@ -26,6 +26,8 @@ import {
   Tooltip,
   Pagination,
   Divider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   Delete as DeleteIcon,
@@ -56,6 +58,11 @@ const Admin = () => {
   const [editingFact, setEditingFact] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const itemsPerPage = 6;
 
   useEffect(() => {
@@ -125,9 +132,19 @@ const Admin = () => {
       if (data) {
         setPanoramicImages([...panoramicImages, ...data]);
         setSelectedFile(null);
+        setSnackbar({
+          open: true,
+          message: "Successfully uploaded new panoramic image!",
+          severity: "success",
+        });
       }
     } catch (error) {
       console.error("Error uploading image:", error);
+      setSnackbar({
+        open: true,
+        message: "Error uploading image. Please try again.",
+        severity: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -222,9 +239,19 @@ const Admin = () => {
       if (data) {
         setDidYouKnowFacts([...didYouKnowFacts, ...data]);
         setNewFact("");
+        setSnackbar({
+          open: true,
+          message: "Successfully added new fact!",
+          severity: "success",
+        });
       }
     } catch (error) {
       console.error("Error adding fact:", error);
+      setSnackbar({
+        open: true,
+        message: "Error adding fact. Please try again.",
+        severity: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -232,15 +259,35 @@ const Admin = () => {
 
   const handleAddQuiz = async () => {
     if (!newQuiz.image_id) {
+      setSnackbar({
+        open: true,
+        message: "Please select an image for the quiz.",
+        severity: "warning",
+      });
       return;
     }
     if (!newQuiz.question.trim()) {
+      setSnackbar({
+        open: true,
+        message: "Please enter a question for the quiz.",
+        severity: "warning",
+      });
       return;
     }
     if (!newQuiz.answer.trim()) {
+      setSnackbar({
+        open: true,
+        message: "Please enter the correct answer for the quiz.",
+        severity: "warning",
+      });
       return;
     }
     if (newQuiz.options.some((option) => !option.trim())) {
+      setSnackbar({
+        open: true,
+        message: "Please fill in all quiz options.",
+        severity: "warning",
+      });
       return;
     }
 
@@ -260,9 +307,19 @@ const Admin = () => {
           options: ["", "", "", ""],
           answer: "",
         });
+        setSnackbar({
+          open: true,
+          message: "Successfully added new quiz!",
+          severity: "success",
+        });
       }
     } catch (error) {
       console.error("Error adding quiz:", error);
+      setSnackbar({
+        open: true,
+        message: "Error adding quiz. Please try again.",
+        severity: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -730,6 +787,21 @@ const Admin = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

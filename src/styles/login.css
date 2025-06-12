@@ -3,28 +3,31 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(white, #d4edda);
+  position: relative;
+  z-index: 1;
 }
 
 .login-box {
   width: 350px;
   padding: 20px;
-  background: white;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
   transition: box-shadow 0.3s ease;
 }
 
 .login-box:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
 }
 
 .login-box .back-link {
   display: block;
   margin-bottom: 10px;
-  color: #000000 !important;
+  color: #2c3e50 !important;
   text-decoration: none;
   font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .login-box .back-link:focus,
@@ -34,8 +37,8 @@
 }
 
 .login-box .back-link:hover {
-  color: #000000 !important;
-  opacity: 0.8;
+  color: #34495e !important;
+  transform: translateX(-3px);
 }
 
 .password-container {

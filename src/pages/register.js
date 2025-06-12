@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/register.css";
+import "../styles/auth-background.css";
 import Notification from "../components/Notification";
 
 const Register = () => {
@@ -173,6 +174,15 @@ const Register = () => {
 
   return (
     <div className="register-container">
+      <div className="auth-background">
+        <div className="animated-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+          <div className="shape shape-5"></div>
+        </div>
+      </div>
       <Notification
         message={notification.message}
         type={notification.type}

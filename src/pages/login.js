@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/login.css";
+import "../styles/auth-background.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -121,6 +122,15 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      <div className="auth-background">
+        <div className="animated-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+          <div className="shape shape-5"></div>
+        </div>
+      </div>
       <div className="login-box">
         <Link to="/" className="back-link">
           Back

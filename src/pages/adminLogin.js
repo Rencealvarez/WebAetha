@@ -4,6 +4,8 @@ import { supabase } from "../supabase";
 import "../styles/adminLogin.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/auth-background.css";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -59,6 +61,15 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-container">
+      <div className="auth-background">
+        <div className="animated-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+          <div className="shape shape-5"></div>
+        </div>
+      </div>
       <ToastContainer theme="colored" position="top-center" limit={2} />
       <div className="admin-login-box">
         <h3 className="text-center">Admin Login</h3>

@@ -2,6 +2,7 @@ import "../styles/updatepassword.css";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
+import "../styles/auth-background.css";
 
 const UpdatePasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -180,6 +181,15 @@ const UpdatePasswordPage = () => {
 
   return (
     <div className="login-container">
+      <div className="auth-background">
+        <div className="animated-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+          <div className="shape shape-5"></div>
+        </div>
+      </div>
       <div className="login-box">
         <h3 className="text-center">Set New Password</h3>
         <form onSubmit={handleUpdate}>
