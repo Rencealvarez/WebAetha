@@ -1,0 +1,4 @@
+# WebAetha Ads.txt
+# This file helps prevent unauthorized ad sales and improves SEO
+# Placeholder for future advertising partnerships
+# For now, this file exists to improve domain authority

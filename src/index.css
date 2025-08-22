@@ -1,0 +1,8 @@
+.home-section {
+  background: url("https://placehold.co/1200x600") no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  text-align: center;
+  padding-top: 80px;
+}

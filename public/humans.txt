@@ -1,0 +1,13 @@
+/* TEAM */
+    Developer: WebAetha Team
+    Contact: info@aetha.it.com
+    From: Philippines
+
+/* SITE */
+    Last update: 2025/01/27
+    Language: English
+    Doctype: HTML5
+    IDE: Visual Studio Code
+    Standards: HTML5, CSS3, JavaScript (ES6+)
+    Components: React.js
+    Software: Node.js, npm

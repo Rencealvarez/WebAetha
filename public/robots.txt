@@ -1,0 +1,41 @@
+# WebAetha Robots.txt
+# https://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+Allow: /
+
+# Allow all search engines to crawl the site
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Sitemap location
+Sitemap: https://aetha.it.com/sitemap.xml
+
+# Crawl delay (optional - helps with server load)
+Crawl-delay: 1
+
+# Allow access to important resources
+Allow: /assets/
+Allow: /images/
+Allow: /public/
+
+# Disallow admin areas (if you want to keep them private)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+
+# Allow JavaScript and CSS files
+Allow: /*.js
+Allow: /*.css
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico

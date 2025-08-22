@@ -1,0 +1,250 @@
+/* Base styles and variables */
+:root {
+  --primary: #218838;
+  --primary-dark: #1a6b2c;
+  --text-dark: #1a1a1a;
+  --text-light: #4a4a4a;
+  --background: #ffffff;
+  --background-alt: #f8f9fa;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+  --spacing-xl: 4rem;
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.bundles-page {
+  background-color: var(--background);
+  color: var(--text-dark);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+/* Header Section */
+.rights-header {
+  background-image: url("../assets/images/35.png");
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  height: 100vh;
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.rights-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+  z-index: 1;
+}
+
+.rights-header h1,
+.rights-header h2 {
+  color: #fff !important;
+  position: relative;
+  z-index: 2;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.rights-header h1 {
+  font-size: 120px;
+  font-weight: 700;
+  opacity: 0.9;
+  margin: 0;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+
+.rights-header h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-top: var(--spacing-md) !important;
+  max-width: 800px;
+  line-height: 1.5;
+}
+
+/* Content Sections */
+.bundles-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-xl) auto;
+  max-width: 1200px;
+  background: var(--background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.bundles-content:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.content-left {
+  padding: var(--spacing-md);
+}
+
+.content-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bundles-content img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  object-fit: cover;
+}
+
+.bundles-content img:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.bundles-content h3 {
+  color: var(--primary);
+  margin-bottom: var(--spacing-md);
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: var(--spacing-xs);
+}
+
+.bundles-content h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary);
+  transition: var(--transition);
+}
+
+.bundles-content:hover h3::after {
+  width: 100px;
+}
+
+.bundles-content ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.bundles-content li {
+  color: var(--text-light);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+  position: relative;
+  padding-left: var(--spacing-md);
+  transition: var(--transition);
+}
+
+.bundles-content li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-size: 1.2em;
+  transition: var(--transition);
+}
+
+.bundles-content li:hover {
+  transform: translateX(5px);
+  color: var(--text-dark);
+}
+
+.bundles-content li:hover::before {
+  color: var(--primary-dark);
+}
+
+/* Footer styles are now handled by App.css */
+
+/* Custom styling removed - keeping original bundles-content styling */
+
+/* Back button styles are now handled by Navbar.css */
+
+.section-reference {
+  display: block;
+  font-size: 0.9em;
+  margin-top: var(--spacing-xs);
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bundles-content {
+    grid-template-columns: 1fr;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .content-left,
+  .content-right {
+    padding: var(--spacing-sm);
+  }
+
+  .rights-header h1 {
+    font-size: 80px;
+  }
+
+  .rights-header h2 {
+    font-size: 1.25rem;
+    padding: 0 var(--spacing-md);
+  }
+
+  .bundles-content h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (forced-colors: active) {
+  .bundles-content {
+    border: 1px solid CanvasText;
+  }
+
+  .bundles-content h3::after {
+    background-color: CanvasText;
+  }
+}
+
+.text-white {
+  color: white;
+}

@@ -1,0 +1,8 @@
+# WebAetha Security Policy
+# This file provides security contact information and policy
+# Visit: https://aetha.it.com/security
+
+Contact: mailto:security@aetha.it.com
+Expires: 2026-01-27T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://aetha.it.com/.well-known/security.txt
