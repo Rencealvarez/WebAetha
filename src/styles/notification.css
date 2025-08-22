@@ -1,0 +1,76 @@
+.custom-notification {
+  position: fixed;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 320px;
+  max-width: 90vw;
+  background: #23272f;
+  color: #fff;
+  padding: 18px 44px 18px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18),
+    0 1.5px 6px rgba(39, 174, 96, 0.08);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  animation: fadeInSlide 0.35s cubic-bezier(0.4, 1.4, 0.6, 1) both;
+  gap: 14px;
+  transition: opacity 0.4s;
+}
+.custom-notification.success {
+  background: linear-gradient(90deg, #020302 80%, #2ecc71 100%);
+  border-left: 6px solid #fff;
+}
+.custom-notification.error {
+  background: linear-gradient(90deg, #c0392b 80%, #e74c3c 100%);
+  border-left: 6px solid #f15e5e;
+}
+.custom-notification .notif-icon {
+  font-size: 1.5rem;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
+}
+.custom-notification .close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.4rem;
+  margin-left: 18px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, background 0.2s;
+  padding: 0 6px;
+  border-radius: 50%;
+  line-height: 1;
+}
+.custom-notification .close-btn:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.custom-notification .close-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.12);
+}
+.custom-notification span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    top: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    top: 32px;
+    transform: translateX(-50%) translateY(0);
+  }
+}
