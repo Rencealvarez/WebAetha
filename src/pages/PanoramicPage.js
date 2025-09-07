@@ -387,16 +387,7 @@ const PanoramicPage = () => {
               className="nav-logo-img"
             />
           </div>
-          <button
-            className="nav-toggle"
-            type="button"
-            onClick={() => {
-              const navMenu = document.getElementById("navMenu");
-              navMenu.classList.toggle("active");
-            }}
-          >
-            <span className="nav-toggle-icon"></span>
-          </button>
+
           <div className="nav-menu" id="navMenu">
             <ul className="nav-list">
               <li className="nav-item">

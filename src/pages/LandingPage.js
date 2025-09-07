@@ -42,9 +42,9 @@ const LandingPage = () => {
       </section>
 
       <section className="eleven-blocks-section">
-        <div className="row2">
-          <div className="col-md-6">
-            <img src={MN} alt="Cultural Exchange" className="img-fluid" />
+        <div className="eleven-container">
+          <div className="eleven-content">
+            <img src={MN} alt="Cultural Exchange" className="eleven-image" />
             <div className="content">
               <h2>11 Building Blocks</h2>
               <p>
@@ -119,13 +119,12 @@ const LandingPage = () => {
       </section>
 
       <section className="cultural-exchange-section">
-        <div className="row">
-          <div className="col-md-6">
+        <div className="cultural-container">
+          <div className="cultural-left">
             <img
               src={engageImage}
               alt="Cultural Exchange"
-              className="img-fluid"
-              style={{ width: "500px", height: "300px" }}
+              className="cultural-image"
             />
             <h4>Discover Aeta Culture</h4>
             <h3>Experience Indigenous Heritage</h3>
@@ -136,8 +135,8 @@ const LandingPage = () => {
               community.
             </p>
           </div>
-          <div className="col-md-6">
-            <div className="program d-flex align-items-center">
+          <div className="cultural-right">
+            <div className="program">
               <div className="text-content">
                 <h5>Supporting Aeta Communities</h5>
                 <h4>Traditional Crafts & Skills</h4>
@@ -157,7 +156,7 @@ const LandingPage = () => {
                 </p>
               </div>
             </div>
-            <div className="program d-flex align-items-center">
+            <div className="program">
               <div className="text-content">
                 <h5>Honoring Aeta Traditions</h5>
                 <p>
@@ -236,10 +235,10 @@ const LandingPage = () => {
       </section>
 
       <section className="learn-more-section">
-        <div className="row align-items-center">
-          <div className="col-md-6">
+        <div className="learn-container">
+          <div className="learn-left">
             <h4>What is Aetha?</h4>
-            <p style={{ textAlign: "justify" }}>
+            <p>
               This project employs virtual reality technology combined with
               high-resolution panoramic imagery to provide an immersive
               representation of the daily lives, traditions, and cultural
@@ -250,13 +249,8 @@ const LandingPage = () => {
               way of life in a modern, accessible format.
             </p>
           </div>
-          <div className="col-md-6">
-            <img
-              src={VRGIRL}
-              alt="Learn More"
-              className="img-fluid rounded"
-              style={{ maxWidth: "500px", maxHeight: "500px" }}
-            />
+          <div className="learn-right">
+            <img src={VRGIRL} alt="Learn More" className="learn-image" />
           </div>
         </div>
       </section>

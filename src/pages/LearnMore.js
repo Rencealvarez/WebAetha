@@ -130,16 +130,7 @@ const LearnMore = () => {
               className="nav-logo-img"
             />
           </div>
-          <button
-            className="nav-toggle"
-            type="button"
-            onClick={() => {
-              const navMenu = document.getElementById("navMenu");
-              navMenu.classList.toggle("active");
-            }}
-          >
-            <span className="nav-toggle-icon"></span>
-          </button>
+
           <div className="nav-menu" id="navMenu">
             <ul className="nav-list">
               <li className="nav-item">
@@ -257,7 +248,7 @@ const LearnMore = () => {
             </h2>
             <div className="video-container">
               <iframe
-                src="https://www.youtube.com/embed/EJ9oMVHjWVA"
+                src="https://www.youtube.com/embed/3F_n_cOIMSA"
                 title="Aeta Cultural Heritage"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

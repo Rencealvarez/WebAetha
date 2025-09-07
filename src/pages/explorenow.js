@@ -11,10 +11,8 @@ import DidYouKnowCard from "../components/DidYouKnowCard";
 
 const ExploreNow = () => {
   const navigate = useNavigate();
-  // Configure your Google Drive file ID via .env (REACT_APP_APK_FILE_ID)
-  const APK_FILE_ID =
-    process.env.REACT_APP_APK_FILE_ID || "1V7ZMVWKW7VdHKnGE3_sis8qvjbul1tB4";
-  const apkUrl = `https://drive.google.com/uc?export=download&id=${APK_FILE_ID}`;
+  // Redirect endpoint that logs download/scan events
+  const redirectUrl = `${window.location.origin}/qr/download`;
 
   return (
     <div className="explore-container">
@@ -43,25 +41,20 @@ const ExploreNow = () => {
       </section>
 
       <section className="building-blocks-section">
-        <div className="row align-items-center">
-          <div className="col-md-6 text-center">
+        <div className="building-container">
+          <div className="building-left text-center">
             <h3>11 Building Blocks</h3>
             <p>
               of Resilient, Responsive, and Relevant ICCs/IPs in their Ancestral
               Domains
             </p>
           </div>
-          <div className="col-md-6">
-            <div className="row">
-              <div className="col-6">
-                <img
-                  src={tryImage}
-                  alt="Building Block 1"
-                  className="img-fluid rounded mb-3"
-                  style={{ maxWidth: "500px", maxHeight: "500px" }}
-                />
-              </div>
-            </div>
+          <div className="building-right">
+            <img
+              src={tryImage}
+              alt="Building Block 1"
+              className="building-image"
+            />
           </div>
         </div>
       </section>
@@ -84,20 +77,20 @@ const ExploreNow = () => {
         <h2 className="fw-bold">The Livelihood of Aeta</h2>
         <p>In Camarines Norte</p>
 
-        <div className="container livelihood-container">
-          <div className="row align-items-center">
-            <div className="col-md-6">
+        <div className="livelihood-container">
+          <div className="livelihood-wrapper">
+            <div className="livelihood-left">
               <div className="livelihood-images">
                 <img
                   src={exploreImage1}
                   alt="Livelihood 1"
-                  className="img-fluid rounded"
+                  className="livelihood-image"
                 />
               </div>
             </div>
 
-            <div className="col-md-6">
-              <div className="livelihood-text text-start">
+            <div className="livelihood-right">
+              <div className="livelihood-text">
                 <h3 className="fw-bold">Explore the life of Aeta People</h3>
                 <p>Learn more about them, click the button below</p>
                 <a href="/learn-more" className="btn btn-success">
@@ -110,10 +103,10 @@ const ExploreNow = () => {
       </section>
 
       <section className="vr-section">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-6 d-flex align-items-center">
-              <img src={vrImage} alt="Aetha Logo" className="vr-logo me-3" />
+        <div className="vr-container">
+          <div className="vr-content">
+            <div className="vr-left">
+              <img src={vrImage} alt="Aetha Logo" className="vr-logo" />
               <div>
                 <h3 className="fw-bold">Download our Aetha app</h3>
                 <p>
@@ -121,14 +114,14 @@ const ExploreNow = () => {
                   in Android
                 </p>
                 <a
-                  href={apkUrl}
+                  href={redirectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Download Aetha APK"
                 >
                   <img
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=440x440&data=${encodeURIComponent(
-                      apkUrl
+                      redirectUrl
                     )}`}
                     alt="Scan to download Aetha APK"
                     className="qr-code"

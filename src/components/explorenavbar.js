@@ -43,15 +43,7 @@ const Navbar = () => {
             className="nav-logo-img"
           />
         </div>
-        <button
-          className="nav-toggle"
-          onClick={() => {
-            const navMenu = document.querySelector(".nav-menu");
-            navMenu.classList.toggle("active");
-          }}
-        >
-          <span className="nav-toggle-icon"></span>
-        </button>
+
         <div className="nav-menu">
           <ul className="nav-list">
             {session && (
@@ -59,6 +51,11 @@ const Navbar = () => {
                 <li className="nav-item">
                   <Link to="/local-voices" className="nav-link">
                     🧑‍🤝‍🧑 Local Voices
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/aeta-museum" className="nav-link">
+                    🏛️ Aeta Museum
                   </Link>
                 </li>
                 <li className="nav-item">

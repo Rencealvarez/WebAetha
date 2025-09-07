@@ -191,6 +191,20 @@
   font-style: italic;
 }
 
+.bundle-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.bundle-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .bundles-content {
@@ -216,6 +230,10 @@
 
   .bundles-content h3 {
     font-size: 1.5rem;
+  }
+
+  .bundle-image {
+    max-width: 100%;
   }
 }
 

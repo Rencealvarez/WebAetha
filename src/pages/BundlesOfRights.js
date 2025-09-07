@@ -3,9 +3,9 @@ import "../styles/BundlesOfRights.css";
 import "../styles/LandingPage.css";
 import BundlesOfRightsNavbar from "../components/BundlesOfRightsNavbar";
 import bg33 from "../assets/images/36.png";
-import bg34 from "../assets/images/37.png";
-import bg35 from "../assets/images/39.png";
-import bg36 from "../assets/images/40.png";
+import bg34 from "../assets/images/leader.png";
+import bg35 from "../assets/images/socialjustice.png";
+import bg36 from "../assets/images/RIGHT TO .jpg";
 import DidYouKnowCard from "../components/DidYouKnowCard";
 
 const BundlesOfRights = () => {
@@ -52,12 +52,7 @@ const BundlesOfRights = () => {
           </ul>
         </div>
         <div className="content-right">
-          <img
-            src={bg33}
-            style={{ width: "500px", height: "300px" }}
-            alt="Ancestral Domains"
-            className="img-fluid"
-          />
+          <img src={bg33} alt="Ancestral Domains" className="bundle-image" />
         </div>
       </div>
 
@@ -79,12 +74,7 @@ const BundlesOfRights = () => {
           </ul>
         </div>
         <div className="content-right">
-          <img
-            src={bg34}
-            style={{ width: "500px", height: "300px" }}
-            alt="Self-Governance"
-            className="img-fluid"
-          />
+          <img src={bg34} alt="Self-Governance" className="bundle-image" />
         </div>
       </div>
 
@@ -104,12 +94,7 @@ const BundlesOfRights = () => {
           </ul>
         </div>
         <div className="content-right">
-          <img
-            src={bg35}
-            style={{ width: "500px", height: "300px" }}
-            alt="Social Justice"
-            className="img-fluid"
-          />
+          <img src={bg35} alt="Social Justice" className="bundle-image" />
         </div>
       </div>
 
@@ -134,12 +119,7 @@ const BundlesOfRights = () => {
           </ul>
         </div>
         <div className="content-right">
-          <img
-            src={bg36}
-            style={{ width: "500px", height: "300px" }}
-            alt="Cultural Integrity"
-            className="img-fluid"
-          />
+          <img src={bg36} alt="Cultural Integrity" className="bundle-image" />
         </div>
       </div>
       <DidYouKnowCard />

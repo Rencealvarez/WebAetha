@@ -40,4 +40,31 @@ section {
   background-color: #1e2421;
   color: white;
   padding: 40px 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure contact section content is not hidden behind DidYouKnowCard */
+.contact-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Responsive bottom padding to prevent DidYouKnowCard overlap */
+@media (max-width: 768px) {
+  .contact-section {
+    padding-bottom: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-section {
+    padding-bottom: 140px;
+  }
+}
+
+@media (max-width: 360px) {
+  .contact-section {
+    padding-bottom: 160px;
+  }
 }

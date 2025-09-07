@@ -255,6 +255,7 @@
   z-index: 2000;
   max-width: 250px;
   font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 @keyframes spin {
@@ -290,5 +291,43 @@
     top: auto;
     bottom: 30px;
     right: 30px;
+  }
+
+  /* Responsive Did You Know Card */
+  .did-you-know-card {
+    bottom: 80px;
+    right: 15px;
+    max-width: 200px;
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .did-you-know-card {
+    bottom: 100px;
+    right: 10px;
+    max-width: 180px;
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .did-you-know-card {
+    bottom: 120px;
+    right: 8px;
+    max-width: 160px;
+    font-size: 11px;
+    padding: 8px;
+  }
+}
+
+/* Landscape orientation on mobile devices */
+@media (max-width: 768px) and (orientation: landscape) {
+  .did-you-know-card {
+    bottom: 60px;
+    right: 15px;
+    max-width: 220px;
   }
 }

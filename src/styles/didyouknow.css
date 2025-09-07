@@ -10,4 +10,58 @@
   max-width: 250px;
   font-size: 14px;
   z-index: 999;
+  transition: all 0.3s ease;
+}
+
+/* Responsive design to prevent footer overlap */
+@media (max-width: 768px) {
+  .did-you-know-box {
+    bottom: 80px;
+    right: 15px;
+    max-width: 200px;
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .did-you-know-box {
+    bottom: 100px;
+    right: 10px;
+    max-width: 180px;
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .did-you-know-box {
+    bottom: 120px;
+    right: 8px;
+    max-width: 160px;
+    font-size: 11px;
+    padding: 8px;
+  }
+}
+
+/* Landscape orientation on mobile devices */
+@media (max-width: 768px) and (orientation: landscape) {
+  .did-you-know-box {
+    bottom: 60px !important;
+    right: 15px !important;
+    max-width: 220px !important;
+  }
+}
+
+/* Ensure the card doesn't interfere with scrollable content */
+.did-you-know-box {
+  pointer-events: auto !important;
+}
+
+/* Add some breathing room for very tall content */
+@media (min-height: 800px) {
+  .did-you-know-box {
+    bottom: 30px !important;
+  }
 }

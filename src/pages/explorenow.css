@@ -67,6 +67,45 @@ h2 {
   font-size: 15px;
 }
 
+.building-blocks-section {
+  padding: 100px 20px;
+  background: #fff;
+}
+
+.building-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.building-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.building-right {
+  flex: 1;
+  min-width: 300px;
+  text-align: center;
+}
+
+.building-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s ease;
+}
+
+.building-image:hover {
+  transform: scale(1.03);
+  box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.15);
+}
+
 .livelihood-section {
   padding: 100px 20px;
   background: #fff;
@@ -74,8 +113,35 @@ h2 {
 
 .livelihood-container {
   padding: 150px 20px;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.livelihood-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.livelihood-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.livelihood-right {
+  flex: 1;
+  min-width: 300px;
+}
+
+.livelihood-image {
+  width: 100%;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.livelihood-image:hover {
+  transform: scale(1.02);
 }
 
 .livelihood-images {
@@ -103,8 +169,33 @@ h2 {
 }
 
 @media (max-width: 768px) {
+  .building-container {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .building-left,
+  .building-right {
+    min-width: 100%;
+  }
+
+  .building-image {
+    max-width: 100%;
+  }
+
+  .livelihood-wrapper {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .livelihood-left,
+  .livelihood-right {
+    min-width: 100%;
+  }
+
   .livelihood-container {
     text-align: center;
+    padding: 80px 20px;
   }
 
   .livelihood-images {
@@ -114,6 +205,20 @@ h2 {
   .livelihood-text {
     text-align: center;
   }
+
+  .vr-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .vr-left {
+    min-width: 100%;
+    justify-content: center;
+  }
+
+  .vr-section {
+    padding: 30px 20px;
+  }
 }
 
 .vr-section {
@@ -121,11 +226,25 @@ h2 {
   background: #f8f9fa;
 }
 
+.vr-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .vr-content {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.vr-left {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  align-items: center;
   gap: 20px;
 }
 
@@ -151,6 +270,22 @@ h2 {
 }
 
 @media (max-width: 480px) {
+  .building-blocks-section {
+    padding: 60px 15px;
+  }
+
+  .livelihood-section {
+    padding: 60px 15px;
+  }
+
+  .livelihood-container {
+    padding: 60px 15px;
+  }
+
+  .vr-section {
+    padding: 20px 15px;
+  }
+
   .qr-code {
     width: 180px;
     height: 180px;

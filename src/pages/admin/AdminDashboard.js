@@ -34,20 +34,25 @@ const AdminDashboard = () => {
   const [weeklyVisits, setWeeklyVisits] = useState([]);
   const [weeklyLabels, setWeeklyLabels] = useState([]);
   const [selectedRange, setSelectedRange] = useState("week");
+  const [qrEventsCount, setQREventsCount] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      const [userRes, loginRes, loginRaw] = await Promise.all([
+      const [userRes, loginRes, loginRaw, qrCountRes] = await Promise.all([
         supabase
           .from("user_profiles")
           .select("*", { count: "exact", head: true }),
         supabase.from("logins").select("*", { count: "exact", head: true }),
         supabase.from("logins").select("logged_in_at, device_type, user_email"),
+        supabase
+          .from("qr_download_events")
+          .select("id", { count: "exact", head: true }),
       ]);
 
       setUserCount(userRes.count || 0);
       setVisitorCount(loginRes.count || 0);
       setLoginData(loginRaw.data || []);
+      setQREventsCount(qrCountRes.count || 0);
 
       // Device usage
       const deviceCounts = { Desktop: 0, Mobile: 0 };
@@ -181,6 +186,10 @@ const AdminDashboard = () => {
         <div className="card summary-card">
           <h5>Total Visits</h5>
           <h2>{visitorCount}</h2>
+        </div>
+        <div className="card summary-card">
+          <h5>QR/App Downloads (tracked)</h5>
+          <h2>{qrEventsCount}</h2>
         </div>
         <div className="card summary-card">
           <h5>Progress Report</h5>
