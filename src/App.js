@@ -24,6 +24,7 @@ import NewUsers from "./pages/admin/NewUsers";
 import QuizStats from "./pages/admin/QuizStats";
 import AdminPendingVoices from "./pages/admin/AdminPendingVoices";
 import MuseumContentManagement from "./pages/admin/MuseumContentManagement";
+import PrintReports from "./pages/admin/PrintReports";
 
 import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
@@ -70,6 +71,7 @@ const App = () => {
               path="museum-content"
               element={<MuseumContentManagement />}
             />
+            <Route path="print-reports" element={<PrintReports />} />
           </Route>
         </Routes>
       </Router>

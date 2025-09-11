@@ -41,6 +41,9 @@ const AdminLayout = () => {
               <Link to="/admin-page/museum-content">🏛️ Museum Content</Link>
             </li>
             <li>
+              <Link to="/admin-page/print-reports">📄 Print Reports</Link>
+            </li>
+            <li>
               <button
                 className="logout-btn"
                 onClick={() => setShowLogoutConfirm(true)}
