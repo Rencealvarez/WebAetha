@@ -30,7 +30,7 @@ import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
-
+import { Analytics } from "@vercel/analytics/react";
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
@@ -74,6 +74,7 @@ const App = () => {
           </Route>
         </Routes>
       </Router>
+      <Analytics />
     </ThemeProvider>
   );
 };

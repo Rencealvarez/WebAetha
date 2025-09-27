@@ -160,7 +160,7 @@ const UpdatePasswordPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="update-password-page">
       <div className="auth-background">
         <div className="animated-shapes">
           <div className="shape shape-1"></div>
