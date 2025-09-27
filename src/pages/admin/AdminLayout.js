@@ -20,28 +20,28 @@ const AdminLayout = () => {
         <nav>
           <ul>
             <li>
-              <Link to="/admin-page/dashboard">📊 Dashboard</Link>
+              <Link to="/admin-page/dashboard">Dashboard</Link>
             </li>
             <li>
-              <Link to="/admin-page/feedback">💬 Feedback</Link>
+              <Link to="/admin-page/feedback">Feedback</Link>
             </li>
             <li>
-              <Link to="/admin-page/new-users">👥 New Users</Link>
+              <Link to="/admin-page/new-users">New Users</Link>
             </li>
             <li>
-              <Link to="/admin-page/quiz-stats">🧠 Quiz Stats</Link>
+              <Link to="/admin-page/quiz-stats">Quiz Stats</Link>
             </li>
             <li>
-              <Link to="/admin-page/pending-voices">⏳ Pending Voices</Link>
+              <Link to="/admin-page/pending-voices">Pending Voices</Link>
             </li>
             <li>
-              <Link to="/admin-page/content">🖼️ Content Management</Link>
+              <Link to="/admin-page/content">Content Management</Link>
             </li>
             <li>
-              <Link to="/admin-page/museum-content">🏛️ Museum Content</Link>
+              <Link to="/admin-page/museum-content">Museum Content</Link>
             </li>
             <li>
-              <Link to="/admin-page/print-reports">📄 Print Reports</Link>
+              <Link to="/admin-page/print-reports">Print Reports</Link>
             </li>
             <li>
               <button

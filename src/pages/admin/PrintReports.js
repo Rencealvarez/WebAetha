@@ -28,7 +28,6 @@ const PrintReports = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // Normalize any timestamp to a local-date ISO (YYYY-MM-DD)
   const toLocalDateIso = (input) => {
     const d =
       typeof input === "string" || typeof input === "number"
@@ -44,7 +43,6 @@ const PrintReports = () => {
       const { selectedPeriod, selectedDate, selectedMonth, selectedYear } =
         reportData;
 
-      // Get all data first
       const [userRes, loginRes, qrRes] = await Promise.all([
         supabase.from("user_profiles").select("created_at, email"),
         supabase.from("logins").select("logged_in_at, device_type, user_email"),

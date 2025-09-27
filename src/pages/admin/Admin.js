@@ -187,8 +187,23 @@ const Admin = () => {
       }
 
       if (error) throw error;
+      const typeToMessage = {
+        image: "Successfully deleted image!",
+        quiz: "Successfully deleted quiz!",
+        fact: "Successfully deleted fact!",
+      };
+      setSnackbar({
+        open: true,
+        message: typeToMessage[type] || "Deleted successfully.",
+        severity: "success",
+      });
     } catch (error) {
       console.error("Error deleting item:", error);
+      setSnackbar({
+        open: true,
+        message: "Error deleting item. Please try again.",
+        severity: "error",
+      });
     } finally {
       setLoading(false);
       setDeleteDialogOpen(false);
@@ -203,20 +218,70 @@ const Admin = () => {
 
   const handleUpdateFact = async () => {
     if (!editingFact) return;
+    const trimmed = (editingFact.fact || "").trim();
+    if (!trimmed) {
+      setSnackbar({
+        open: true,
+        message: "Fact cannot be empty.",
+        severity: "warning",
+      });
+      return;
+    }
+    if (trimmed.length < 5) {
+      setSnackbar({
+        open: true,
+        message: "Fact is too short. Please add more detail.",
+        severity: "warning",
+      });
+      return;
+    }
+    if (trimmed.length > 300) {
+      setSnackbar({
+        open: true,
+        message: "Fact is too long. Keep it under 300 characters.",
+        severity: "warning",
+      });
+      return;
+    }
+    const exists = didYouKnowFacts.some(
+      (f) =>
+        f.id !== editingFact.id &&
+        (f.fact || "").trim().toLowerCase() === trimmed.toLowerCase()
+    );
+    if (exists) {
+      setSnackbar({
+        open: true,
+        message: "This fact already exists.",
+        severity: "warning",
+      });
+      return;
+    }
     setLoading(true);
     try {
       const { error } = await supabase
         .from("did_you_know")
-        .update({ fact: editingFact.fact })
+        .update({ fact: trimmed })
         .eq("id", editingFact.id);
 
       if (error) throw error;
 
       setDidYouKnowFacts(
-        didYouKnowFacts.map((f) => (f.id === editingFact.id ? editingFact : f))
+        didYouKnowFacts.map((f) =>
+          f.id === editingFact.id ? { ...editingFact, fact: trimmed } : f
+        )
       );
+      setSnackbar({
+        open: true,
+        message: "Successfully updated fact!",
+        severity: "success",
+      });
     } catch (error) {
       console.error("Error updating fact:", error);
+      setSnackbar({
+        open: true,
+        message: "Error updating fact. Please try again.",
+        severity: "error",
+      });
     } finally {
       setLoading(false);
       setEditMode(false);
@@ -225,14 +290,47 @@ const Admin = () => {
   };
 
   const handleAddFact = async () => {
-    if (!newFact.trim()) {
+    const trimmed = (newFact || "").trim();
+    if (!trimmed) {
+      setSnackbar({
+        open: true,
+        message: "Please enter a fact before adding.",
+        severity: "warning",
+      });
+      return;
+    }
+    if (trimmed.length < 5) {
+      setSnackbar({
+        open: true,
+        message: "Fact is too short. Please add more detail.",
+        severity: "warning",
+      });
+      return;
+    }
+    if (trimmed.length > 300) {
+      setSnackbar({
+        open: true,
+        message: "Fact is too long. Keep it under 300 characters.",
+        severity: "warning",
+      });
+      return;
+    }
+    const exists = didYouKnowFacts.some(
+      (f) => (f.fact || "").trim().toLowerCase() === trimmed.toLowerCase()
+    );
+    if (exists) {
+      setSnackbar({
+        open: true,
+        message: "This fact already exists.",
+        severity: "warning",
+      });
       return;
     }
     setLoading(true);
     try {
       const { data, error } = await supabase
         .from("did_you_know")
-        .insert([{ fact: newFact }])
+        .insert([{ fact: trimmed }])
         .select();
 
       if (error) throw error;
@@ -502,6 +600,59 @@ const Admin = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+                  {newQuiz.image_id && (
+                    <Grid span={12}>
+                      <Card
+                        sx={{
+                          mt: 1,
+                          maxWidth: 260,
+                          borderRadius: 2,
+                          boxShadow: 1,
+                          border: "1px solid",
+                          borderColor: "divider",
+                        }}
+                      >
+                        <CardMedia
+                          component="img"
+                          height="140"
+                          image={
+                            panoramicImages.find(
+                              (img) => img.id === newQuiz.image_id
+                            )?.url || ""
+                          }
+                          alt={
+                            panoramicImages.find(
+                              (img) => img.id === newQuiz.image_id
+                            )?.file_name || "Selected preview"
+                          }
+                          sx={{ objectFit: "cover" }}
+                        />
+                        <CardContent sx={{ py: 1.5 }}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: "block", textAlign: "center" }}
+                          >
+                            Selected Image Preview
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              textAlign: "center",
+                              fontWeight: 500,
+                              mt: 0.5,
+                            }}
+                          >
+                            {
+                              panoramicImages.find(
+                                (img) => img.id === newQuiz.image_id
+                              )?.file_name
+                            }
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  )}
                   <Grid span={12}>
                     <TextField
                       fullWidth

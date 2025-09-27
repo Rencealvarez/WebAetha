@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "../supabase";
 import "../styles/updatepassword.css";
 import "../styles/auth-background.css";
+import Loader from "../components/Loader";
 
 const RequestPasswordResetPage = () => {
   const [email, setEmail] = useState("");
@@ -184,14 +185,7 @@ const RequestPasswordResetPage = () => {
             disabled={!isValidEmail || isLoading || !canResend}
           >
             {isLoading ? (
-              <>
-                <span
-                  className="spinner-border spinner-border-sm me-2"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-                Sending...
-              </>
+              <Loader label="Sending" size="sm" />
             ) : (
               <>
                 <i className="fas fa-paper-plane me-2"></i>

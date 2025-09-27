@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { supabase } from "../../supabase";
 import "../../styles/AdminFeedback.css";
+import Loader from "../../components/Loader";
 
 const getFilename = (url) => (url ? url.split("/").pop() : "");
 
@@ -117,9 +118,7 @@ const AdminFeedback = () => {
         />
       </div>
       {loading ? (
-        <div className="loading-spinner" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+        <Loader label="Loading feedback" fullscreen size="md" />
       ) : error ? (
         <div className="error-message" role="alert">
           {error}

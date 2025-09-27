@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
 import "../styles/LocalVoices.css";
+import Loader from "../components/Loader";
 
 const LocalVoicesWall = () => {
   const [quote, setQuote] = useState("");
@@ -58,6 +59,26 @@ const LocalVoicesWall = () => {
     setPreviewUrl({ url, type });
   };
 
+  // Naive spam heuristics
+  const isLikelySpam = (text, authorName) => {
+    const content = `${authorName || ""} ${text}`.toLowerCase();
+    const urlMatches = (content.match(/https?:\/\//g) || []).length;
+    const hasManyLinks = urlMatches >= 2;
+    const tooShort = text.trim().length < 20;
+    const repeatedChars = /(.)\1{6,}/.test(content);
+    const blacklist = [
+      "viagra",
+      "casino",
+      "loan",
+      "crypto",
+      "porn",
+      "sex",
+      "xxx",
+    ];
+    const hasBlacklisted = blacklist.some((w) => content.includes(w));
+    return hasManyLinks || tooShort || repeatedChars || hasBlacklisted;
+  };
+
   // Handle submission with improved error handling
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,6 +89,17 @@ const LocalVoicesWall = () => {
     let audioUrl = null;
 
     try {
+      // Client-side cooldown (defense-in-depth; server also enforces)
+      const COOLDOWN_SECONDS = 60;
+      const last = Number(localStorage.getItem("lv_last_submit") || 0);
+      const nowTs = Date.now();
+      if (nowTs - last < COOLDOWN_SECONDS * 1000) {
+        const secsLeft = Math.ceil(COOLDOWN_SECONDS - (nowTs - last) / 1000);
+        throw new Error(
+          `Please wait ${secsLeft}s before submitting another story.`
+        );
+      }
+
       const {
         data: { user },
         error: userErr,
@@ -108,11 +140,21 @@ const LocalVoicesWall = () => {
           quote: quote.trim(),
           image_url: imageUrl,
           audio_url: audioUrl,
+          suspected_spam: isLikelySpam(quote, name),
           approved: false,
         },
       ]);
 
-      if (insertErr) throw new Error("Failed to save your story.");
+      if (insertErr) {
+        // Translate rate-limit error if raised by DB trigger
+        const msg = insertErr.message || "Failed to save your story.";
+        if (msg.toLowerCase().includes("rate_limit")) {
+          throw new Error(
+            "You are submitting too fast. Please wait a bit and try again."
+          );
+        }
+        throw new Error(msg);
+      }
 
       // Reset form
       setName("");
@@ -121,6 +163,8 @@ const LocalVoicesWall = () => {
       setAudio(null);
       setPreviewUrl(null);
       setSuccess("Thanks! Your story is pending admin approval.");
+
+      localStorage.setItem("lv_last_submit", String(Date.now()));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -279,7 +323,11 @@ const LocalVoicesWall = () => {
         )}
 
         <button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
-          {isSubmitting ? "Posting..." : "Share Your Story"}
+          {isSubmitting ? (
+            <Loader label="Posting" size="sm" />
+          ) : (
+            "Share Your Story"
+          )}
         </button>
       </form>
 

@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/register.css";
 import "../styles/auth-background.css";
 import Notification from "../components/Notification";
+import Loader from "../components/Loader";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -280,8 +281,7 @@ const Register = () => {
             >
               {isLoading ? (
                 <>
-                  <span className="loading-spinner"></span>
-                  Creating Account...
+                  <Loader label="Creating Account" size="sm" />
                 </>
               ) : (
                 "Create Account"

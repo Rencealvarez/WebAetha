@@ -1,0 +1,72 @@
+.loader-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.loader-container.fullscreen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 2000;
+}
+
+.loader-label {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.loader-spinner {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+
+.loader-spinner::before,
+.loader-spinner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid transparent;
+}
+
+/* Dual ring with gradient accent */
+.loader-spinner::before {
+  border-top-color: #3b82f6;
+  border-right-color: #60a5fa;
+  animation: spin 0.8s linear infinite;
+}
+
+.loader-spinner::after {
+  border-bottom-color: #93c5fd;
+  border-left-color: #c7d2fe;
+  animation: spin 1.2s linear infinite reverse;
+}
+
+/* Sizes */
+.loader-spinner.sm {
+  width: 24px;
+  height: 24px;
+}
+.loader-spinner.md {
+  width: 40px;
+  height: 40px;
+}
+.loader-spinner.lg {
+  width: 64px;
+  height: 64px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

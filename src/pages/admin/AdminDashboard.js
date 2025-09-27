@@ -192,7 +192,7 @@ const AdminDashboard = () => {
           <h2>{qrEventsCount}</h2>
         </div>
         <div className="card summary-card">
-          <h5>Progress Report</h5>
+          <h5>User Login Progress</h5>
           <div className="progress-bar-wrapper">
             <div
               className="progress-bar"

@@ -83,17 +83,21 @@
 /* Table Header */
 .table-header {
   display: grid;
-  grid-template-columns: 60px 2fr 1fr 1fr 1fr 120px;
+  grid-template-columns: 60px 2fr 1fr 1fr;
   gap: var(--space-4);
   padding: var(--space-4);
   background-color: var(--color-neutral-100);
   border-bottom: 1px solid var(--color-neutral-200);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-neutral-700);
+  text-transform: uppercase;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.04em;
   min-width: 900px;
   position: sticky;
   top: 0;
   z-index: 2;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
 }
 
 .user-table-body {
@@ -108,7 +112,7 @@
 /* Card Styles */
 .user-card {
   display: grid;
-  grid-template-columns: 60px 2fr 1fr 1fr 1fr 120px;
+  grid-template-columns: 60px 2fr 1fr 1fr;
   gap: var(--space-4);
   padding: var(--space-4);
   background-color: var(--color-neutral-50);
@@ -124,6 +128,10 @@
 
 .user-card:hover {
   background-color: var(--color-neutral-100);
+}
+
+.user-card:nth-child(even) {
+  background-color: #fff;
 }
 
 /* User Avatar */
@@ -280,12 +288,18 @@
   color: var(--color-neutral-600);
   cursor: pointer;
   transition: all var(--transition-fast);
+  outline: none;
 }
 
 .action-button:hover {
   background-color: var(--color-neutral-100);
   color: var(--color-neutral-900);
   transform: translateY(-1px);
+}
+
+.action-button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  border-color: var(--color-primary);
 }
 
 .action-button.edit:hover {
@@ -538,4 +552,91 @@
   .role-badge {
     border: 1px solid CanvasText;
   }
+}
+
+/* Force Light Theme on New Users page (override system dark mode) */
+.new-users .user-grid {
+  background-color: var(--color-neutral-50);
+  border-color: var(--color-neutral-200);
+}
+
+.new-users .table-header {
+  background-color: var(--color-neutral-100);
+  border-color: var(--color-neutral-200);
+  color: var(--color-neutral-700);
+  box-shadow: none;
+}
+
+.new-users .user-card {
+  background-color: var(--color-neutral-50);
+  border-color: var(--color-neutral-200);
+}
+
+.new-users .user-card:hover {
+  background-color: var(--color-neutral-100);
+}
+
+.new-users .user-card:nth-child(even) {
+  background-color: #fff;
+}
+
+.new-users h2 {
+  color: #000 !important;
+  border-bottom-color: var(--color-neutral-200);
+}
+
+.new-users .user-name {
+  color: var(--color-neutral-900);
+}
+
+.new-users .user-email {
+  color: var(--color-neutral-600);
+}
+
+.new-users .role-badge {
+  background-color: var(--color-neutral-200);
+  color: var(--color-neutral-700);
+}
+
+.new-users .action-button {
+  border-color: var(--color-neutral-200);
+  color: var(--color-neutral-600);
+  background-color: transparent;
+}
+
+.new-users .action-button:hover {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-900);
+  border-color: var(--color-neutral-300);
+}
+
+.new-users .copy-button {
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-600);
+  border-color: var(--color-neutral-200);
+}
+
+.new-users .copy-button:hover {
+  background-color: var(--color-neutral-200);
+  color: var(--color-neutral-900);
+}
+
+/* Sleek Scrollbar for the table body */
+.user-table-body::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.user-table-body::-webkit-scrollbar-track {
+  background: var(--color-neutral-100);
+  border-radius: var(--radius-full);
+}
+
+.user-table-body::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-full);
+}
+
+.user-table-body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
 }

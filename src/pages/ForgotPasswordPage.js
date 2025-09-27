@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth-background.css";
+import Loader from "../components/Loader";
 
 const UpdatePasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -243,14 +244,7 @@ const UpdatePasswordPage = () => {
             disabled={isLoading || passwordStrength.score < 3}
           >
             {isLoading ? (
-              <>
-                <span
-                  className="spinner-border spinner-border-sm me-2"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-                Updating...
-              </>
+              <Loader label="Updating" size="sm" />
             ) : (
               "Update Password"
             )}

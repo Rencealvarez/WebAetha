@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { supabase } from "../../supabase";
 import "../../styles/QuizStats.css";
+import Loader from "../../components/Loader";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -215,12 +216,7 @@ const QuizStats = () => {
   };
 
   if (loading) {
-    return (
-      <div className="quiz-stats loading" role="alert" aria-busy="true">
-        <div className="loading-spinner"></div>
-        <p>Loading quiz statistics...</p>
-      </div>
-    );
+    return <Loader label="Loading quiz statistics" fullscreen size="lg" />;
   }
 
   if (error) {

@@ -50,12 +50,12 @@ const Navbar = () => {
               <>
                 <li className="nav-item">
                   <Link to="/local-voices" className="nav-link">
-                    🧑‍🤝‍🧑 Local Voices
+                    Local Voices
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link to="/aeta-museum" className="nav-link">
-                    🏛️ Aeta Museum
+                    Aeta Museum
                   </Link>
                 </li>
                 <li className="nav-item">

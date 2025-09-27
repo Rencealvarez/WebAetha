@@ -135,6 +135,7 @@ const MuseumContentManagement = () => {
           englishText:
             row.englishText !== undefined ? row.englishText : row.english_text,
           aetaText: row.aetaText !== undefined ? row.aetaText : row.aeta_text,
+          imageUrl: row.imageUrl !== undefined ? row.imageUrl : row.image_url,
         }))
       );
 
@@ -274,6 +275,8 @@ const MuseumContentManagement = () => {
   };
 
   const handleEditArtifact = (artifact) => {
+    // Ensure we preview the artifact's current image and not a stale selection
+    setSelectedArtifactFile(null);
     setEditingArtifact(artifact);
   };
 
@@ -308,6 +311,7 @@ const MuseumContentManagement = () => {
         )
       );
       setEditingArtifact(null);
+      setSelectedArtifactFile(null);
       // no-op for 3d model in image-only mode
       setSnackbar({
         open: true,
@@ -1163,11 +1167,32 @@ const MuseumContentManagement = () => {
                   </label>
                   {selectedArtifactFile && (
                     <Box sx={{ mt: 1 }}>
-                      <img
-                        src={selectedArtifactFile.preview}
-                        alt="Preview"
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
+                      <Card
+                        sx={{
+                          maxWidth: 220,
+                          borderRadius: 2,
+                          boxShadow: 1,
+                          border: "1px solid",
+                          borderColor: "divider",
+                        }}
+                      >
+                        <CardMedia
+                          component="img"
+                          height="140"
+                          image={selectedArtifactFile.preview}
+                          alt="Selected preview"
+                          sx={{ objectFit: "cover" }}
+                        />
+                        <CardContent sx={{ py: 1.5 }}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: "block", textAlign: "center" }}
+                          >
+                            Selected Image Preview
+                          </Typography>
+                        </CardContent>
+                      </Card>
                     </Box>
                   )}
                 </Grid>
@@ -1792,25 +1817,63 @@ const MuseumContentManagement = () => {
                   {editingArtifact?.imageUrl ? "Replace Image" : "Upload Image"}
                 </Button>
               </label>
-              {editingArtifact?.imageUrl && (
-                <Box
-                  sx={{ mt: 1, display: "flex", gap: 1, alignItems: "center" }}
-                >
-                  <Chip label="Image attached" size="small" />
-                  <Button
-                    size="small"
-                    color="error"
-                    onClick={() => {
-                      if (window.confirm("Remove the current image?")) {
-                        setEditingArtifact({
-                          ...editingArtifact,
-                          imageUrl: "",
-                        });
-                      }
+              {(selectedArtifactFile || editingArtifact?.imageUrl) && (
+                <Box sx={{ mt: 1 }}>
+                  <Card
+                    sx={{
+                      maxWidth: 220,
+                      borderRadius: 2,
+                      boxShadow: 1,
+                      border: "1px solid",
+                      borderColor: "divider",
                     }}
                   >
-                    Remove Image
-                  </Button>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={
+                        selectedArtifactFile?.preview ||
+                        editingArtifact?.imageUrl
+                      }
+                      alt="Image preview"
+                      sx={{ objectFit: "cover" }}
+                    />
+                    <CardContent sx={{ py: 1.5 }}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: "block", textAlign: "center" }}
+                      >
+                        {selectedArtifactFile
+                          ? "New Image Preview"
+                          : "Current Image"}
+                      </Typography>
+                      {editingArtifact?.imageUrl && !selectedArtifactFile && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mt: 0.5,
+                          }}
+                        >
+                          <Button
+                            size="small"
+                            color="error"
+                            onClick={() => {
+                              if (window.confirm("Remove the current image?")) {
+                                setEditingArtifact({
+                                  ...editingArtifact,
+                                  imageUrl: "",
+                                });
+                              }
+                            }}
+                          >
+                            Remove Image
+                          </Button>
+                        </Box>
+                      )}
+                    </CardContent>
+                  </Card>
                 </Box>
               )}
             </Grid>

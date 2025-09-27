@@ -8,6 +8,7 @@ import "../styles/panoramicpage.css";
 import "../components/Navbar.css";
 import DidYouKnowCard from "../components/DidYouKnowCard";
 import aethaLogo from "../assets/images/aetha_logo.svg";
+import Loader from "../components/Loader";
 
 const logQuizResult = async (imagePath, selectedOption, isCorrect, userId) => {
   const quizPayload = {
@@ -40,7 +41,12 @@ const PanoramaViewer = ({ image }) => {
         <sphereGeometry args={[5, 64, 64]} />
         <meshStandardMaterial map={texture} side={THREE.BackSide} />
       </mesh>
-      <OrbitControls enableZoom={false} autoRotate />
+      {/** Keep thumbnails static: no rotation, no zoom/pan */}
+      <OrbitControls
+        enableZoom={false}
+        enablePan={false}
+        enableRotate={false}
+      />
       <Environment preset="sunset" />
     </Canvas>
   );
@@ -72,7 +78,7 @@ const FullscreenPanorama = ({ image, onClose }) => {
         <button onClick={zoomIn}>+</button>
         <button onClick={zoomOut}>-</button>
       </div>
-      <Suspense fallback={<div className="loading-spinner">Loading...</div>}>
+      <Suspense fallback={<Loader label="Loading panorama" size="lg" />}>
         <Canvas
           style={{ height: "100vh", width: "100vw" }}
           camera={{ fov: 75 }}

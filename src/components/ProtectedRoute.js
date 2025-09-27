@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "../supabase";
+import Loader from "./Loader";
 
 const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ children }) => {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  if (loading) return null; // or a spinner
+  if (loading) return <Loader label="Checking session" fullscreen size="md" />;
   if (!session) return <Navigate to="/login" replace />;
   return children;
 };

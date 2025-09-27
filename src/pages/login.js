@@ -4,6 +4,7 @@ import { supabase } from "../supabase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/login.css";
 import "../styles/auth-background.css";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -59,7 +60,7 @@ const Login = () => {
     }
 
     if (!validatePassword(password)) {
-      setError("Password must be at least 6 characters long.");
+      setError("Password must be at least 8 characters long.");
       setIsLoading(false);
       return;
     }
@@ -192,18 +193,7 @@ const Login = () => {
             className="btn btn-success w-100 py-2"
             disabled={isLoading}
           >
-            {isLoading ? (
-              <>
-                <span
-                  className="spinner-border spinner-border-sm me-2"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-                Signing in...
-              </>
-            ) : (
-              "Sign In"
-            )}
+            {isLoading ? <Loader label="Signing in" size="sm" /> : "Sign In"}
           </button>
           <p className="text-center mt-3 text-black">
             Don't have an account?{" "}

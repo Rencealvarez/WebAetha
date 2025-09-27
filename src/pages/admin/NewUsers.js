@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
-import { FaUserCircle, FaTrash, FaBan, FaCopy, FaCheck } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import "../../styles/NewUsers.css";
 
 const NewUsers = () => {
   const [newUsers, setNewUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [copiedId, setCopiedId] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -42,16 +41,6 @@ const NewUsers = () => {
       console.error("Error fetching new users:", err.message);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleCopy = async (text, id) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      console.error("Failed to copy text:", err);
     }
   };
 
@@ -114,8 +103,6 @@ const NewUsers = () => {
           <div>User</div>
           <div>Status</div>
           <div>Role</div>
-          <div>User ID</div>
-          <div>Actions</div>
         </div>
         <div className="user-table-body">
           {isLoading ? (
@@ -129,12 +116,6 @@ const NewUsers = () => {
                 </div>
                 <div className="status-badge" />
                 <div className="role-badge" />
-                <div className="user-id" />
-                <div className="card-actions">
-                  <div className="action-button" />
-                  <div className="action-button" />
-                  <div className="action-button" />
-                </div>
               </div>
             ))
           ) : newUsers.length > 0 ? (
@@ -159,46 +140,6 @@ const NewUsers = () => {
                   {user.status || "active"}
                 </span>
                 <span className="role-badge">{user.role || "user"}</span>
-                <div className="user-id">
-                  {user.id}
-                  <button
-                    className="copy-button"
-                    onClick={() => handleCopy(user.id, user.id)}
-                    title="Copy user ID"
-                  >
-                    {copiedId === user.id ? (
-                      <>
-                        <FaCheck />
-                        Copied!
-                      </>
-                    ) : (
-                      <>
-                        <FaCopy />
-                        Copy
-                      </>
-                    )}
-                  </button>
-                </div>
-                <div className="card-actions">
-                  <button
-                    className="action-button suspend"
-                    onClick={() => handleSuspend(user)}
-                    title={
-                      user.status === "suspended"
-                        ? "Activate user"
-                        : "Suspend user"
-                    }
-                  >
-                    <FaBan />
-                  </button>
-                  <button
-                    className="action-button delete"
-                    onClick={() => handleDelete(user)}
-                    title="Delete user"
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
               </div>
             ))
           ) : (

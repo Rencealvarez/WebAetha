@@ -8,6 +8,8 @@ const AdminPendingVoices = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("pending");
+  const [userSearch, setUserSearch] = useState("");
+  const [showSpamOnly] = useState(false);
   const [sortConfig, setSortConfig] = useState({
     key: "created_at",
     direction: "desc",
@@ -17,6 +19,7 @@ const AdminPendingVoices = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isConfirming, setIsConfirming] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+  const [profilesById, setProfilesById] = useState({});
   const ITEMS_PER_PAGE = 10;
 
   // Fetch voices with pagination and filters
@@ -37,11 +40,16 @@ const AdminPendingVoices = () => {
           query = query.eq("approved", true);
         }
 
-        // Apply search
+        // Apply search (by public name/quote)
         if (searchTerm) {
           query = query.or(
             `name.ilike.%${searchTerm}%,quote.ilike.%${searchTerm}%`
           );
+        }
+
+        // Apply spam-only filter
+        if (showSpamOnly) {
+          query = query.eq("suspected_spam", true);
         }
 
         // Apply sorting
@@ -59,6 +67,27 @@ const AdminPendingVoices = () => {
         if (error) throw error;
 
         setVoices((prev) => (append ? [...prev, ...data] : data));
+        // Fetch related profiles for real names/emails (based only on new data)
+        const userIds = Array.from(
+          new Set(data.map((v) => v.user_id).filter(Boolean))
+        );
+        if (userIds.length > 0) {
+          const { data: profs, error: profErr } = await supabase
+            .from("user_profiles")
+            .select("id, full_name, email")
+            .in("id", userIds);
+          if (!profErr && profs) {
+            setProfilesById((prev) => {
+              const merged = { ...prev };
+              profs.forEach((p) => {
+                merged[p.id] = p;
+              });
+              return merged;
+            });
+          }
+        } else {
+          // no-op; keep existing cached profiles to avoid UI flicker
+        }
         setHasMore(count > pageNum * ITEMS_PER_PAGE);
         setPage(pageNum);
       } catch (err) {
@@ -68,7 +97,7 @@ const AdminPendingVoices = () => {
         setIsLoading(false);
       }
     },
-    [searchTerm, statusFilter, sortConfig]
+    [searchTerm, statusFilter, sortConfig, showSpamOnly]
   );
 
   // Initial load and filter changes
@@ -107,6 +136,16 @@ const AdminPendingVoices = () => {
           .from("local_voices")
           .update({ approved: true })
           .in("id", ids);
+      } else if (action === "mark_spam") {
+        await supabase
+          .from("local_voices")
+          .update({ suspected_spam: true })
+          .in("id", ids);
+      } else if (action === "unmark_spam") {
+        await supabase
+          .from("local_voices")
+          .update({ suspected_spam: false })
+          .in("id", ids);
       } else if (action === "delete") {
         await supabase.from("local_voices").delete().in("id", ids);
       }
@@ -130,6 +169,16 @@ const AdminPendingVoices = () => {
         await supabase
           .from("local_voices")
           .update({ approved: true })
+          .eq("id", id);
+      } else if (action === "mark_spam") {
+        await supabase
+          .from("local_voices")
+          .update({ suspected_spam: true })
+          .eq("id", id);
+      } else if (action === "unmark_spam") {
+        await supabase
+          .from("local_voices")
+          .update({ suspected_spam: false })
           .eq("id", id);
       } else if (action === "delete") {
         await supabase.from("local_voices").delete().eq("id", id);
@@ -157,15 +206,24 @@ const AdminPendingVoices = () => {
     [fetchVoices, isLoading, hasMore, page]
   );
 
-  // Memoize sorted and filtered voices
-  const sortedVoices = useMemo(() => {
-    return [...voices].sort((a, b) => {
+  // Client-side filter by user profile (real name/email), then sort
+  const filteredAndSortedVoices = useMemo(() => {
+    const byUser = userSearch.trim().toLowerCase();
+    const filtered = byUser
+      ? voices.filter((v) => {
+          const p = profilesById[v.user_id] || {};
+          const fn = (p.full_name || "").toLowerCase();
+          const em = (p.email || "").toLowerCase();
+          return fn.includes(byUser) || em.includes(byUser);
+        })
+      : voices;
+    return [...filtered].sort((a, b) => {
       if (sortConfig.direction === "asc") {
         return a[sortConfig.key] > b[sortConfig.key] ? 1 : -1;
       }
       return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1;
     });
-  }, [voices, sortConfig]);
+  }, [voices, profilesById, userSearch, sortConfig]);
 
   return (
     <div className="admin-pending" role="main">
@@ -187,6 +245,13 @@ const AdminPendingVoices = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search voices"
           />
+          <input
+            type="search"
+            placeholder="Filter by real name or email"
+            value={userSearch}
+            onChange={(e) => setUserSearch(e.target.value)}
+            aria-label="Filter by user profile"
+          />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -199,6 +264,9 @@ const AdminPendingVoices = () => {
         </div>
 
         <div className="batch-actions">
+          <span className="selected-count">
+            {selectedVoices.size > 0 ? `${selectedVoices.size} selected` : ""}
+          </span>
           <button
             className="btn batch-btn"
             onClick={() => handleBatchAction("approve")}
@@ -206,6 +274,22 @@ const AdminPendingVoices = () => {
             aria-label={`Approve ${selectedVoices.size} selected voices`}
           >
             Approve Selected
+          </button>
+          <button
+            className="btn batch-btn"
+            onClick={() => handleBatchAction("mark_spam")}
+            disabled={selectedVoices.size === 0}
+            aria-label={`Mark ${selectedVoices.size} selected voices as spam`}
+          >
+            Mark Spam
+          </button>
+          <button
+            className="btn batch-btn"
+            onClick={() => handleBatchAction("unmark_spam")}
+            disabled={selectedVoices.size === 0}
+            aria-label={`Unmark ${selectedVoices.size} selected voices as spam`}
+          >
+            Unmark Spam
           </button>
           <button
             className="btn batch-btn delete"
@@ -226,10 +310,15 @@ const AdminPendingVoices = () => {
                 <th>
                   <input
                     type="checkbox"
-                    checked={selectedVoices.size === voices.length}
+                    checked={
+                      filteredAndSortedVoices.length > 0 &&
+                      selectedVoices.size === filteredAndSortedVoices.length
+                    }
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedVoices(new Set(voices.map((v) => v.id)));
+                        setSelectedVoices(
+                          new Set(filteredAndSortedVoices.map((v) => v.id))
+                        );
                       } else {
                         setSelectedVoices(new Set());
                       }
@@ -242,6 +331,7 @@ const AdminPendingVoices = () => {
                   {sortConfig.key === "name" &&
                     (sortConfig.direction === "asc" ? "↑" : "↓")}
                 </th>
+                <th>Real User</th>
                 <th onClick={() => handleSort("created_at")}>
                   Date{" "}
                   {sortConfig.key === "created_at" &&
@@ -249,11 +339,12 @@ const AdminPendingVoices = () => {
                 </th>
                 <th>Content</th>
                 <th>Media</th>
+                <th>Spam</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {sortedVoices.map((voice) => (
+              {filteredAndSortedVoices.map((voice) => (
                 <tr
                   key={voice.id}
                   className={selectedVoices.has(voice.id) ? "selected" : ""}
@@ -275,6 +366,20 @@ const AdminPendingVoices = () => {
                     />
                   </td>
                   <td>{voice.name}</td>
+                  <td>
+                    {profilesById[voice.user_id] ? (
+                      <div className="real-user">
+                        <div className="full-name">
+                          {profilesById[voice.user_id].full_name}
+                        </div>
+                        <div className="email">
+                          {profilesById[voice.user_id].email}
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="muted">Unknown</span>
+                    )}
+                  </td>
                   <td>
                     <time dateTime={voice.created_at}>
                       {new Date(voice.created_at).toLocaleString()}
@@ -304,6 +409,13 @@ const AdminPendingVoices = () => {
                     </div>
                   </td>
                   <td>
+                    {voice.suspected_spam ? (
+                      <span className="tag tag-spam">Spam</span>
+                    ) : (
+                      <span className="tag tag-clean">Clean</span>
+                    )}
+                  </td>
+                  <td>
                     <div className="actions">
                       {!voice.approved && (
                         <button
@@ -312,6 +424,23 @@ const AdminPendingVoices = () => {
                           aria-label={`Approve voice from ${voice.name}`}
                         >
                           Approve
+                        </button>
+                      )}
+                      {voice.suspected_spam ? (
+                        <button
+                          className="btn"
+                          onClick={() => handleAction(voice.id, "unmark_spam")}
+                          aria-label={`Unmark spam for ${voice.name}`}
+                        >
+                          Unmark Spam
+                        </button>
+                      ) : (
+                        <button
+                          className="btn"
+                          onClick={() => handleAction(voice.id, "mark_spam")}
+                          aria-label={`Mark as spam for ${voice.name}`}
+                        >
+                          Mark Spam
                         </button>
                       )}
                       <button
@@ -325,14 +454,15 @@ const AdminPendingVoices = () => {
                   </td>
                 </tr>
               ))}
+              {filteredAndSortedVoices.length === 0 && (
+                <tr>
+                  <td colSpan="8" className="empty-state">
+                    No voices found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
-          {isLoading && (
-            <div className="loading-indicator" role="status">
-              <div className="loading-spinner"></div>
-              <span>Loading more voices...</span>
-            </div>
-          )}
         </div>
       </div>
 
