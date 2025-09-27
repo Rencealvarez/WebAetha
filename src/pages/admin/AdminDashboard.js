@@ -54,7 +54,6 @@ const AdminDashboard = () => {
       setLoginData(loginRaw.data || []);
       setQREventsCount(qrCountRes.count || 0);
 
-      // Device usage
       const deviceCounts = { Desktop: 0, Mobile: 0 };
       (loginRaw.data || []).forEach((log) => {
         if (log.device_type === "Desktop") deviceCounts.Desktop++;
@@ -62,7 +61,6 @@ const AdminDashboard = () => {
       });
       setDeviceData([deviceCounts.Desktop, deviceCounts.Mobile]);
 
-      // 🌐 Progress Report Calculation with local date
       const today = new Date();
       const todayStr = today.toISOString().split("T")[0];
       const uniqueEmails = new Set();

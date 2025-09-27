@@ -38,7 +38,6 @@
   border: 3px solid transparent;
 }
 
-/* Dual ring with gradient accent */
 .loader-spinner::before {
   border-top-color: #3b82f6;
   border-right-color: #60a5fa;
@@ -51,7 +50,6 @@
   animation: spin 1.2s linear infinite reverse;
 }
 
-/* Sizes */
 .loader-spinner.sm {
   width: 24px;
   height: 24px;

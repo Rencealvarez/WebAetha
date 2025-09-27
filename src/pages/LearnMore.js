@@ -9,7 +9,6 @@ const LearnMore = () => {
   const [activeSection, setActiveSection] = useState(null);
   const [readingProgress, setReadingProgress] = useState(0);
 
-  // Track reading progress
   useEffect(() => {
     const handleScroll = () => {
       const totalHeight =
@@ -112,13 +111,11 @@ const LearnMore = () => {
 
   return (
     <div className="learnmore-page">
-      {/* Progress Bar */}
       <div
         className="reading-progress"
         style={{ width: `${readingProgress}%` }}
       />
 
-      {/* Navigation */}
       <nav className="nav" role="navigation" aria-label="Main navigation">
         <div className="nav-container">
           <div className="nav-logo">
@@ -148,7 +145,6 @@ const LearnMore = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="hero-section-learnmore" role="banner">
         <div className="hero-text">
           <h1>Discover the Aeta</h1>
@@ -167,10 +163,8 @@ const LearnMore = () => {
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="content-section" role="main">
         <div className="container">
-          {/* Table of Contents */}
           <div
             className="toc-container"
             role="navigation"
@@ -192,7 +186,6 @@ const LearnMore = () => {
             </ul>
           </div>
 
-          {/* Content Sections */}
           {sections.map((section) => (
             <div key={section.id} id={section.id} className="content-block">
               <h2 className="section-title">
@@ -240,7 +233,6 @@ const LearnMore = () => {
             </div>
           ))}
 
-          {/* Video Section */}
           <div id="video" className="video-section">
             <h2 className="section-title">
               <i className="fas fa-video"></i>

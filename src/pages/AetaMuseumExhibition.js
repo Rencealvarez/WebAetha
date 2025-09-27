@@ -36,11 +36,7 @@ import BundlesOfRightsNavbar from "../components/BundlesOfRightsNavbar";
 import { supabase } from "../supabase";
 import "./AetaMuseumExhibition.css";
 import playerPlaceholder from "../assets/images/player.png";
-// 3D dependencies removed for image-only mode
 
-// 3D components removed in image-only mode
-
-// Interactive 3D Display Component
 const Interactive3DDisplay = ({
   title,
   description,
@@ -59,7 +55,6 @@ const Interactive3DDisplay = ({
           {title}
         </Typography>
 
-        {/* Real Image View */}
         <MuiBox
           className="real-image-container"
           sx={{
@@ -169,7 +164,6 @@ const Interactive3DDisplay = ({
   );
 };
 
-// Cultural Heritage Section
 const CulturalHeritageSection = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [languages, setLanguages] = useState([]);
@@ -190,7 +184,7 @@ const CulturalHeritageSection = () => {
         if (ritualsRes.data) setRituals(ritualsRes.data);
       } catch (error) {
         console.error("Error loading heritage data:", error);
-        // No local fallback; rely on database only
+
         setLanguages([]);
         setFestivals([]);
         setRituals([]);
@@ -395,13 +389,11 @@ const CulturalHeritageSection = () => {
   );
 };
 
-// Living Culture Gallery
 const LivingCultureGallery = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [culturalVideos, setCulturalVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Utilities to derive duration from YouTube without an API key
   const extractYouTubeId = (url) => {
     if (!url) return null;
     const match = url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
@@ -431,7 +423,7 @@ const LivingCultureGallery = () => {
         document.body.appendChild(tag);
       }
       window.onYouTubeIframeAPIReady = () => resolve(window.YT);
-      // If already loading, poll briefly
+
       const check = () => {
         if (window.YT && window.YT.Player) resolve(window.YT);
         else setTimeout(check, 100);
@@ -561,7 +553,6 @@ const LivingCultureGallery = () => {
             >
               <iframe
                 src={(() => {
-                  // Convert YouTube watch URL to embed URL with proper time handling
                   const url = selectedVideo.videoUrl;
                   console.log("🎬 Processing video URL:", url);
 
@@ -579,7 +570,7 @@ const LivingCultureGallery = () => {
                       return embedUrl;
                     }
                   }
-                  // Fallback for other video URLs
+
                   const fallbackUrl = url.replace("watch?v=", "embed/");
                   console.log("🎬 Using fallback URL:", fallbackUrl);
                   return fallbackUrl;
@@ -618,7 +609,6 @@ const LivingCultureGallery = () => {
   );
 };
 
-// Main Exhibition Component
 const AetaMuseumExhibition = () => {
   const [activeSection, setActiveSection] = useState("artifacts");
   const [artifacts, setArtifacts] = useState([]);
@@ -640,11 +630,10 @@ const AetaMuseumExhibition = () => {
 
         if (error) throw error;
         if (data) {
-          // Normalize DB field names (snake_case) to the props expected by the UI (camelCase)
           const normalized = data.map((item) => {
             let resolvedImageUrl =
               item.imageUrl || item.image_url || item.image || null;
-            // If it's a Supabase Storage path (no protocol), build a public URL
+
             if (resolvedImageUrl && !/^https?:\/\//i.test(resolvedImageUrl)) {
               try {
                 const bucket =
@@ -676,7 +665,7 @@ const AetaMuseumExhibition = () => {
         }
       } catch (error) {
         console.error("Error loading artifacts:", error);
-        // Do not fallback to local data anymore; rely on database
+
         setArtifacts([]);
       } finally {
         setArtifactsLoading(false);
@@ -689,7 +678,7 @@ const AetaMuseumExhibition = () => {
   return (
     <div className="museum-page">
       <BundlesOfRightsNavbar />
-      {/* Hero Section with Background Image */}
+
       <section className="hero-section museum-hero">
         <div className="hero-overlay">
           <div className="text-center text-white">
@@ -714,14 +703,12 @@ const AetaMuseumExhibition = () => {
       </section>
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        {/* Navigation Tabs */}
         <MuiBox sx={{ borderBottom: 1, borderColor: "divider", mb: 4, mt: 4 }}>
           <Tabs
             value={activeSection}
             onChange={(e, newValue) => setActiveSection(newValue)}
             variant="scrollable"
             scrollButtons="auto"
-            // remove centered to avoid conflict with scrollable variant
           >
             {sections.map((section) => (
               <Tab
@@ -735,7 +722,6 @@ const AetaMuseumExhibition = () => {
           </Tabs>
         </MuiBox>
 
-        {/* Traditional Artifacts Section */}
         {activeSection === "artifacts" && (
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -780,7 +766,6 @@ const AetaMuseumExhibition = () => {
           </motion.div>
         )}
 
-        {/* Living Culture Gallery Section */}
         {activeSection === "culture" && (
           <motion.div
             initial={{ opacity: 0, x: 50 }}
@@ -791,7 +776,6 @@ const AetaMuseumExhibition = () => {
           </motion.div>
         )}
 
-        {/* Cultural Heritage Center Section */}
         {activeSection === "heritage" && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -802,7 +786,6 @@ const AetaMuseumExhibition = () => {
           </motion.div>
         )}
 
-        {/* Footer Information */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -834,7 +817,6 @@ const AetaMuseumExhibition = () => {
         </motion.div>
       </Container>
 
-      {/* Contact Section Footer - Matching Landing Page Style */}
       <section id="contact" className="contact-section">
         <div className="container text-center">
           <h2>Get in touch!</h2>

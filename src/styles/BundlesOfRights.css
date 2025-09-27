@@ -1,4 +1,3 @@
-/* Base styles and variables */
 :root {
   --primary: #218838;
   --primary-dark: #1a6b2c;
@@ -26,7 +25,6 @@
   scroll-behavior: smooth;
 }
 
-/* Header Section */
 .rights-header {
   background-image: url("../assets/images/35.png");
   background-size: cover;
@@ -78,7 +76,6 @@
   line-height: 1.5;
 }
 
-/* Content Sections */
 .bundles-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -177,12 +174,6 @@
   color: var(--primary-dark);
 }
 
-/* Footer styles are now handled by App.css */
-
-/* Custom styling removed - keeping original bundles-content styling */
-
-/* Back button styles are now handled by Navbar.css */
-
 .section-reference {
   display: block;
   font-size: 0.9em;
@@ -205,7 +196,6 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .bundles-content {
     grid-template-columns: 1fr;
@@ -237,7 +227,6 @@
   }
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -252,7 +241,6 @@
   outline-offset: 2px;
 }
 
-/* High contrast mode */
 @media (forced-colors: active) {
   .bundles-content {
     border: 1px solid CanvasText;

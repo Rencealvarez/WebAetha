@@ -22,7 +22,6 @@ const UpdatePasswordPage = () => {
   useEffect(() => {
     const setupSession = async () => {
       try {
-        // Get the access token from the URL hash
         const hash = window.location.hash;
         console.log("URL hash:", hash);
 
@@ -34,7 +33,6 @@ const UpdatePasswordPage = () => {
           console.log("Access token found:", !!accessToken);
 
           if (accessToken) {
-            // Set the session using the access token
             const { error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
@@ -47,7 +45,6 @@ const UpdatePasswordPage = () => {
           }
         }
 
-        // Check if we have a valid session
         const {
           data: { session },
           error,
@@ -76,21 +73,19 @@ const UpdatePasswordPage = () => {
     const feedback = [];
     let score = 0;
 
-    // Length check
     if (password.length >= 8) {
       score += 1;
     } else {
       feedback.push("Password should be at least 8 characters long");
     }
 
-    // Combined character check (uppercase, lowercase, numeric, and special)
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
     const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     if (hasUppercase && hasLowercase && hasNumber && hasSpecial) {
-      score += 4; // Give full points for meeting all character requirements
+      score += 4;
     } else {
       feedback.push(
         "Must contain uppercase, lowercase, number, and special character"
@@ -125,7 +120,6 @@ const UpdatePasswordPage = () => {
     }
 
     try {
-      // Update password using Supabase Auth
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
@@ -134,12 +128,10 @@ const UpdatePasswordPage = () => {
         throw error;
       }
 
-      // Get current user email for logging
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
-      // Log the password change using RPC
       const { error: logError } = await supabase.rpc(
         "log_password_reset_attempt",
         {
@@ -154,7 +146,6 @@ const UpdatePasswordPage = () => {
         console.error("Failed to log password reset completion:", logError);
       }
 
-      // Sign out from all devices
       await supabase.auth.signOut();
 
       setMessage("✅ Password updated successfully! Redirecting to login...");

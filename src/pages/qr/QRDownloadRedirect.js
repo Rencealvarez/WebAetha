@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { supabase } from "../../supabase";
 
-// A lightweight redirect page that logs QR/CTA hits and then forwards
-// to the actual APK download URL. This works for both scans and clicks.
 const QRDownloadRedirect = () => {
   const executedRef = useRef(false);
 
@@ -14,7 +12,6 @@ const QRDownloadRedirect = () => {
           "180IOw_8JfQqodo_gpOeVnaYZaoXZ92du";
         const apkUrl = `https://drive.google.com/uc?export=download&id=${APK_FILE_ID}`;
 
-        // Guard against double-invocation in React StrictMode (dev)
         const SESSION_KEY = "qr_redirect_log_in_progress";
         if (
           executedRef.current ||
@@ -38,7 +35,6 @@ const QRDownloadRedirect = () => {
 
         window.location.replace(apkUrl);
       } catch (e) {
-        // If logging fails, still redirect
         const APK_FILE_ID =
           process.env.REACT_APP_APK_FILE_ID ||
           "180IOw_8JfQqodo_gpOeVnaYZaoXZ92du";

@@ -432,7 +432,6 @@ const Admin = () => {
     page * itemsPerPage
   );
 
-  // Sort quizzes by the order of panoramicImages (dropdown order)
   const imageOrder = panoramicImages.map((img) => img.file_name);
   const sortedQuizzes = [...quizzes].sort((a, b) => {
     const aImage =

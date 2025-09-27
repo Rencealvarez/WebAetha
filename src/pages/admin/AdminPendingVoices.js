@@ -22,7 +22,6 @@ const AdminPendingVoices = () => {
   const [profilesById, setProfilesById] = useState({});
   const ITEMS_PER_PAGE = 10;
 
-  // Fetch voices with pagination and filters
   const fetchVoices = useCallback(
     async (pageNum = 1, append = false) => {
       try {
@@ -33,31 +32,26 @@ const AdminPendingVoices = () => {
           .from("local_voices")
           .select("*", { count: "exact" });
 
-        // Apply status filter
         if (statusFilter === "pending") {
           query = query.eq("approved", false);
         } else if (statusFilter === "approved") {
           query = query.eq("approved", true);
         }
 
-        // Apply search (by public name/quote)
         if (searchTerm) {
           query = query.or(
             `name.ilike.%${searchTerm}%,quote.ilike.%${searchTerm}%`
           );
         }
 
-        // Apply spam-only filter
         if (showSpamOnly) {
           query = query.eq("suspected_spam", true);
         }
 
-        // Apply sorting
         query = query.order(sortConfig.key, {
           ascending: sortConfig.direction === "asc",
         });
 
-        // Apply pagination
         const from = (pageNum - 1) * ITEMS_PER_PAGE;
         const to = from + ITEMS_PER_PAGE - 1;
         query = query.range(from, to);
@@ -67,7 +61,7 @@ const AdminPendingVoices = () => {
         if (error) throw error;
 
         setVoices((prev) => (append ? [...prev, ...data] : data));
-        // Fetch related profiles for real names/emails (based only on new data)
+
         const userIds = Array.from(
           new Set(data.map((v) => v.user_id).filter(Boolean))
         );
@@ -86,7 +80,6 @@ const AdminPendingVoices = () => {
             });
           }
         } else {
-          // no-op; keep existing cached profiles to avoid UI flicker
         }
         setHasMore(count > pageNum * ITEMS_PER_PAGE);
         setPage(pageNum);
@@ -100,13 +93,11 @@ const AdminPendingVoices = () => {
     [searchTerm, statusFilter, sortConfig, showSpamOnly]
   );
 
-  // Initial load and filter changes
   useEffect(() => {
     setPage(1);
     fetchVoices(1, false);
   }, [fetchVoices]);
 
-  // Handle sorting
   const handleSort = (key) => {
     setSortConfig((prev) => ({
       key,
@@ -114,7 +105,6 @@ const AdminPendingVoices = () => {
     }));
   };
 
-  // Handle batch actions
   const handleBatchAction = async (action) => {
     if (selectedVoices.size === 0) return;
 
@@ -161,7 +151,6 @@ const AdminPendingVoices = () => {
     }
   };
 
-  // Handle individual actions
   const handleAction = async (id, action) => {
     try {
       setIsLoading(true);
@@ -191,7 +180,6 @@ const AdminPendingVoices = () => {
     }
   };
 
-  // Handle infinite scroll
   const handleScroll = useCallback(
     (e) => {
       const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -206,7 +194,6 @@ const AdminPendingVoices = () => {
     [fetchVoices, isLoading, hasMore, page]
   );
 
-  // Client-side filter by user profile (real name/email), then sort
   const filteredAndSortedVoices = useMemo(() => {
     const byUser = userSearch.trim().toLowerCase();
     const filtered = byUser
@@ -466,7 +453,6 @@ const AdminPendingVoices = () => {
         </div>
       </div>
 
-      {/* Confirmation Dialog */}
       {isConfirming && (
         <div
           className="confirmation-dialog"

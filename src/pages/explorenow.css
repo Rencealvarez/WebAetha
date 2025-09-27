@@ -300,8 +300,6 @@ h2 {
   height: auto;
 }
 
-/* Footer styles are now handled by App.css */
-
 @media (max-width: 768px) {
   .explore-content {
     flex-direction: column;

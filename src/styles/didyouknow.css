@@ -13,7 +13,6 @@
   transition: all 0.3s ease;
 }
 
-/* Responsive design to prevent footer overlap */
 @media (max-width: 768px) {
   .did-you-know-box {
     bottom: 80px;
@@ -34,7 +33,6 @@
   }
 }
 
-/* Extra small screens */
 @media (max-width: 360px) {
   .did-you-know-box {
     bottom: 120px;
@@ -45,7 +43,6 @@
   }
 }
 
-/* Landscape orientation on mobile devices */
 @media (max-width: 768px) and (orientation: landscape) {
   .did-you-know-box {
     bottom: 60px !important;
@@ -54,12 +51,10 @@
   }
 }
 
-/* Ensure the card doesn't interfere with scrollable content */
 .did-you-know-box {
   pointer-events: auto !important;
 }
 
-/* Add some breathing room for very tall content */
 @media (min-height: 800px) {
   .did-you-know-box {
     bottom: 30px !important;

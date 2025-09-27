@@ -13,7 +13,6 @@
   --spacing-unit: 1rem;
 }
 
-/* Base Styles */
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
@@ -24,7 +23,6 @@ body {
   padding: 0;
 }
 
-/* Reading Progress Bar */
 .reading-progress {
   position: fixed;
   top: 0;
@@ -35,8 +33,6 @@ body {
   transition: width 0.1s ease;
 }
 
-/* Navigation styles are now handled by Navbar.css */
-/* Additional navigation overrides for LearnMore page */
 body .nav {
   position: absolute;
   width: 100%;
@@ -80,9 +76,6 @@ body .nav-link:hover {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* Back link styles are now handled by Navbar.css */
-
-/* Hero Section */
 .hero-section-learnmore {
   height: 70vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
@@ -157,7 +150,6 @@ body .nav-link:hover {
   padding: 0 var(--spacing-unit);
 }
 
-/* Table of Contents */
 .toc-container {
   background-color: var(--card-background);
   padding: 2rem;
@@ -204,7 +196,6 @@ body .nav-link:hover {
   color: var(--text-light);
 }
 
-/* Content Blocks */
 .content-block {
   margin-bottom: 3rem;
 }
@@ -339,7 +330,6 @@ body .nav-link:hover {
   gap: 0.5rem;
 }
 
-/* Feedback Section */
 .feedback-container {
   text-align: center;
   margin-top: 1rem;
@@ -377,14 +367,13 @@ body .nav-link:hover {
   color: white;
 }
 
-/* Video Section */
 .video-section {
   margin-top: 4rem;
 }
 
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   border-radius: var(--border-radius);
@@ -409,8 +398,6 @@ body .nav-link:hover {
   font-size: 4rem;
   margin-bottom: 1rem;
 }
-
-/* Footer styles are now handled by App.css */
 
 .social-share {
   display: flex;
@@ -438,7 +425,6 @@ body .nav-link:hover {
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .hero-text h1 {
     font-size: 2.5rem;
@@ -473,20 +459,17 @@ body .nav-link:hover {
   }
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
   }
 }
 
-/* Focus Styles */
 :focus {
   outline: 3px solid var(--secondary-color);
   outline-offset: 2px;
 }
 
-/* Print Styles */
 @media print {
   .nav,
   .hero-section-learnmore,

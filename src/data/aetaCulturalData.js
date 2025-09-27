@@ -1,6 +1,3 @@
-// Aeta Cultural Data for Museum Exhibition
-// This data represents authentic information about Aeta culture and heritage
-
 export const aetaLanguages = [
   {
     name: "Mag-antsi",

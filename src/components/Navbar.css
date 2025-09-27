@@ -95,12 +95,10 @@
     gap: 1rem;
   }
 
-  /* Hide the hamburger menu button */
   .nav-toggle {
     display: none !important;
   }
 
-  /* Show the navigation menu directly without toggle */
   .nav-menu {
     display: flex !important;
     position: static;
@@ -149,7 +147,6 @@
   }
 }
 
-/* Additional mobile styles for very small screens */
 @media (max-width: 480px) {
   .nav-container {
     padding: 0 20px;

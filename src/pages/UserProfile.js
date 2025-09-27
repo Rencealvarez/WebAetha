@@ -1,4 +1,3 @@
-// src/pages/UserProfilePage.js
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
@@ -32,7 +31,7 @@ export default function UserProfilePage() {
   const [avatarFile, setAvatarFile] = useState(null);
   const [coverFile, setCoverFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [cropMode, setCropMode] = useState(null); // 'avatar' or 'cover'
+  const [cropMode, setCropMode] = useState(null);
   const [crop, setCrop] = useState();
   const [imgSrc, setImgSrc] = useState("");
   const imgRef = useRef(null);
@@ -135,7 +134,6 @@ export default function UserProfilePage() {
       crop.height
     );
 
-    // Convert canvas to blob
     canvas.toBlob((blob) => {
       if (blob) {
         const file = new File(
@@ -266,7 +264,6 @@ export default function UserProfilePage() {
         </div>
       )}
 
-      {/* Cover + Avatar */}
       <div
         className={`cover-wrapper ${coverFile ? "has-selected-image" : ""} ${
           isUploading ? "is-uploading" : ""
@@ -278,7 +275,6 @@ export default function UserProfilePage() {
           className="cover-photo"
         />
 
-        {/* Avatar */}
         <div
           className={`avatar-wrapper ${
             avatarFile ? "has-selected-image" : ""
@@ -302,7 +298,6 @@ export default function UserProfilePage() {
           )}
         </div>
 
-        {/* Cover edit pencil */}
         {editing && (
           <label className="cover-edit-icon">
             <FaPencilAlt />
@@ -316,7 +311,6 @@ export default function UserProfilePage() {
         )}
       </div>
 
-      {/* White card with details */}
       <div className="profile-content">
         <button
           className="edit-btn"

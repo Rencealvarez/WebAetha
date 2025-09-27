@@ -53,7 +53,6 @@ const PrintReports = () => {
       const logins = loginRes.data || [];
       const qrEvents = qrRes.data || [];
 
-      // Calculate filtered data based on selected period
       let filteredUsers = [];
       let filteredLogins = [];
       let filteredQrEvents = [];
@@ -117,14 +116,12 @@ const PrintReports = () => {
         );
       }
 
-      // Calculate device usage
       const deviceCounts = { Desktop: 0, Mobile: 0 };
       filteredLogins.forEach((login) => {
         if (login.device_type === "Desktop") deviceCounts.Desktop++;
         else if (login.device_type === "Mobile") deviceCounts.Mobile++;
       });
 
-      // Calculate login activity (last 7 days for context)
       const loginActivity = [];
       for (let i = 6; i >= 0; i--) {
         const date = new Date(now);
@@ -151,7 +148,6 @@ const PrintReports = () => {
         totalUsers: users.length,
         totalVisits: logins.length,
         qrDownloads: qrEvents.length,
-        // period-specific counts for preview/report
         periodUsers: filteredUsers.length,
         periodVisits: filteredLogins.length,
         periodQrDownloads: filteredQrEvents.length,
@@ -181,7 +177,6 @@ const PrintReports = () => {
   }, [fetchReportData]);
 
   const generatePDF = () => {
-    // Check if at least one section is selected
     const hasSelectedSections = Object.values(selectedSections).some(
       (selected) => selected
     );
@@ -220,7 +215,6 @@ const PrintReports = () => {
     doc.text(periodText, pageWidth / 2, yPosition, { align: "center" });
     yPosition += 20;
 
-    // Generated date
     doc.setFontSize(10);
     doc.text(
       `Generated on: ${new Date().toLocaleString()}`,
@@ -230,7 +224,6 @@ const PrintReports = () => {
     );
     yPosition += 20;
 
-    // Summary Statistics (if selected)
     if (selectedSections.summaryStats) {
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
@@ -240,7 +233,6 @@ const PrintReports = () => {
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
 
-      // Total users
       doc.text(
         `Total Registered Users: ${reportData.totalUsers}`,
         20,
@@ -254,7 +246,6 @@ const PrintReports = () => {
       yPosition += 15;
     }
 
-    // Period-specific registrations (if selected)
     if (selectedSections.periodRegistrations) {
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
@@ -286,7 +277,6 @@ const PrintReports = () => {
       yPosition += 15;
     }
 
-    // Device Usage (if selected)
     if (selectedSections.deviceUsage) {
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
@@ -320,7 +310,6 @@ const PrintReports = () => {
       yPosition += 15;
     }
 
-    // Recent Activity (Last 7 Days) (if selected)
     if (selectedSections.loginActivity) {
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
@@ -340,12 +329,10 @@ const PrintReports = () => {
       });
     }
 
-    // Footer
     yPosition = pageHeight - 20;
     doc.setFontSize(8);
     doc.text("AETHA", pageWidth / 2, yPosition, { align: "center" });
 
-    // Save the PDF
     const fileName = `AETHA-Report-${
       reportData.selectedPeriod
     }-${Date.now()}.pdf`;

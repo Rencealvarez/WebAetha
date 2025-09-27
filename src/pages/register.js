@@ -46,27 +46,23 @@ const Register = () => {
   const validateInputs = () => {
     const newErrors = {};
 
-    // Name validation
     if (name.length < 2) {
       newErrors.name = "Name must be at least 2 characters long";
     } else if (!/^[a-zA-Z\s]*$/.test(name)) {
       newErrors.name = "Name can only contain letters and spaces";
     }
 
-    // Last name validation
     if (lastName.length < 2) {
       newErrors.lastName = "Last name must be at least 2 characters long";
     } else if (!/^[a-zA-Z\s]*$/.test(lastName)) {
       newErrors.lastName = "Last name can only contain letters and spaces";
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       newErrors.email = "Please enter a valid email address";
     }
 
-    // Password validation
     if (password.length < 8) {
       newErrors.password = "Password must be at least 8 characters long";
     } else if (!/(?=.*[a-z])/.test(password)) {
@@ -134,7 +130,6 @@ const Register = () => {
         return;
       }
 
-      // Insert into "user_profiles" table for profile page
       const { error: dbError } = await supabase.from("user_profiles").insert([
         {
           id: user.id,

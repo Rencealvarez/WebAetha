@@ -17,7 +17,6 @@ const AdminFeedback = () => {
   const [itemsPerPage] = useState(10);
   const [notification, setNotification] = useState(null);
 
-  // Only allow valid column names for sorting
   const validSortFields = ["submitted_at", "image_path", "emoji", "status"];
   const safeSortField = validSortFields.includes(sortField)
     ? sortField
@@ -59,7 +58,6 @@ const AdminFeedback = () => {
     }
   };
 
-  // Group feedback by unique image filename and aggregate reactions
   const imageMap = {};
   feedbackData.forEach((item) => {
     const filename = getFilename(item.image_path);
@@ -87,7 +85,6 @@ const AdminFeedback = () => {
   });
   const uniqueImages = Object.values(imageMap);
 
-  // Apply search and pagination to unique images
   const filteredImages = uniqueImages.filter((item) =>
     item.filename.toLowerCase().includes(searchTerm.toLowerCase())
   );

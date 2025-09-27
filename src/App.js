@@ -59,7 +59,6 @@ const App = () => {
             element={<RequestPasswordResetPage />}
           />
 
-          {/*  Nested Admin Routes */}
           <Route path="/admin-page" element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="feedback" element={<AdminFeedback />} />

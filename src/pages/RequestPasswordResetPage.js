@@ -16,9 +16,9 @@ const RequestPasswordResetPage = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [showResendPrompt, setShowResendPrompt] = useState(false);
   const MAX_ATTEMPTS = 3;
-  const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
-  const RESEND_COOLDOWN = 60; // 60 seconds cooldown
-  const MESSAGE_DISPLAY_TIME = 5000; // 5 seconds
+  const LOCKOUT_TIME = 15 * 60 * 1000;
+  const RESEND_COOLDOWN = 60;
+  const MESSAGE_DISPLAY_TIME = 5000;
   const [lockoutEndTime, setLockoutEndTime] = useState(null);
 
   useEffect(() => {

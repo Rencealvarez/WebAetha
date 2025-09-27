@@ -13,7 +13,6 @@ import {
   Legend,
 } from "chart.js";
 
-// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,7 +32,6 @@ const QuizStats = () => {
   });
   const [filter, setFilter] = useState("all");
 
-  // Function to convert image path to readable name
   const formatImageName = (imagePath) => {
     return imagePath
       .split("/")
@@ -85,11 +83,9 @@ const QuizStats = () => {
     fetchQuizLogs();
   }, []);
 
-  // Sort and filter stats
   const processedStats = useMemo(() => {
     let filtered = Object.entries(quizStats);
 
-    // Apply filter
     if (filter === "high") {
       filtered = filtered.filter(
         ([_, stat]) => stat.correct / stat.total >= 0.7
@@ -100,7 +96,6 @@ const QuizStats = () => {
       );
     }
 
-    // Apply sorting
     return filtered.sort((a, b) => {
       const [_, statA] = a;
       const [__, statB] = b;
@@ -120,7 +115,6 @@ const QuizStats = () => {
     });
   }, [quizStats, sortConfig, filter]);
 
-  // Prepare data for chart
   const chartData = {
     labels: processedStats.map(([image]) => formatImageName(image)),
     datasets: [
@@ -154,7 +148,6 @@ const QuizStats = () => {
       tooltip: {
         callbacks: {
           title: function (context) {
-            // Show formatted file name in tooltip title
             const imagePath = processedStats[context[0].dataIndex][0];
             return formatImageName(imagePath);
           },
@@ -196,7 +189,6 @@ const QuizStats = () => {
           padding: 10,
           callback: function (value, index, values) {
             const label = this.getLabelForValue(value);
-            // Truncate if too long
             return label.length > 12 ? label.slice(0, 12) + "…" : label;
           },
         },

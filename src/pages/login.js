@@ -52,7 +52,6 @@ const Login = () => {
     setIsLoading(true);
     setShowResendConfirmation(false);
 
-    // Validate inputs
     if (!validateEmail(email)) {
       setError("Invalid email format. Please enter a valid email address.");
       setIsLoading(false);
@@ -88,11 +87,9 @@ const Login = () => {
 
       console.log("Login successful, user data:", data);
 
-      // Detect device type
       const userAgent = navigator.userAgent;
       const deviceType = /Mobi|Android/i.test(userAgent) ? "Mobile" : "Desktop";
 
-      // Insert login record with timestamp
       const { error: insertErr } = await supabase.from("logins").insert([
         {
           user_email: email,
@@ -105,7 +102,6 @@ const Login = () => {
         console.error("Error recording login:", insertErr);
       }
 
-      // Store user_id for profile use
       const { data: sessionData } = await supabase.auth.getSession();
       const userId = sessionData?.session?.user?.id;
       if (userId) {

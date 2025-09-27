@@ -44,13 +44,11 @@ section {
   z-index: 1;
 }
 
-/* Ensure contact section content is not hidden behind DidYouKnowCard */
 .contact-section .container {
   position: relative;
   z-index: 2;
 }
 
-/* Responsive bottom padding to prevent DidYouKnowCard overlap */
 @media (max-width: 768px) {
   .contact-section {
     padding-bottom: 120px;

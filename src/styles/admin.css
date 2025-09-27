@@ -1,4 +1,3 @@
-/* Overall Page Layout */
 .admin-container {
   background: #f8f9fa;
   min-height: 100vh;
@@ -10,7 +9,6 @@
   padding: 20px;
 }
 
-/* Navbar */
 .admin-nav {
   width: 100%;
   background: #2c3e50;
@@ -33,7 +31,6 @@
   border-radius: 5px;
 }
 
-/* Summary Cards */
 .summary-cards {
   display: flex;
   gap: 20px;
@@ -51,7 +48,6 @@
   text-align: center;
 }
 
-/* Progress Bar inside Card */
 .progress {
   background: #eee;
   border-radius: 5px;
@@ -64,7 +60,6 @@
   background: #4caf50;
 }
 
-/* Charts Section */
 .charts-section {
   display: flex;
   gap: 20px;
@@ -87,7 +82,6 @@
   flex: 1;
 }
 
-/* Chart Headers */
 .chart-header {
   display: flex;
   justify-content: space-between;
@@ -108,7 +102,6 @@
   color: white;
 }
 
-/* Recent Logins Table */
 .recent-logins table,
 .new-users table {
   width: 100%;
@@ -130,7 +123,6 @@
   background-color: #f5f5f5;
 }
 
-/* New Users Grid Cards */
 .new-users {
   margin-top: 40px;
 }
@@ -158,7 +150,6 @@
   color: gray;
 }
 
-/* Footer */
 .admin-footer {
   width: 100%;
   background: #2c3e50;
@@ -171,7 +162,6 @@
   border-radius: 0;
 }
 
-/* Content Management Styles */
 .admin-content {
   padding: 20px;
   max-width: 1200px;
@@ -197,7 +187,6 @@
   color: white;
 }
 
-/* Content sections with scrolling */
 .panoramic-section,
 .quizzes-section,
 .didyouknow-section {
@@ -209,7 +198,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Upload section styles */
 .upload-section {
   margin-bottom: 20px;
   padding: 15px;
@@ -223,7 +211,6 @@
   margin-top: 5px;
 }
 
-/* Image grid styles */
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -244,7 +231,6 @@
   object-fit: cover;
 }
 
-/* Quiz styles */
 .quiz-form {
   display: flex;
   flex-direction: column;
@@ -277,7 +263,6 @@
   font-size: 0.9em;
 }
 
-/* Facts styles */
 .fact-form {
   display: flex;
   gap: 10px;
@@ -300,7 +285,6 @@
   align-items: center;
 }
 
-/* Delete button styles */
 .delete-btn {
   padding: 5px 10px;
   background: #dc3545;
@@ -314,7 +298,6 @@
   background: #c82333;
 }
 
-/* Form input styles */
 input[type="text"],
 input[type="file"],
 select {
@@ -333,7 +316,6 @@ button {
   cursor: pointer;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .admin-content {
     padding: 1rem;
@@ -360,7 +342,6 @@ button {
   }
 }
 
-/* Loading States */
 .loading {
   display: flex;
   justify-content: center;
@@ -387,7 +368,6 @@ button {
   }
 }
 
-/* Success/Error Messages */
 .message {
   padding: 1rem;
   border-radius: 8px;
@@ -407,7 +387,6 @@ button {
   border: 1px solid #f5c6cb;
 }
 
-/* Material UI Theme Customization */
 .MuiContainer-root {
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -434,7 +413,6 @@ button {
   transform: translateY(-2px);
 }
 
-/* Custom Upload Area */
 .upload-area {
   border: 2px dashed #ccc;
   border-radius: 8px;
@@ -448,7 +426,6 @@ button {
   border-color: #1976d2;
 }
 
-/* Custom Form Styles */
 .form-section {
   margin-bottom: 2rem;
 }
@@ -457,7 +434,6 @@ button {
   margin-bottom: 1rem;
 }
 
-/* Custom Card Styles */
 .content-card {
   height: 100%;
   display: flex;
@@ -468,22 +444,18 @@ button {
   flex-grow: 1;
 }
 
-/* Custom Button Styles */
 .action-button {
   margin-right: 0.5rem;
 }
 
-/* Custom Grid Styles */
 .grid-container {
   margin-top: 1rem;
 }
 
-/* Custom Dialog Styles */
 .confirmation-dialog .MuiDialogContent-root {
   padding-top: 1rem !important;
 }
 
-/* Loading State */
 .loading-container {
   display: flex;
   justify-content: center;
@@ -491,7 +463,6 @@ button {
   min-height: 200px;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 600px) {
   .MuiContainer-root {
     padding: 1rem;
@@ -506,7 +477,6 @@ button {
   }
 }
 
-/* Animation Classes */
 .fade-enter {
   opacity: 0;
 }
@@ -525,7 +495,6 @@ button {
   transition: opacity 200ms ease-in;
 }
 
-/* Toast Notifications */
 .Toastify__toast {
   border-radius: 8px;
   font-family: inherit;
@@ -539,7 +508,6 @@ button {
   background: #f44336;
 }
 
-/* Accessibility */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -552,7 +520,6 @@ button {
   border: 0;
 }
 
-/* Print Styles */
 @media print {
   .MuiContainer-root {
     padding: 0;

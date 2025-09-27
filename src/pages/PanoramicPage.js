@@ -17,7 +17,7 @@ const logQuizResult = async (imagePath, selectedOption, isCorrect, userId) => {
     is_correct: isCorrect,
     user_id: userId,
   };
-  // Debug log
+
   console.log("[DEBUG] userId:", userId, "quizPayload:", quizPayload);
   const { data, error } = await supabase
     .from("quiz_logs")
@@ -41,7 +41,7 @@ const PanoramaViewer = ({ image }) => {
         <sphereGeometry args={[5, 64, 64]} />
         <meshStandardMaterial map={texture} side={THREE.BackSide} />
       </mesh>
-      {/** Keep thumbnails static: no rotation, no zoom/pan */}
+
       <OrbitControls
         enableZoom={false}
         enablePan={false}
@@ -176,7 +176,7 @@ const PanoramicPage = () => {
       } = await supabase.auth.getUser();
       if (user) {
         setUserId(user.id);
-        // Fetch user's badges
+
         const { data: badges } = await supabase
           .from("user_badges")
           .select("*")
@@ -190,7 +190,6 @@ const PanoramicPage = () => {
           setUserBadges(badgeMap);
         }
 
-        // Fetch user's reactions
         const { data: reactions } = await supabase
           .from("feedback_logs")
           .select("image_path, emoji, user_id")
@@ -224,7 +223,6 @@ const PanoramicPage = () => {
   };
 
   const handleAnswer = async (option) => {
-    // Ensure user is authenticated
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -244,7 +242,6 @@ const PanoramicPage = () => {
     setShowResult(true);
 
     if (isCorrect) {
-      // Add badge to database only if correct and not already awarded
       if (!userBadges[imageSrc]) {
         const badgePayload = {
           user_id: user.id,
@@ -265,7 +262,6 @@ const PanoramicPage = () => {
       }
     }
 
-    // Always log the quiz result
     const quizPayload = {
       image_path: imageSrc,
       selected_option: option,
@@ -307,7 +303,6 @@ const PanoramicPage = () => {
   };
 
   const handleReaction = async (imagePath, emoji) => {
-    // Ensure user is authenticated
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -318,11 +313,9 @@ const PanoramicPage = () => {
 
     const normalizedPath = imagePath.replace(/^\//, "");
 
-    // Check if user already has a reaction
     const existingReaction = userReactions[normalizedPath];
 
     try {
-      // Start a transaction: Remove previous reaction for this user and image
       const { error: deleteError } = await supabase
         .from("feedback_logs")
         .delete()
@@ -331,7 +324,6 @@ const PanoramicPage = () => {
 
       if (deleteError) throw deleteError;
 
-      // If clicking the same reaction, just remove it
       if (existingReaction === emoji) {
         setUserReactions((prev) => {
           const newReactions = { ...prev };
@@ -342,7 +334,6 @@ const PanoramicPage = () => {
         return;
       }
 
-      // Insert new reaction
       const { error: insertError } = await supabase
         .from("feedback_logs")
         .insert([
@@ -356,7 +347,6 @@ const PanoramicPage = () => {
 
       if (insertError) throw insertError;
 
-      // Update local state
       setUserReactions((prev) => ({
         ...prev,
         [normalizedPath]: emoji,

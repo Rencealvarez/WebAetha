@@ -1,4 +1,3 @@
-// src/pages/LocalVoicesWall.js
 import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
@@ -12,14 +11,13 @@ const LocalVoicesWall = () => {
   const [audio, setAudio] = useState(null);
   const [voices, setVoices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState("all"); // all, audio, image
+  const [filter, setFilter] = useState("all");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch only approved entries with search and filter
   const fetchVoices = useCallback(async () => {
     try {
       let query = supabase
@@ -52,14 +50,12 @@ const LocalVoicesWall = () => {
     fetchVoices();
   }, [fetchVoices]);
 
-  // Handle file preview
   const handleFilePreview = (file, type) => {
     if (!file) return;
     const url = URL.createObjectURL(file);
     setPreviewUrl({ url, type });
   };
 
-  // Naive spam heuristics
   const isLikelySpam = (text, authorName) => {
     const content = `${authorName || ""} ${text}`.toLowerCase();
     const urlMatches = (content.match(/https?:\/\//g) || []).length;
@@ -79,7 +75,6 @@ const LocalVoicesWall = () => {
     return hasManyLinks || tooShort || repeatedChars || hasBlacklisted;
   };
 
-  // Handle submission with improved error handling
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -89,7 +84,6 @@ const LocalVoicesWall = () => {
     let audioUrl = null;
 
     try {
-      // Client-side cooldown (defense-in-depth; server also enforces)
       const COOLDOWN_SECONDS = 60;
       const last = Number(localStorage.getItem("lv_last_submit") || 0);
       const nowTs = Date.now();
@@ -106,7 +100,6 @@ const LocalVoicesWall = () => {
       } = await supabase.auth.getUser();
       if (userErr || !user) throw new Error("You must be logged in to post.");
 
-      // Upload image if present
       if (image) {
         const path = `images/${Date.now()}_${image.name}`;
         const { error: imgErr } = await supabase.storage
@@ -119,7 +112,6 @@ const LocalVoicesWall = () => {
         imageUrl = publicUrl;
       }
 
-      // Upload audio if present
       if (audio) {
         const path = `audio/${Date.now()}_${audio.name}`;
         const { error: audErr } = await supabase.storage
@@ -132,7 +124,6 @@ const LocalVoicesWall = () => {
         audioUrl = publicUrl;
       }
 
-      // Insert pending row
       const { error: insertErr } = await supabase.from("local_voices").insert([
         {
           user_id: user.id,
@@ -146,7 +137,6 @@ const LocalVoicesWall = () => {
       ]);
 
       if (insertErr) {
-        // Translate rate-limit error if raised by DB trigger
         const msg = insertErr.message || "Failed to save your story.";
         if (msg.toLowerCase().includes("rate_limit")) {
           throw new Error(
@@ -156,7 +146,6 @@ const LocalVoicesWall = () => {
         throw new Error(msg);
       }
 
-      // Reset form
       setName("");
       setQuote("");
       setImage(null);
@@ -172,16 +161,12 @@ const LocalVoicesWall = () => {
     }
   };
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.ctrlKey && e.key === "z") {
-        // Undo last action
         setQuote((prev) => prev.slice(0, -1));
       }
       if (e.ctrlKey && e.key === "y") {
-        // Redo last action
-        // Implementation depends on your undo/redo logic
       }
     };
 
@@ -201,7 +186,6 @@ const LocalVoicesWall = () => {
 
       <h1>🧑‍🤝‍🧑 Local Voices Wall</h1>
 
-      {/* Search and Filter Controls */}
       <div className="controls" role="search">
         <input
           type="search"
@@ -221,7 +205,6 @@ const LocalVoicesWall = () => {
         </select>
       </div>
 
-      {/* Messages */}
       {error && (
         <div className="message error" role="alert">
           {error}
@@ -233,7 +216,6 @@ const LocalVoicesWall = () => {
         </div>
       )}
 
-      {/* Submission Form */}
       <form
         className="voice-form"
         onSubmit={handleSubmit}
@@ -304,7 +286,6 @@ const LocalVoicesWall = () => {
           <small id="audio-help">Optional: Add voice recording</small>
         </div>
 
-        {/* Preview Section */}
         {previewUrl && (
           <div
             className="preview-section"
@@ -331,7 +312,6 @@ const LocalVoicesWall = () => {
         </button>
       </form>
 
-      {/* Stories Grid */}
       <div
         className="voices-grid"
         role="feed"

@@ -28,7 +28,6 @@
   transition: filter 0.3s ease;
 }
 
-/* Cover photo selection feedback */
 .cover-wrapper.has-selected-image .cover-photo {
   filter: brightness(0.7);
 }
@@ -65,7 +64,6 @@
   transform: scale(1.05);
 }
 
-/* Avatar selection feedback */
 .avatar-wrapper {
   position: absolute;
   top: 180px;
@@ -115,7 +113,6 @@
   z-index: 3;
 }
 
-/* File input styling */
 .cover-edit-icon input[type="file"],
 .avatar-edit-icon input[type="file"] {
   position: absolute;
@@ -128,7 +125,6 @@
   border: 0;
 }
 
-/* Loading state */
 .cover-wrapper.is-uploading .cover-photo,
 .avatar-wrapper.is-uploading .avatar-large {
   filter: brightness(0.5);
@@ -316,7 +312,6 @@
   margin-top: 0;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .profile-card {
     margin: 1rem;
@@ -481,7 +476,6 @@
   transform: translateY(-1px);
 }
 
-/* Ensure the crop area is visible */
 .ReactCrop {
   position: relative;
   display: inline-block;

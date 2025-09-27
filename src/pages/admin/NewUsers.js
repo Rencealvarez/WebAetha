@@ -16,18 +16,18 @@ const NewUsers = () => {
     try {
       setIsLoading(true);
       setError(null);
-      // Fetch users
+
       const { data: users, error: usersError } = await supabase
         .from("user_profiles")
         .select("*")
         .limit(10);
       if (usersError) throw usersError;
-      // Fetch profiles
+
       const { data: profiles, error: profilesError } = await supabase
         .from("user_profiles")
         .select("*");
       if (profilesError) throw profilesError;
-      // Merge users with profiles by id
+
       const merged = (users || []).map((user) => {
         const profile = (profiles || []).find((p) => p.id === user.id);
         return {
@@ -106,7 +106,6 @@ const NewUsers = () => {
         </div>
         <div className="user-table-body">
           {isLoading ? (
-            // Loading skeleton rows
             Array.from({ length: 3 }).map((_, index) => (
               <div key={`loading-${index}`} className="user-card loading">
                 <div className="user-avatar" />

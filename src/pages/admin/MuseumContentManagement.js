@@ -40,7 +40,7 @@ import {
 import "../../styles/admin.css";
 
 const MuseumContentManagement = () => {
-  const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB guard for uploads
+  const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024;
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
@@ -49,7 +49,6 @@ const MuseumContentManagement = () => {
     severity: "success",
   });
 
-  // Artifacts state
   const [artifacts, setArtifacts] = useState([]);
   const [newArtifact, setNewArtifact] = useState({
     title: "",
@@ -61,11 +60,7 @@ const MuseumContentManagement = () => {
   });
   const [editingArtifact, setEditingArtifact] = useState(null);
   const [selectedArtifactFile, setSelectedArtifactFile] = useState(null);
-  // 3D model handling removed
 
-  // helper removed in image-only mode
-
-  // Cultural Heritage state
   const [languages, setLanguages] = useState([]);
   const [festivals, setFestivals] = useState([]);
   const [rituals, setRituals] = useState([]);
@@ -85,12 +80,10 @@ const MuseumContentManagement = () => {
     age: "",
   });
 
-  // Edit states for Cultural Heritage
   const [editingLanguage, setEditingLanguage] = useState(null);
   const [editingFestival, setEditingFestival] = useState(null);
   const [editingRitual, setEditingRitual] = useState(null);
 
-  // Living Culture state
   const [culturalVideos, setCulturalVideos] = useState([]);
   const [newVideo, setNewVideo] = useState({
     title: "",
@@ -99,10 +92,9 @@ const MuseumContentManagement = () => {
   });
   const [selectedVideoUpload, setSelectedVideoUpload] = useState(null);
   const [videoUrlColumn, setVideoUrlColumn] = useState("videoUrl");
-  // Edit state for Living Culture
+
   const [editingVideo, setEditingVideo] = useState(null);
 
-  // 3D Models Management state
   const [threeDModels, setThreeDModels] = useState([]);
   const [newThreeDModel, setNewThreeDModel] = useState({
     name: "",
@@ -122,7 +114,6 @@ const MuseumContentManagement = () => {
   const loadMuseumData = async () => {
     setLoading(true);
     try {
-      // Load artifacts
       const { data: artifactsData, error: artifactsError } = await supabase
         .from("museum_artifacts")
         .select("*")
@@ -139,7 +130,6 @@ const MuseumContentManagement = () => {
         }))
       );
 
-      // Load cultural heritage data
       const { data: languagesData, error: languagesError } = await supabase
         .from("museum_languages")
         .select("*");
@@ -160,7 +150,6 @@ const MuseumContentManagement = () => {
       setFestivals(festivalsData || []);
       setRituals(ritualsData || []);
 
-      // Load cultural videos
       const { data: videosData, error: videosError } = await supabase
         .from("museum_videos")
         .select("*");
@@ -175,8 +164,6 @@ const MuseumContentManagement = () => {
           setVideoUrlColumn("videoUrl");
         }
       }
-
-      // 3D models disabled in image-only mode
     } catch (error) {
       console.error("Error loading museum data:", error);
       setSnackbar({
@@ -189,7 +176,6 @@ const MuseumContentManagement = () => {
     }
   };
 
-  // Artifacts Management
   const handleArtifactFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -212,7 +198,6 @@ const MuseumContentManagement = () => {
     try {
       let imageUrl = newArtifact.imageUrl;
 
-      // Upload image if file is selected
       if (selectedArtifactFile) {
         const file = selectedArtifactFile.file;
         const filePath = `artifacts/${Date.now()}_${file.name}`;
@@ -275,7 +260,6 @@ const MuseumContentManagement = () => {
   };
 
   const handleEditArtifact = (artifact) => {
-    // Ensure we preview the artifact's current image and not a stale selection
     setSelectedArtifactFile(null);
     setEditingArtifact(artifact);
   };
@@ -312,7 +296,7 @@ const MuseumContentManagement = () => {
       );
       setEditingArtifact(null);
       setSelectedArtifactFile(null);
-      // no-op for 3d model in image-only mode
+
       setSnackbar({
         open: true,
         message: "Successfully updated artifact!",
@@ -358,7 +342,6 @@ const MuseumContentManagement = () => {
     }
   };
 
-  // Cultural Heritage Management
   const handleAddLanguage = async () => {
     if (!newLanguage.name.trim() || !newLanguage.region.trim()) {
       setSnackbar({
@@ -473,7 +456,6 @@ const MuseumContentManagement = () => {
     }
   };
 
-  // Edit handlers for Cultural Heritage
   const handleEditLanguage = (language) => {
     setEditingLanguage(language);
   };
@@ -685,7 +667,6 @@ const MuseumContentManagement = () => {
     }
   };
 
-  // Living Culture Management
   const handleVideoUploadChange = (e) => {
     const file = e.target.files[0];
     if (file) setSelectedVideoUpload(file);
@@ -702,7 +683,6 @@ const MuseumContentManagement = () => {
 
     setLoading(true);
     try {
-      // If a local video file was selected, upload it and use its public URL
       let finalVideoUrl = newVideo.videoUrl;
       if (selectedVideoUpload) {
         if (selectedVideoUpload.size > MAX_VIDEO_SIZE_BYTES) {
@@ -791,7 +771,6 @@ const MuseumContentManagement = () => {
     }
   };
 
-  // Edit handler for Living Culture
   const handleEditVideo = (video) => {
     setEditingVideo(video);
   };
@@ -835,7 +814,6 @@ const MuseumContentManagement = () => {
     }
   };
 
-  // 3D Models Management
   const handleModelFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -874,7 +852,6 @@ const MuseumContentManagement = () => {
     try {
       let thumbnailUrl = newThreeDModel.thumbnail;
 
-      // Upload thumbnail if file is selected
       if (selectedThumbnailFile) {
         const file = selectedThumbnailFile.file;
         const filePath = `3d-models/thumbnails/${Date.now()}_${file.name}`;
@@ -892,7 +869,6 @@ const MuseumContentManagement = () => {
         thumbnailUrl = publicUrlData.publicUrl;
       }
 
-      // Upload 3D model file
       const modelFilePath = `3d-models/${Date.now()}_${selectedModelFile.name}`;
       const { error: modelUploadError } = await supabase.storage
         .from("museum-images")
@@ -904,7 +880,6 @@ const MuseumContentManagement = () => {
         .from("museum-images")
         .getPublicUrl(modelFilePath);
 
-      // Insert 3D model record
       const { data, error } = await supabase
         .from("museum_3d_models")
         .insert([
@@ -1056,16 +1031,13 @@ const MuseumContentManagement = () => {
         </Box>
       )}
 
-      {/* Scrollable Content Area */}
       <Box sx={{ height: "calc(100vh - 200px)", overflow: "auto" }}>
-        {/* Traditional Artifacts Tab */}
         {activeTab === 0 && (
           <Box>
             <Typography variant="h5" sx={{ mb: 3 }}>
               Manage Traditional Artifacts
             </Typography>
 
-            {/* Add New Artifact Form */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Add New Artifact
@@ -1196,7 +1168,7 @@ const MuseumContentManagement = () => {
                     </Box>
                   )}
                 </Grid>
-                {/* 3D model upload removed in image-only mode */}
+
                 <Grid item xs={12}>
                   <Button
                     variant="contained"
@@ -1210,7 +1182,6 @@ const MuseumContentManagement = () => {
               </Grid>
             </Paper>
 
-            {/* Existing Artifacts */}
             <Grid container spacing={3}>
               {artifacts.map((artifact) => (
                 <Grid item xs={12} md={6} lg={4} key={artifact.id}>
@@ -1237,7 +1208,7 @@ const MuseumContentManagement = () => {
                         size="small"
                         sx={{ mb: 1, mr: 1 }}
                       />
-                      {/* 3D model indicator removed */}
+
                       <Typography
                         variant="body2"
                         color="text.secondary"
@@ -1271,14 +1242,12 @@ const MuseumContentManagement = () => {
           </Box>
         )}
 
-        {/* Cultural Heritage Tab */}
         {activeTab === 1 && (
           <Box>
             <Typography variant="h5" sx={{ mb: 3 }}>
               Manage Cultural Heritage
             </Typography>
 
-            {/* Languages Section */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Languages & Dialects
@@ -1370,7 +1339,6 @@ const MuseumContentManagement = () => {
               </Grid>
             </Paper>
 
-            {/* Festivals Section */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Festivals & Celebrations
@@ -1465,7 +1433,6 @@ const MuseumContentManagement = () => {
               </Grid>
             </Paper>
 
-            {/* Rituals Section */}
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Life Cycle Rituals
@@ -1562,14 +1529,12 @@ const MuseumContentManagement = () => {
           </Box>
         )}
 
-        {/* Living Culture Tab */}
         {activeTab === 2 && (
           <Box>
             <Typography variant="h5" sx={{ mb: 3 }}>
               Manage Living Culture Gallery
             </Typography>
 
-            {/* Add New Video Form */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Add New Cultural Video
@@ -1649,7 +1614,6 @@ const MuseumContentManagement = () => {
               </Grid>
             </Paper>
 
-            {/* Existing Videos */}
             <Grid container spacing={3}>
               {culturalVideos.map((video) => (
                 <Grid item xs={12} md={4} key={video.id}>
@@ -1692,11 +1656,8 @@ const MuseumContentManagement = () => {
             </Grid>
           </Box>
         )}
-
-        {/* 3D Models Tab removed - models are now attached per artifact */}
       </Box>
 
-      {/* Edit Artifact Dialog */}
       <Dialog
         open={!!editingArtifact}
         onClose={() => setEditingArtifact(null)}
@@ -1877,7 +1838,6 @@ const MuseumContentManagement = () => {
                 </Box>
               )}
             </Grid>
-            {/* 3D model controls removed in image-only mode */}
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -1898,7 +1858,6 @@ const MuseumContentManagement = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Edit Language Dialog */}
       <Dialog
         open={!!editingLanguage}
         onClose={() => setEditingLanguage(null)}
@@ -1967,7 +1926,6 @@ const MuseumContentManagement = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Edit Festival Dialog */}
       <Dialog
         open={!!editingFestival}
         onClose={() => setEditingFestival(null)}
@@ -2036,7 +1994,6 @@ const MuseumContentManagement = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Edit Ritual Dialog */}
       <Dialog
         open={!!editingRitual}
         onClose={() => setEditingRitual(null)}
@@ -2105,7 +2062,6 @@ const MuseumContentManagement = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Edit Video Dialog */}
       <Dialog
         open={!!editingVideo}
         onClose={() => setEditingVideo(null)}
@@ -2177,8 +2133,6 @@ const MuseumContentManagement = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* 3D model edit dialog removed */}
 
       <Snackbar
         open={snackbar.open}

@@ -11,7 +11,7 @@ import DidYouKnowCard from "../components/DidYouKnowCard";
 
 const ExploreNow = () => {
   const navigate = useNavigate();
-  // Redirect endpoint that logs download/scan events
+
   const redirectUrl = `${window.location.origin}/qr/download`;
 
   return (

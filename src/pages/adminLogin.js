@@ -31,7 +31,6 @@ const AdminLogin = () => {
       }
 
       if (data?.user) {
-        // Check if user is an admin
         const { data: adminData, error: adminError } = await supabase
           .from("admins")
           .select("*")
@@ -47,7 +46,7 @@ const AdminLogin = () => {
         toast.success("Welcome, Admin!");
         setTimeout(() => {
           navigate("/admin-page/dashboard");
-        }, 2000); // delay
+        }, 2000);
       }
     } catch (error) {
       toast.error(

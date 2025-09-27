@@ -1,6 +1,4 @@
-/* Design System Variables */
 :root {
-  /* Colors */
   --color-primary: #2563eb;
   --color-primary-light: #3b82f6;
   --color-primary-dark: #1d4ed8;
@@ -18,7 +16,6 @@
   --color-neutral-800: #1e293b;
   --color-neutral-900: #0f172a;
 
-  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -28,7 +25,6 @@
   --space-8: 32px;
   --space-10: 40px;
 
-  /* Typography */
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -36,23 +32,19 @@
   --font-size-xl: 1.25rem;
   --font-size-2xl: 1.5rem;
 
-  /* Border Radius */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-full: 9999px;
 
-  /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 
-  /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
 }
 
-/* Container Styles */
 .new-users {
   padding: var(--space-6);
   max-width: 1200px;
@@ -68,7 +60,6 @@
   border-bottom: 2px solid var(--color-neutral-200);
 }
 
-/* Table Layout */
 .user-grid {
   display: flex;
   flex-direction: column;
@@ -80,7 +71,6 @@
   overflow: hidden;
 }
 
-/* Table Header */
 .table-header {
   display: grid;
   grid-template-columns: 60px 2fr 1fr 1fr;
@@ -109,7 +99,6 @@
   gap: 0;
 }
 
-/* Card Styles */
 .user-card {
   display: grid;
   grid-template-columns: 60px 2fr 1fr 1fr;
@@ -134,7 +123,6 @@
   background-color: #fff;
 }
 
-/* User Avatar */
 .user-avatar {
   width: 40px;
   height: 40px;
@@ -157,7 +145,6 @@
   color: var(--color-neutral-400);
 }
 
-/* User Info */
 .user-info {
   display: flex;
   flex-direction: column;
@@ -184,7 +171,6 @@
   text-overflow: ellipsis;
 }
 
-/* Status Badge */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -221,7 +207,6 @@
   color: var(--color-warning);
 }
 
-/* Role Badge */
 .role-badge {
   display: inline-flex;
   align-items: center;
@@ -234,7 +219,6 @@
   width: fit-content;
 }
 
-/* User ID */
 .user-id {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: var(--font-size-sm);
@@ -244,7 +228,6 @@
   text-overflow: ellipsis;
 }
 
-/* Copy Button */
 .copy-button {
   display: inline-flex;
   align-items: center;
@@ -269,7 +252,6 @@
   height: 12px;
 }
 
-/* Action Buttons */
 .card-actions {
   display: flex;
   gap: var(--space-2);
@@ -325,7 +307,6 @@
   height: 14px;
 }
 
-/* Loading State */
 .user-card.loading {
   cursor: wait;
 }
@@ -384,7 +365,6 @@
   }
 }
 
-/* Error State */
 .error-message {
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--color-danger);
@@ -404,7 +384,6 @@
   opacity: 0.8;
 }
 
-/* No Users State */
 .no-users {
   text-align: center;
   padding: var(--space-8);
@@ -419,7 +398,6 @@
   font-size: var(--font-size-lg);
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .user-grid {
     overflow-x: auto;
@@ -437,7 +415,6 @@
   }
 }
 
-/* Dark Mode */
 @media (prefers-color-scheme: dark) {
   .user-grid {
     background-color: var(--color-neutral-800);
@@ -516,7 +493,6 @@
   z-index: 1;
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .user-card,
   .action-button,
@@ -529,7 +505,6 @@
   }
 }
 
-/* High Contrast Mode */
 @media (forced-colors: active) {
   .user-grid {
     border: 2px solid CanvasText;
@@ -554,7 +529,6 @@
   }
 }
 
-/* Force Light Theme on New Users page (override system dark mode) */
 .new-users .user-grid {
   background-color: var(--color-neutral-50);
   border-color: var(--color-neutral-200);
@@ -621,7 +595,6 @@
   color: var(--color-neutral-900);
 }
 
-/* Sleek Scrollbar for the table body */
 .user-table-body::-webkit-scrollbar {
   height: 10px;
   width: 10px;

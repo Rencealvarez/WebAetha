@@ -1,4 +1,3 @@
-/* Branded Background Animation Styles with Provided Palette */
 .auth-background {
   position: fixed;
   top: 0;
@@ -7,7 +6,7 @@
   height: 100%;
   z-index: -1;
   overflow: hidden;
-  /* Palette: darkest to lightest */
+
   background: linear-gradient(
     180deg,
     #111412 0%,
@@ -87,7 +86,6 @@
   filter: blur(1px);
 }
 
-/* Engaging animations */
 @keyframes float {
   0% {
     transform: translate(0, 0) rotate(0deg) scale(1);
@@ -103,7 +101,6 @@
   }
 }
 
-/* Dynamic background animation */
 @keyframes gradientBG {
   0% {
     background-position: 0% 50%;
@@ -116,7 +113,6 @@
   }
 }
 
-/* Sparkling particles */
 .particle {
   position: absolute;
   width: 4px;
@@ -141,7 +137,6 @@
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .shape {
     transform: scale(0.7);
@@ -173,7 +168,6 @@
   }
 }
 
-/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .auth-background {
     animation: none;
@@ -198,7 +192,6 @@
   }
 }
 
-/* Fallback for browsers that don't support animations */
 @supports not (animation: float 15s infinite ease-in-out) {
   .shape {
     display: none;

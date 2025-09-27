@@ -91,7 +91,6 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Navigation Section */
 .navigation-section {
   padding: 80px 0;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -150,7 +149,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 1; /* Make sure content stays above the overlay */
+  z-index: 1;
 }
 
 .contact-section::before {
@@ -165,7 +164,7 @@
     rgba(0, 0, 0, 0.836),
     rgba(17, 127, 0, 0.459)
   );
-  z-index: -1; /* Push overlay behind content */
+  z-index: -1;
 }
 
 .contact-section h2 {
@@ -700,7 +699,7 @@
 }
 @media (max-width: 991px) {
 }
-/* Navigation styles are now handled by Navbar.css */
+
 .display-4 {
   font-size: 4.5rem !important;
   font-weight: 800;
@@ -783,7 +782,6 @@
     height: auto;
   }
 
-  /* Cultural Exchange Section Mobile Styles */
   .cultural-exchange-section {
     padding: 40px 20px;
   }
@@ -824,7 +822,6 @@
     padding: 8px;
   }
 
-  /* Learn More Section Mobile Styles */
   .learn-more-section {
     padding: 40px 20px;
   }
@@ -841,7 +838,6 @@
     font-size: 1rem;
   }
 
-  /* Eleven Blocks Section Mobile Styles */
   .eleven-blocks-section {
     padding: 40px 20px;
   }
@@ -873,7 +869,6 @@
     margin-bottom: 12px;
   }
 
-  /* Learn More Section Mobile Styles */
   .learn-more-section {
     padding: 30px 15px;
   }
@@ -890,7 +885,6 @@
     font-size: 0.95rem;
   }
 
-  /* Eleven Blocks Section Mobile Styles */
   .eleven-blocks-section {
     padding: 30px 15px;
   }

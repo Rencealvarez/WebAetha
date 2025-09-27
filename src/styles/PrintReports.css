@@ -206,7 +206,6 @@
   color: #2c3e50;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .print-reports {
     padding: 15px;
@@ -230,7 +229,6 @@
   }
 }
 
-/* Main Content Grid */
 .main-content-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -238,7 +236,6 @@
   margin-bottom: 20px;
 }
 
-/* Section Selector Styles */
 .section-selector {
   background: white;
   padding: 20px;
@@ -342,7 +339,6 @@
   font-size: 0.9rem;
 }
 
-/* Preview Styles */
 .preview-note {
   color: #7f8c8d;
   font-style: italic;
@@ -411,7 +407,6 @@
   margin: 0;
 }
 
-/* Responsive Design Updates */
 @media (max-width: 1024px) {
   .main-content-grid {
     grid-template-columns: 1fr;

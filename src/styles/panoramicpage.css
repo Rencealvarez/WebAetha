@@ -5,7 +5,6 @@
   min-height: 100vh;
 }
 
-/* Navigation overrides for Panoramic page */
 .panoramic-page .nav {
   position: absolute;
   width: 100%;
@@ -227,8 +226,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Footer styles are now handled by App.css */
-
 .loading-spinner {
   position: absolute;
   top: 50%;
@@ -267,7 +264,6 @@
   }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .panorama-header svg {
     width: 80px;
@@ -293,7 +289,6 @@
     right: 30px;
   }
 
-  /* Responsive Did You Know Card */
   .did-you-know-card {
     bottom: 80px;
     right: 15px;
@@ -323,7 +318,6 @@
   }
 }
 
-/* Landscape orientation on mobile devices */
 @media (max-width: 768px) and (orientation: landscape) {
   .did-you-know-card {
     bottom: 60px;
