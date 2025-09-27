@@ -15,6 +15,8 @@ const UpdatePasswordPage = () => {
     feedback: [],
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,32 +83,18 @@ const UpdatePasswordPage = () => {
       feedback.push("Password should be at least 8 characters long");
     }
 
-    // Uppercase check
-    if (/[A-Z]/.test(password)) {
-      score += 1;
-    } else {
-      feedback.push("Include at least one uppercase letter");
-    }
+    // Combined character check (uppercase, lowercase, numeric, and special)
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    // Lowercase check
-    if (/[a-z]/.test(password)) {
-      score += 1;
+    if (hasUppercase && hasLowercase && hasNumber && hasSpecial) {
+      score += 4; // Give full points for meeting all character requirements
     } else {
-      feedback.push("Include at least one lowercase letter");
-    }
-
-    // Number check
-    if (/[0-9]/.test(password)) {
-      score += 1;
-    } else {
-      feedback.push("Include at least one number");
-    }
-
-    // Special character check
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      score += 1;
-    } else {
-      feedback.push("Include at least one special character");
+      feedback.push(
+        "Must contain uppercase, lowercase, number, and special character"
+      );
     }
 
     return { score, feedback };
@@ -129,7 +117,7 @@ const UpdatePasswordPage = () => {
       return;
     }
 
-    if (passwordStrength.score < 3) {
+    if (passwordStrength.score < 5) {
       setMessage("Password is too weak. Please follow the requirements above.");
       setSuccess(false);
       setIsLoading(false);
@@ -192,24 +180,65 @@ const UpdatePasswordPage = () => {
         </div>
       </div>
       <div className="login-box">
-        <h3 className="text-center">Set New Password</h3>
+        <h3>Set New Password</h3>
         <form onSubmit={handleUpdate}>
           <div className="form-group">
-            <label>New Password</label>
-            <input
-              type="password"
-              className="form-control"
-              value={newPassword}
-              onChange={handlePasswordChange}
-              required
-              placeholder="Enter new password"
-            />
+            <label htmlFor="newPassword">New Password</label>
+            <div className="password-input-container">
+              <input
+                id="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                className="form-control password-input"
+                value={newPassword}
+                onChange={handlePasswordChange}
+                required
+                placeholder="Enter a strong password"
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                tabIndex={-1}
+              >
+                {showNewPassword ? (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
             {newPassword && (
-              <div className="password-strength mt-2">
-                <div className="progress" style={{ height: "5px" }}>
+              <div
+                className={`password-strength ${
+                  passwordStrength.score >= 5 ? "compressed" : ""
+                }`}
+              >
+                <div className="progress">
                   <div
                     className={`progress-bar ${
-                      passwordStrength.score >= 4
+                      passwordStrength.score >= 5
                         ? "bg-success"
                         : passwordStrength.score >= 3
                         ? "bg-warning"
@@ -219,29 +248,95 @@ const UpdatePasswordPage = () => {
                     style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
                   ></div>
                 </div>
-                <small className="text-muted">
+                <small>
                   {passwordStrength.feedback.map((msg, index) => (
-                    <div key={index}>{msg}</div>
+                    <div
+                      key={index}
+                      className={
+                        passwordStrength.score >= 5
+                          ? "text-success"
+                          : "text-danger"
+                      }
+                    >
+                      {msg}
+                    </div>
                   ))}
                 </small>
               </div>
             )}
           </div>
-          <div className="form-group mt-3">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              className="form-control"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              placeholder="Confirm new password"
-            />
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="password-input-container">
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                className="form-control password-input"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="Confirm your password"
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={
+                  showConfirmPassword ? "Hide password" : "Show password"
+                }
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
+            {confirmPassword &&
+              newPassword &&
+              confirmPassword !== newPassword && (
+                <div className="password-validation">
+                  <small className="text-danger">Passwords do not match</small>
+                </div>
+              )}
+            {confirmPassword &&
+              newPassword &&
+              confirmPassword === newPassword && (
+                <div className="password-validation">
+                  <small className="text-success">✓ Passwords match</small>
+                </div>
+              )}
           </div>
           <button
             type="submit"
             className="btn btn-success w-100 mt-3"
-            disabled={isLoading || passwordStrength.score < 3}
+            disabled={
+              isLoading ||
+              passwordStrength.score < 5 ||
+              newPassword !== confirmPassword
+            }
           >
             {isLoading ? (
               <Loader label="Updating" size="sm" />
