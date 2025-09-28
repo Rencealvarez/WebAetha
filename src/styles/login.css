@@ -45,25 +45,29 @@
   position: relative;
 }
 
+.password-container .form-control {
+  padding-right: 50px; /* Add space for the toggle button */
+}
+
 /* Password toggle button styles */
 .password-toggle-btn {
   position: absolute;
-  right: 15px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px;
+  padding: 8px;
   color: #718096;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  z-index: 100;
-  width: 40px;
-  height: 40px;
+  border-radius: 6px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
   pointer-events: auto;
 }
 
@@ -99,20 +103,10 @@
 
 /* Mobile responsiveness for password toggle */
 @media (max-width: 768px) {
-  .password-toggle-btn {
-    right: 12px;
-    width: 36px;
-    height: 36px;
-    padding: 8px;
+  .password-container .form-control {
+    padding-right: 45px; /* Slightly less padding on mobile */
   }
 
-  .password-toggle-btn svg {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-@media (max-width: 480px) {
   .password-toggle-btn {
     right: 10px;
     width: 32px;
@@ -123,6 +117,24 @@
   .password-toggle-btn svg {
     width: 18px;
     height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .password-container .form-control {
+    padding-right: 40px; /* Even less padding on small mobile */
+  }
+
+  .password-toggle-btn {
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+  }
+
+  .password-toggle-btn svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
