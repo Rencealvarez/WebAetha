@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import * as THREE from "three";
+import { Carousel } from "react-bootstrap";
 import { supabase } from "../supabase";
 import "../styles/panoramicpage.css";
 import "../components/Navbar.css";
@@ -131,11 +132,16 @@ const PanoramicPage = () => {
         if (error) throw error;
 
         if (data) {
-          const formattedImages = data.map((img, index) => ({
-            src: img.url,
-            label: (index + 1).toString(),
-            id: img.id,
-          }));
+          const formattedImages = data.map((img, index) => {
+            // Extract filename from URL and use it as label
+            const urlParts = img.url.split("/");
+            const filename = urlParts[urlParts.length - 1];
+            return {
+              src: img.url,
+              label: filename,
+              id: img.id,
+            };
+          });
           setImages(formattedImages);
         }
       } catch (error) {
@@ -450,57 +456,66 @@ const PanoramicPage = () => {
         </div>
       </section>
 
-      <section className="panorama-gallery container">
-        <div className="row row-cols-1 row-cols-md-2 g-4">
-          {images.map((item, index) => {
-            const imgKey = item.src.replace(/^\//, "");
-            const feedback = feedbackCounts[imgKey] || {};
+      <section className="panorama-carousel container">
+        {images.length > 0 && (
+          <Carousel interval={4000} pause="hover" indicators>
+            {images.map((item, index) => {
+              const imgKey = item.src.replace(/^\//, "");
+              const feedback = feedbackCounts[imgKey] || {};
 
-            return (
-              <div className="col" key={index}>
-                <div
-                  className="panorama-card"
-                  onClick={() => openFullscreen(item)}
-                >
-                  <div className="canvas-wrapper">
-                    <PanoramaViewer image={item.src} />
+              return (
+                <Carousel.Item key={index}>
+                  <div className="d-flex justify-content-center align-items-center">
+                    <div className="panorama-card">
+                      <div
+                        className="canvas-wrapper"
+                        onClick={() => openFullscreen(item)}
+                      >
+                        <PanoramaViewer image={item.src} />
+                      </div>
+                      <p className="text-center mt-2 fw-bold">{item.label}</p>
+                      {hasBadge(item.src) && (
+                        <p className="text-center mt-1">
+                          <span>🏅</span>
+                        </p>
+                      )}
+                      <div
+                        className="feedback-buttons text-center mt-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {["👍", "😐", "👎"].map((emoji) => {
+                          const isActiveReaction =
+                            userReactions[imgKey] === emoji;
+                          return (
+                            <button
+                              key={emoji}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleReaction(item.src, emoji);
+                              }}
+                              className={`btn btn-sm mx-1 ${
+                                isActiveReaction
+                                  ? "btn-primary"
+                                  : "btn-outline-secondary"
+                              }`}
+                              title={
+                                isActiveReaction
+                                  ? "Click to remove reaction"
+                                  : "Click to react"
+                              }
+                            >
+                              {emoji} {feedback[emoji] || 0}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-center mt-2 fw-bold">
-                    {item.label}{" "}
-                    {hasBadge(item.src) && <span className="ms-2">🏅</span>}
-                  </p>
-                  <div
-                    className="feedback-buttons text-center mt-2"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {["👍", "😐", "👎"].map((emoji) => {
-                      const isActive = userReactions[imgKey] === emoji;
-                      return (
-                        <button
-                          key={emoji}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleReaction(item.src, emoji);
-                          }}
-                          className={`btn btn-sm mx-1 ${
-                            isActive ? "btn-primary" : "btn-outline-secondary"
-                          }`}
-                          title={
-                            isActive
-                              ? "Click to remove reaction"
-                              : "Click to react"
-                          }
-                        >
-                          {emoji} {feedback[emoji] || 0}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                </Carousel.Item>
+              );
+            })}
+          </Carousel>
+        )}
       </section>
 
       {selectedImage && (

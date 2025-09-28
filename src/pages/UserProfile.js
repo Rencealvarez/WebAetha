@@ -41,6 +41,7 @@ export default function UserProfilePage() {
     avatar_url: "",
     cover_url: "",
   });
+  const [userBadges, setUserBadges] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -78,6 +79,17 @@ export default function UserProfilePage() {
           avatar_url: data.avatar_url || "",
           cover_url: data.cover_url || "",
         });
+      }
+
+      // Fetch user badges
+      const { data: badges, error: badgeError } = await supabase
+        .from("user_badges")
+        .select("*")
+        .eq("user_id", session.id)
+        .order("earned_at", { ascending: false });
+
+      if (!badgeError && badges) {
+        setUserBadges(badges);
       }
     })();
   }, [nav]);
@@ -355,6 +367,39 @@ export default function UserProfilePage() {
             <div className="label">Registered at</div>
             <div className="value">{registeredAt}</div>
           </div>
+        </div>
+
+        {/* Badges Section */}
+        <div className="badges-section">
+          <h3 className="badges-title">🏅 Earned Badges</h3>
+          {userBadges.length > 0 ? (
+            <div className="badges-grid">
+              {userBadges.map((badge, index) => (
+                <div key={index} className="badge-item">
+                  <div className="badge-icon">🏅</div>
+                  <div className="badge-info">
+                    <div className="badge-name">
+                      {badge.image_path
+                        .split("/")
+                        .pop()
+                        .replace(/\.[^/.]+$/, "")
+                        .replace(/_/g, " ")
+                        .replace(/\b\w/g, (l) => l.toUpperCase())}
+                    </div>
+                    <div className="badge-date">
+                      {new Date(badge.earned_at).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-badges">
+              <p>
+                No badges earned yet. Complete panoramic quizzes to earn badges!
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="actions">

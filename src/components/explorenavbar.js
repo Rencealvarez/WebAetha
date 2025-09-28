@@ -9,6 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -26,14 +27,36 @@ const Navbar = () => {
     };
   }, []);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMenuOpen && !event.target.closest(".nav-container")) {
+        closeMenu();
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
+    }
+  }, [isMenuOpen]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/login");
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="nav">
-      <div className="nav-container">
+      <div className="nav-container has-burger-menu">
         <div className="nav-logo">
           <img
             src={aethaLogo}
@@ -44,22 +67,41 @@ const Navbar = () => {
           />
         </div>
 
-        <div className="nav-menu">
+        {/* Burger Menu Button */}
+        <button
+          className={`nav-toggle ${isMenuOpen ? "nav-toggle-open" : ""}`}
+          onClick={toggleMenu}
+          aria-label="Toggle navigation menu"
+        >
+          <span className="nav-toggle-line"></span>
+          <span className="nav-toggle-line"></span>
+          <span className="nav-toggle-line"></span>
+        </button>
+
+        <div className={`nav-menu ${isMenuOpen ? "nav-menu-open" : ""}`}>
           <ul className="nav-list">
             {session && (
               <>
                 <li className="nav-item">
-                  <Link to="/local-voices" className="nav-link">
+                  <Link
+                    to="/local-voices"
+                    className="nav-link"
+                    onClick={closeMenu}
+                  >
                     Local Voices
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/aeta-museum" className="nav-link">
+                  <Link
+                    to="/aeta-museum"
+                    className="nav-link"
+                    onClick={closeMenu}
+                  >
                     Aeta Museum
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/profile" className="nav-link">
+                  <Link to="/profile" className="nav-link" onClick={closeMenu}>
                     Profile
                   </Link>
                 </li>
@@ -68,7 +110,10 @@ const Navbar = () => {
             <li className="nav-item">
               <button
                 className="nav-link"
-                onClick={() => setShowLogoutConfirm(true)}
+                onClick={() => {
+                  setShowLogoutConfirm(true);
+                  closeMenu();
+                }}
               >
                 Logout
               </button>

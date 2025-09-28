@@ -164,17 +164,15 @@ const Login = () => {
           </div>
           <div className="form-group mb-3">
             <label className="form-label">Password</label>
-            <div className="password-container">
-              <input
-                type="password"
-                className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Enter your password"
-                autoComplete="current-password"
-              />
-            </div>
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Enter your password"
+              autoComplete="current-password"
+            />
             <div className="d-flex justify-content-end mt-2">
               <Link
                 to="/request-password-reset"

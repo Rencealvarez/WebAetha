@@ -186,7 +186,7 @@ const Register = () => {
       />
       <div className="register-box">
         <Link to="/login" className="back-link">
-          ← Back to Login
+          Back to Login
         </Link>
         <h3 className="text-center">Create Your Account</h3>
         {confirmationSent ? (
