@@ -9,7 +9,7 @@ const QRDownloadRedirect = () => {
       try {
         const APK_FILE_ID =
           process.env.REACT_APP_APK_FILE_ID ||
-          "180IOw_8JfQqodo_gpOeVnaYZaoXZ92du";
+          "1bPPv2J6Q3G_ohSx1x4vGFlXtYKR4kuaK";
         const apkUrl = `https://drive.google.com/uc?export=download&id=${APK_FILE_ID}`;
 
         const SESSION_KEY = "qr_redirect_log_in_progress";
@@ -37,7 +37,7 @@ const QRDownloadRedirect = () => {
       } catch (e) {
         const APK_FILE_ID =
           process.env.REACT_APP_APK_FILE_ID ||
-          "180IOw_8JfQqodo_gpOeVnaYZaoXZ92du";
+          "1bPPv2J6Q3G_ohSx1x4vGFlXtYKR4kuaK";
         const apkUrl = `https://drive.google.com/uc?export=download&id=${APK_FILE_ID}`;
         window.location.replace(apkUrl);
       }
